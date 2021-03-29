@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Office 365 Update License Problem &amp; Solution</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Support-Notes_16384017.html">Support Notes</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Office 365 Update License Problem &amp; Solution
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified by <span class='editor'> Paul Daniels</span> on Oct 13, 2014
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Office365UpdateLicenseProblem&amp;Solution-/*&lt;![CDATA[*/div.rbtoc1617011816939{padding:0px;}div.rbtoc1617011816939ul{list-style:disc;margin-left:0px;}div.rbtoc1617011816939li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#Office365UpdateLicenseProblem&amp;Solution-Int"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1617011816939 {padding: 0px;}
+div.rbtoc1617011816939 ul {list-style: disc;margin-left: 0px;}
+div.rbtoc1617011816939 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1617011816939'>
+<ul class='toc-indentation'>
+<li><a href='#Office365UpdateLicenseProblem&amp;Solution-'></a></li>
+<li><a href='#Office365UpdateLicenseProblem&amp;Solution-Introduction'>Introduction</a></li>
+<li><a href='#Office365UpdateLicenseProblem&amp;Solution-Theupdate-license-processor.ps1script'>The update-license-processor.ps1 script</a></li>
+<li><a href='#Office365UpdateLicenseProblem&amp;Solution-ProblematicUseCases'>Problematic Use Cases</a>
+<ul class='toc-indentation'>
+<li><a href='#Office365UpdateLicenseProblem&amp;Solution-Scenario1-DelaybetweenStudentendingtheirCourseandGraduating'>Scenario 1 - Delay between Student ending their Course and Graduating</a></li>
+<li><a href='#Office365UpdateLicenseProblem&amp;Solution-Scenario2-VariousProblematicalTransitions'>Scenario 2 - Various Problematical Transitions</a></li>
+</ul>
+</li>
+</ul>
+</div></h1><h1 id="Office365UpdateLicenseProblem&amp;Solution-Introduction">Introduction</h1><p>On 9th October 2014, a huge batch of accounts were processed by the updateLicense.ps1 PowerShell script. It had previously been switched off for several months. This script is supposed to tell Office365 to change the A2 license for that student, to a special Alumnus license which gives them less features, but still allow them to use their email account (for life). </p><p>Unfortunately, something in Accman told this script to update non-alumnus accounts too for some reason. The script dutifully removes all existing licenses from any account, and then applies the Alumni license <em>if</em> that account is an alumnus. If they are <strong>not</strong> an alumnus, it just removes all existing licenses and then does nothing (it wasn't designed to process non-alumnus students). Obviously, with no license, a student is unable to log into their email account. This resulted in 1268 frustrated students and some very busy helpdesk staff.</p><p>The whole lifecycle of an account from Banner to Accman needs to be properly understood to work out why this script was executed for normal students in the first place (something to do with the Banner import process) but that is a separate discussion. We quickly wrote a slightly better version of this script that would apply the A2 license to non-alumnus accounts if it is ever (incorrectly) asked to process such an account. This page is just a set of instructions about the modified script, in case it ever needs to be run again.</p><h1 id="Office365UpdateLicenseProblem&amp;Solution-Theupdate-license-processor.ps1script">The update-license-processor.ps1 script</h1><p>In case the above problem happens again for whatever reason, there is a modified version of the ‘update license’ script on uos-p-acbe-01 in D:\PowerShellFix\Office365Processors\UpdateLicense.</p><p>To run it, you need to do the following</p><ul><li>Rename the “_stop” file to “stop” (the script wont run if it sees a file called 'stop' in the same directory)</li><li>Run start.bat from a command line</li></ul><p>The script will then periodically check D:\Accman\PowershellData\O365-2\UpdateLicense for files to process. If an account needs fixing, you need a pair of files dropping into that folder for each account that needs to be fixed. They need to have the username in their filename. Assuming their username is ABC123 the files should be:</p><ul><li>ABC123.flg (this is just an empty file to indicate that this account needs processing. On successful processing, it will be renamed ABC123.flg.complete to indicate it all went well.</li><li>ABC123.csv (this contains the account information that needs to be updated. It just has their email address, and True or False to indicate whether this person is an alumnus e.g.<ul><li><a href="mailto:M.Mamas@edu.salford.ac.uk,False" class="external-link" rel="nofollow">M.Mamas@edu.salford.ac.uk,False</a><br/><br/></li></ul></li></ul><div class="confluence-information-macro confluence-information-macro-information"><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>D:\Accman\PowershellData\O365-2\ is not used by the real (but currently disabled) update license script. That one looks in D:\Accman\PowershellData\O365\. I created the O365-2 directory as a place we could put our separate data files for fixing this issue.</p></div></div><p> </p><p>When the powershell script sees a pair of files like this, it will process the corresponding CSV file as follows:</p><ol><li>Alumnus flag is “True” – remove all current license and then apply the testlivesalfordac:EXCHANGESTANDARD_ALUMNI license</li><li>Alumnus flag is “False” - remove all current license and then apply the testlivesalfordac:STANDARDWOFFPACK_STUDENT license (also known as the A2 license). <em>Then</em> it will also remove the Lync service plan from that account.</li></ol><p>While the powershell script helped us out of a tight spot yesterday, it was hacked together rather quickly so isn’t a proper replacement for the real update license script. But I’ll leave it on the server in case we ever need it again.</p><p> </p><h1 id="Office365UpdateLicenseProblem&amp;Solution-ProblematicUseCases">Problematic Use Cases</h1><h2 id="Office365UpdateLicenseProblem&amp;Solution-Scenario1-DelaybetweenStudentendingtheirCourseandGraduating">Scenario 1 - Delay between Student ending their Course and Graduating</h2><p>The University has started graduating some students in December, sometime after their course has finished. This has the effect of disabling their AD and Office365 accounts during the interval. A case was raised by Denise Milward, 80124.</p><h2 id="Office365UpdateLicenseProblem&amp;Solution-Scenario2-VariousProblematicalTransitions">Scenario 2 - Various Problematical Transitions</h2><p>This section lists Student status transitions that cause problems:</p><ol><li>Alumni Student returns as an Undergrad/Postgrad. O365 Licence isn't changed.</li><li>Alumni Student returns as above but doesn't complete. O365 A/c is disabled. Licence isn't changed.</li></ol><p> </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

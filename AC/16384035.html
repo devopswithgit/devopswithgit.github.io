@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : RFC1937: SAP/Banner Talis Interface Replacement</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RFC-and-Project-Work_16384025.html">RFC and Project Work</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : RFC1937: SAP/Banner Talis Interface Replacement
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis881)</span>, last modified on Jan 11, 2013
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="RFC1937:SAP/BannerTalisInterfaceReplacement-Introduction">Introduction</h1><p>This RFC is about removing the existing perl scripts that send barcode information downstream to Talis as part of the activation/registration processes.</p><p>The current SAP system is being updated, and during the update process a table was identified (ZCARDHST) as not being part of the core SAP database.  Investigation showed that it was being used as part of the interface that transfers barcodes into Talis from the upstream systems as part of the AccMan process flow when new staff members are assigned an ID card.</p><p>This table will not be present once the SAP upgrade is in place, and as a result the existing code will need to be altered as a matter of urgency.  The code is currently written in Perl is not written in such a way as to make changing databases (or database locations) a trivial task, so it will be a simpler and quicker approach to replace the existing code with a .NET version that would perform the same tasks and be aligned to current development standards.  As an added bonus, it would allow us to combine the Banner version of this codebase (used for students instead of staff) with the SAP codebase, thus eliminating two Perl processes and combining two existing .NET processes (for updating the SAP and Banner database tables with the ID card information) into a single process.</p><p>The required changes are:</p><p>The following code amendments are required to make this possible:</p><ol><li>Amend the Update Security Credentials (98) process to remove references to processes 96 and 98, and replace with the new Update Talis Barcode process.</li><li>Create the new Update Talis Barcode Process and associated configuration artefacts.</li><li>Create the Talis DAO class (and associated interface class) required to contact the Talis Web Service.</li><li>Potentially, a further class may be required to contact the web service depending on how this service must be contacted.</li><li>The web service call as contained in the Perl script is a direct http request using parameters.  This is obviously insecure (as the parameters are passed in cleartext).  Also, one of the parameters is a ‘transaction_id’ parameters, which appears to be sequential but ultimately controlled by the existing Perl bridge code.  Some further investigation will be required regarding the nature of this parameter, and potentially the generation of this ‘transaction_id’ parameter may require some additional coding to encapsulate any additional complexity.  It is hoped, however, that the value of ‘transaction_id’ can be the same as that of the Transaction generated in the database to perform this action.The code change writes the UIDNumber generated as part of the resgister.pl script to AD during AD account creation.</li></ol><h1 id="RFC1937:SAP/BannerTalisInterfaceReplacement-DesignDocument">Design Document</h1><p><a href="attachments/16384035/16581309.docx" data-linked-resource-id="16581309" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Talis Interface Replacement Design.docx" data-nice-type="Word Document" data-linked-resource-content-type="application/vnd.openxmlformats-officedocument.wordprocessingml.document" data-linked-resource-container-id="16384035" data-linked-resource-container-version="5">Talis Interface Replacement Design.docx</a></p><h1 id="RFC1937:SAP/BannerTalisInterfaceReplacement-SourceCode">Source Code</h1><p>This change is held on the following SVN branch: <a href="svn://isd-sysarch01.isdads.salford.ac.uk/UoS_IdM/Accman.NET/branches/SAPUpgrade" rel="nofollow">svn://isd-sysarch01.isdads.salford.ac.uk/UoS_IdM/Accman.NET/branches/SAPUpgrade</a></p><h1 id="RFC1937:SAP/BannerTalisInterfaceReplacement-Deployment">Deployment</h1><p>Follow these steps:</p><ol><li>Backup the existing AccManBackEndLibrary dlls and the quartz_jobs.xml file.</li><li>Update the AccManBackEndLibrary on the AccMan Server (uos-p-ambe-01) with the new version</li><li>Stop the existing Perl scripts.</li><li>Restart the ConsoleSchedulerService</li><li>Verify that the new UpdateTalisBarcode Transactions are being created.</li><li>Add Configuration to the quartz_jobs.xml file for the new transaction</li><li>Restart the ConsoleSchedulerService</li><li>Verify that the Barcodes are being sent correctly to Talis (via logs and/or querying Talis itself).</li></ol><h2 id="RFC1937:SAP/BannerTalisInterfaceReplacement-Rollback">Rollback</h2><p>To roll back the upgrade, we simply return the previous version of the code.  Note, however, that without the underlying SAP tables, the existing Perl processes will be useless.</p><p>Note that there are two separate elements to this process - we can allow the Update Security Credentials process to continue if it is generating the UpdateTalisBarcode transactions correctly, even if the secondary transaction does not work correctly.  In this case, the Update Security Credentials process will continue to generate UpdateTalisBarcode transactions that can be processed at a later point in time when that process can be made to work correctly - we simply disable the UpdateTalisBarcode process in the configuration file until such time as it is working correctly, at which point the stored transactions will be processed successfully.</p><p> </p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384035/16581309.docx">Talis Interface Replacement Design.docx</a> (application/vnd.openxmlformats-officedocument.wordprocessingml.document)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

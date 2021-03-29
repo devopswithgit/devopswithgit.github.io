@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Email for Life</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RFC-and-Project-Work_16384025.html">RFC and Project Work</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Email for Life
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Jul 09, 2012
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="EmailforLife-Introduction">Introduction</h1><p>In a nutshell, Email4Life is a modification to Accman which means that a student who has graduated (and therefore left the university) can continue using their Salford email address for ever. </p><p>Previously, upon leaving the university, a student's email account would be deleted when their account was disabled.</p><h1 id="EmailforLife-Process">Process </h1><ol><li>Student graduates</li><li>Accman reads the details from Banner and discovers that the student has gone</li><li>Accman checks if the student left for a good reason (they graduated and are now an alumnus) or a bad reason (kicked off the course for not attending etc etc)</li><li>If the reason is good, disable their Accman account but do <strong>not</strong> disable their Live@Edu email address. </li><li>Also, hide their address from the Live@Edu address list.</li></ol><p>The first part of the process (deciding whether the student is an alumnus and should therefore keep their email address) takes place in the banner_import Perl scripts. </p><p>The second part (hiding / unhiding from the address list).</p><p><a href="Perl-Script-Business-Logic_16384029.html">Perl Script Business Logic</a></p><p><a href="Development-Notes_16384065.html">Development Notes</a></p><h1 id="EmailforLife-SourceCode">Source Code</h1><p>The .NET Source Code is not yet checked in as it's involves quite a painful merge of the Email For Life and Department Change branches into the Associates branch (our badly named trunk). This is on my (Richard's) PC in &quot;C:\VS2010\The Big One&quot;.</p><p>That is what is currently on the Test server (uos-t-acbe-01). </p><p>The Perl scripts are also on the test server. When we come to go live, we need to do a manual comparison with the production scripts to be sure we are making the correct changes. This is always the case with Accman, since to get scripts working at all on test, we always have to make lots of manual changes because things like configuration is not stored in one location - it's spread throughout the scripts. We will have to do the following:</p><ol><li>Copy all the Perl scripts from test to a local development PC e.g. C:\AccmanCompare\FromTest</li><li>Copy all the production scripts to a similar folder e.g. C:\AccmanCompare\FromProduction</li><li>Use something like TotalCommander to compare all the files and see what's changed</li><li>Identify which changes have been made just to get them to work at all in test (database connection strings etc)</li><li>Identify which changes are specific to Email4Life and DepartmentChange - these are the changes we want to copy into production</li><li>Copy the changes over the the production scripts</li><li>Put the modified changes onto the production server</li><li>Restart all the Perl scripts</li><li>I imagine Accman will be down for about a day while we do this, because it's going to be messy.</li></ol>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,53 @@
+﻿*,CN=Temp (Exv01),CN=Storage Group 3,CN=InformationStore,CN=ISD-EXV01,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+ASS,CN=Academic_ Division mailstore,CN=Storage Group 2,CN=InformationStore,CN=ISD-EXV01,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+ANS,CN=AcaStds_OHSS mailstore,CN=Storage Group 3,CN=InformationStore,CN=ISD-EXV01,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+QSS,CN=AcaStds_OHSS mailstore,CN=Storage Group 3,CN=InformationStore,CN=ISD-EXV01,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+ZAS,CN=Commercial_services_mailstore,CN=Storage Group 4,CN=InformationStore,CN=ISD-EXV03,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' RAS,
+' BSS,
+CAS,CN=Commercial_services_mailstore,CN=Storage Group 4,CN=InformationStore,CN=ISD-EXV03,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+CRS,CN=Commercial_services_mailstore,CN=Storage Group 4,CN=InformationStore,CN=ISD-EXV03,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' PHS,
+' CMS,
+' EDS,
+ESS,CN=Estates Mailbox,CN=Storage Group 4,CN=InformationStore,CN=ISD-EXV01,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' EUS,
+' EXS,
+' AFS,
+BFS,CN=BLBE_mailstore,CN=Storage Group 4,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' HFS,
+' SFS,
+' PRS,
+' FIS,
+UIS,CN=ILS_Mailstore,CN=Storage Group 1,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' HAS,
+' MTS,
+' SIS,
+' IES,
+' MRS,
+' OHS,
+PES,CN=Personnel_Mailstore,CN=Storage Group 2,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' PUS,
+' RDS,
+' RGS,
+' BIS,
+' STS,
+ARS,CN=AMSS _mailstore,CN=Storage Group 3,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' BRS,
+HRS,CN=Personnel_Mailstore,CN=Storage Group 2,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' SRS,
+BNS,CN=SBS_mailstore,CN=Storage Group 4,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' LWS,
+ADS,CN=Art & Design_mailstore,CN=Storage Group 3,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' CXS,
+' SGS,
+EPS,CN=ESPaCH_mailstore,CN=Storage Group 3,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' ELS,
+' HLS,
+LAS,CN=Sch.of Languages mailstore,CN=Storage Group 1,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+MMS,CN=MMP_mailstore,CN=Storage Group 2,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' NUS,
+PMS,CN=SOBE mailstore,CN=Storage Group 4,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk
+' SUS,
+' TES,
+VCS,CN=VIP_mailstore,CN=Storage Group 2,CN=InformationStore,CN=ISD-EXV02,CN=Servers,CN=First Administrative Group,CN=Administrative Groups,CN=University of Salford,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk

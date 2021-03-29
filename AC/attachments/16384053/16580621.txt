@@ -1,0 +1,60 @@
+Expected outage
+Hopefully a couple of hours but could take all day.
+
+Prior to release
+
+•	Shut down the AccmanWeb user interface so that users cannot use it at all. 
+•	Inform the users that Accman will not be available until further notice (could take all day. Hopefully not but it’s going to be an unpleasant release).
+•	Operations need to back up the Accman database.
+•	Shut down all running Perl scripts (new and old servers).
+•	Disable all scheduled tasks (new and old servers).
+•	Stop ConsoleSchedulerService (new and old servers).
+
+Database Changes
+
+EmailForLife
+For EmailForLife, we also need to add a new field to the PERSON table called “is_alumnus”:
+
+alter table PERSON add is_alumnus tinyint(4)
+
+DepartmentChange
+Execute the attached script department_codes_update.sql
+
+Code to release:
+
+.NET Accman branches:
+EmailForLife:     svn://isd-sysarch01.isdads.salford.ac.uk/UoS_IdM/Accman.NET/branches/EmailForLife
+DepartmentChange: svn://isd-sysarch01.isdads.salford.ac.uk/UoS_IdM/Accman.NET/branches/DepartmentChange2012
+
+These have both been merged (locally) into the Accman trunk which is at: 
+                svn://isd-sysarch01.isdads.salford.ac.uk/UoS_IdM/Accman.NET/branches/Associates
+
+Code to release:
+                The compiled version of AccmanBackendLibrary with the above branches merged into it. 
+
+Steps to release:
+
+1.	Backup the contents of C:\AccmanBackEndLibrary on both servers
+2.	Copy the newly built DLLs into C:\AccmanBackEndLibrary (overwriting the existing files)
+3.	Modify C:\ConsoleSchedulerService\quartz-jobs.xml to include the new configuration for the DepartmentChange and EmailForLife jobs.
+4.	Start ConsoleSchedulerService
+5.	Verify that there are no error messages in the log files and that it has started correctly. 
+
+Perl Scripts
+The Perl script changes are harder to manage but we can release them in the following way (from http://uos-d-dbld-01:8090/display/AC/Email+for+Life)
+
+1.	Back up the scripts on accmanbe and uos-p-acbe-01 by making a copy of c:\accman on both servers
+2.	Copy all the Perl scripts from test to a local development PC e.g. C:\AccmanCompare\FromTest
+3.	Copy all the production scripts to a similar folder e.g. C:\AccmanCompare\FromProduction
+4.	Use something like TotalCommander to compare all the files and see what's changed
+5.	Identify which changes have been made just to get them to work at all in test (database connection strings etc)
+6.	Identify which changes are specific to Email4Life and DepartmentChange - these are the changes we want to copy into production
+7.	Copy the changes over to the production scripts
+8.	Put the modified changes onto the production server
+9.	Restart all the Perl scripts and enable all scheduled tasks
+10.	I imagine Accman will be down for about a day while we do this, because it's going to be messy.
+
+Backout Plan
+Stop all running Perl scripts, ConsoleScheduler, and disable the scheduled tasks
+Restore the backed up files from C:\AccmanBackEndLibrary, C:\Accman and also the file C:\ConsoleSchedulerService\quartz-jobs.xml
+Start all Perl scripts, ConsoleScheduler, and enable the scheduled tasks

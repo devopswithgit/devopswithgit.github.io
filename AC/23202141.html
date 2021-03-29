@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Transactions remains in &#39;creating&#39; state</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Completed_19595586.html">Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Transactions remains in &#39;creating&#39; state
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (ujs079)</span>, last modified on Oct 20, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Some newly created transactions remain in the 'creating' state which results in them not being executed.  </td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Bug</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">Low</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="ujs079" href="https://confluence.salford.ac.uk:8444/confluence/display/~ujs079" data-linked-resource-id="832132" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (ujs079)</a></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd">16/10/2015</td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd">This was originally raised by <a class="confluence-userlink user-mention" data-username="uis475" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis475" data-linked-resource-id="831379" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Matthew Davies</a>. He noticed transaction 61 (Change Outlook Live [O365] Password) for several users was created with parameters but was never run because it was in the 'creating' state. From conversations with other service desk members it appears this is not specific to any one transaction.<br/> </td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-276" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-276?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-276</a>
+                            -
+            <span class="summary">Transactions remain in &#39;creating&#39; state </span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+</td></tr><tr><th colspan="1" class="confluenceTh">LanDESK</th><td colspan="1" class="confluenceTd">INC/171689</td></tr></tbody></table></div><p> </p><h2 id="Transactionsremainsin&#39;creating&#39;state-Details">Details</h2><p>Once a transaction is created (in the 'creating' state) parameters used by it are added. Whilst attempting to update the new transaction state to 'waiting' a TimeoutException is generated and the transaction state remains in the 'creating' state.</p><p>Transactions in the creating state are never executed. It is an interim state where parameters are being loaded. Once this has completed the state should be altered to 'waiting'.</p><p>The error occurrences on multiple transaction types intermittently. This makes it difficult to find the route cause. It may be due to a table lock when creating the initial transaction record or a slowdown in the performance of the database caused by additional load at the time of creating the transaction.</p><p>An extract of the Accman FE website log file has been added to the JIRA issue description for reference. The details of the log file's location are:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Server</th><td class="confluenceTd">UOS-P-AMFE-01</td></tr><tr><th class="confluenceTh">Folder</th><td class="confluenceTd">C:\AccmanFE\Logs\</td></tr><tr><th colspan="1" class="confluenceTh">Filename</th><td colspan="1" class="confluenceTd">AccMan.log.20151014</td></tr></tbody></table></div></div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/23202141/23202139.20151014">AccMan.log.20151014</a> (application/x-upload-data)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-23202171"></a>
+                                    <font class="smallfont"><p><a class="confluence-userlink user-mention" data-username="ujs079" href="https://confluence.salford.ac.uk:8444/confluence/display/~ujs079" data-linked-resource-id="832132" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (ujs079)</a>, can you add where you saw the TimeoutException please. Location of Log file would be useful.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis876 at Oct 19, 2015 10:33
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23202174"></a>
+                                    <font class="smallfont"><p>Its in the last sentence of the details. Accman FE</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ujs079 at Oct 19, 2015 10:39
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23202176"></a>
+                                    <font class="smallfont"><p><a class="confluence-userlink user-mention" data-username="ujs079" href="https://confluence.salford.ac.uk:8444/confluence/display/~ujs079" data-linked-resource-id="832132" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (ujs079)</a>, which server and which folder is ithe Accman Fe website log file in?</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis876 at Oct 19, 2015 10:41
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23202179"></a>
+                                    <font class="smallfont"><p>All done</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ujs079 at Oct 19, 2015 10:49
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

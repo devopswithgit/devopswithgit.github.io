@@ -1,0 +1,444 @@
+<!-- ================================== -->
+<!-- Transaction 121 - Update AD Fields -->
+<!-- ================================== -->
+<job>
+    <job-detail>
+      <name>121</name>
+      <group>AccMan</group>
+      <description>Transaction 121 - Update AD Fields</description>
+      <job-type>Salford.Library.SchedulerService.Model.SerialServiceProcess, SchedulerServiceLibrary</job-type>
+      <volatile>false</volatile>
+      <durable>false</durable>
+      <recover>false</recover>
+      <job-data-map>
+        <entry>
+          <key>ID</key>
+          <value>121</value>
+        </entry>
+        <entry>
+          <key>DllFile</key>
+          <value>C:\AccManBackEndLibrary\AccManBackEndLibrary.dll</value>
+        </entry>
+        <entry>
+          <key>ClassName</key>
+          <value>Salford.AccMan.BackEnd.Processes.ActiveDirectory.UpdateFields</value>
+        </entry>
+        <entry>
+          <key>LogLevel</key>
+          <value>All</value>
+        </entry>
+        <entry>
+          <key>LogDirectory</key>
+          <value>C:\Logs\ADUpdateFields</value>
+        </entry>
+        <entry>
+          <key>AccManDatabase</key>
+          <value>Server=accman.salford.ac.uk;Uid=accman;Pwd=w3w2g,wnam!;Database=mail;</value>
+        </entry>
+        <entry>
+          <key>TransactionLogDirectory</key>
+          <value>C:\Logs\TransactionLogs</value>
+        </entry>
+        <entry>
+          <key>ADConfigRoot</key>
+          <value>CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk</value>
+        </entry>
+        <entry>
+          <key>ADHost</key>
+          <value>146.87.174.120</value>
+        </entry>
+        <entry>
+          <key>ADRoot</key>
+          <value>DC=isdads,DC=salford,DC=ac,DC=uk</value>
+        </entry>
+        <entry>
+          <key>ADUserBase</key>
+          <value>OU=Students,OU=Users,OU=Non Datacentre</value>
+        </entry>
+        <entry>
+          <key>ADUsername</key>
+          <value>Svc-prd-accman</value>
+        </entry>
+        <entry>
+          <key>ADGroupBase</key>
+          <value>OU=Provisioned,OU=Groups,OU=Non Datacentre</value>
+        </entry>
+        <entry>
+          <key>ADMigratedGroupBase</key>
+          <value>OU=Migrated Groups,OU=Groups,OU=Non Datacentre</value>
+        </entry>        
+        <entry>
+          <key>ADPassword</key>
+          <value>*******</value>
+        </entry>
+      </job-data-map>
+    </job-detail>
+
+    <trigger>
+      <cron>
+        <name>121-cron-trigger</name>
+        <job-name>121</job-name>
+        <cron-expression>0/30 * * * * ?</cron-expression>
+        <misfire-instruction>DoNothing</misfire-instruction>
+      </cron>
+    </trigger>
+
+  </job> 
+  
+<!-- ================================== -->
+<!-- Transaction 123 - CheckForBannerUpdates -->
+<!-- ================================== -->
+<job>
+    <job-detail>
+      <name>123</name>
+      <group>AccMan</group>
+      <description>Transaction 123 - CheckForBannerUpdates</description>
+      <job-type>Salford.Library.SchedulerService.Model.SerialServiceProcess, SchedulerServiceLibrary</job-type>
+      <volatile>false</volatile>
+      <durable>false</durable>
+      <recover>false</recover>
+      <job-data-map>
+        <entry>
+          <key>ID</key>
+          <value>121</value>
+        </entry>
+        <entry>
+          <key>DllFile</key>
+          <value>C:\AccManBackEndLibrary\AccManBackEndLibrary.dll</value>
+        </entry>
+        <entry>
+          <key>ClassName</key>
+          <value>Salford.AccMan.BackEnd.Processes.Banner.CheckForBannerUpdates</value>
+        </entry>
+        <entry>
+          <key>LogLevel</key>
+          <value>All</value>
+        </entry>
+        <entry>
+          <key>LogDirectory</key>
+          <value>C:\Logs\CheckForBannerUpdates</value>
+        </entry>
+        <entry>
+          <key>AccManDatabase</key>
+          <value>Server=accman.salford.ac.uk;Uid=accman;Pwd=w3w2g,wnam!;Database=mail;</value>
+        </entry>
+	    <entry>
+          <key>BannerDatabase</key>
+          <value>Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=uos-p-rhel-vip-pbanno-cwb.isdads.salford.ac.uk)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=PBANNO.SALFORD.AC.UK)));User Id=accman;Password=*********</value>   
+        </entry>          
+        <entry>
+          <key>TransactionLogDirectory</key>
+          <value>C:\Logs\TransactionLogs</value>
+        </entry>
+      </job-data-map>
+    </job-detail>
+
+    <trigger>
+      <cron>
+        <name>123-cron-trigger</name>
+        <job-name>123</job-name>
+        <cron-expression>0/30 * * * * ?</cron-expression>
+        <misfire-instruction>DoNothing</misfire-instruction>
+      </cron>
+    </trigger>
+  </job> 
+  
+<!-- ================================== -->
+<!-- Transaction 124 - Unhide In Email Address Lists -->
+<!-- ================================== -->  
+   <job>
+    <job-detail>
+      <name>124</name>
+      <group>AccMan</group>
+      <description>Transaction 124 - Unhide In Email Address Lists</description>
+      <job-type>Salford.Library.SchedulerService.Model.SerialServiceProcess, SchedulerServiceLibrary</job-type>
+      <volatile>false</volatile>
+      <durable>false</durable>
+      <recover>false</recover>
+      <job-data-map>
+        <entry>
+          <key>ID</key>
+          <value>124</value>
+        </entry>
+        <entry>
+          <key>DllFile</key>
+          <value>C:\AccManBackEndLibrary\AccManBackEndLibrary.dll</value>
+        </entry>
+        <entry>
+          <key>ClassName</key>
+          <value>Salford.AccMan.BackEnd.Processes.StudentEmail.UnhideInEmailAddressLists</value>
+        </entry>
+        <entry>
+          <key>AccManDatabase</key>
+          <value>Server=accman.salford.ac.uk;Uid=accman;Pwd=w3w2g,wnam!;Database=mail;</value>
+        </entry> 
+        <entry>
+          <key>AssociateDatabase</key>
+          <value>Server=accman.salford.ac.uk;Uid=accman;Pwd=w3w2g,wnam!;Database=associates;</value>
+        </entry>
+        <entry>
+          <key>LogLevel</key>
+          <value>Debug</value>
+        </entry>
+        <entry>
+          <key>LogDirectory</key>
+          <value>C:\Logs\UnhideInEmailAddressLists</value>
+        </entry>
+	<entry>		
+          <key>SkipSecurityChecks</key>
+          <value>TRUE</value>
+        </entry> 
+	<entry>
+          <key>ExchangeAuthenticationMethod</key>
+          <value>Kerberos</value>
+    	</entry>            
+        <entry>
+          <key>ExchangeUsername</key>
+          <value>isdads\svc-prd-accman</value>
+        </entry>
+        <entry>
+          <key>ExchangePassword</key>
+          <value>*******</value>
+        </entry>
+        <entry>
+          <key>ExchangeURI</key>
+          <value>http://uos-p-exch-04.isdads.salford.ac.uk/PowerShell</value>
+        </entry>
+        <entry>
+          <key>ExchangeSchemaURI</key>
+          <value>http://schemas.microsoft.com/powershell/Microsoft.Exchange</value>
+        </entry>
+	<entry>
+          <key>LiveEduAuthenticationMethod</key>
+          <value>Basic</value>
+    	</entry>          
+        <entry>
+          <key>LiveEduUsername</key>
+          <value>accmanprod2@edu.salford.ac.uk</value>
+        </entry>
+        <entry>
+          <key>LiveEduPassword</key>
+          <value>*******</value>
+        </entry>        
+        <entry>
+          <key>LiveEduURI</key>
+          <value>https://ps.outlook.com/powershell/</value>
+        </entry>
+        <entry>
+	  <key>LiveEduSchemaURI</key>
+	  <value>http://schemas.microsoft.com/powershell/Microsoft.Exchange</value>
+        </entry>        
+        <entry>
+          <key>DomainController</key>
+          <value>uos-p-domc-02.isdads.salford.ac.uk</value>
+        </entry>
+        <entry>
+          <key>ADConfigRoot</key>
+          <value>CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk</value>
+        </entry>
+        <entry>
+          <key>ADHost</key>
+          <value>146.87.174.120</value>
+        </entry>
+        <entry>
+          <key>ADRoot</key>
+          <value>DC=isdads,DC=salford,DC=ac,DC=uk</value>
+        </entry>
+        <entry>
+          <key>ADUserBase</key>
+          <value>OU=Students,OU=Users,OU=Non Datacentre</value>
+        </entry>
+        <entry>
+          <key>ADFunctionalPath</key>
+          <value>OU=Functional,OU=Users,OU=Non Datacentre</value>
+        </entry>   
+        <entry>
+          <key>ADStaffPath</key>
+          <value>OU=Staff,OU=Users,OU=Non Datacentre</value>
+        </entry>
+        <entry>
+          <key>ADStudentPath</key>
+          <value>OU=Students,OU=Users,OU=Non Datacentre</value>
+        </entry> 
+	    <entry>
+          <key>ADUnknownPath</key>
+          <value>OU=Other,OU=Users,OU=Non Datacentre</value>
+        </entry>          
+        <entry>
+          <key>ADUsername</key>
+          <value>Svc-prd-accman</value>
+        </entry>
+        <entry>
+          <key>ADPassword</key>
+          <value>*********</value>
+        </entry>
+        <entry>
+          <key>TransactionLogDirectory</key>
+          <value>C:\Logs\TransactionLogs</value>
+        </entry>
+        <entry>
+          <key>Limit</key>
+          <value>1000</value>
+        </entry>
+      </job-data-map>
+    </job-detail>
+
+    <trigger>
+      <cron>
+        <name>124-cron-trigger</name>
+        <job-name>124</job-name>
+        <cron-expression>0/5 * * * * ?</cron-expression>
+        <misfire-instruction>DoNothing</misfire-instruction>
+      </cron>
+    </trigger>
+  </job>    
+  
+<!-- ================================== -->
+<!-- Transaction 125 - Hide In Email Address Lists -->
+<!-- ================================== -->  
+<job>
+    <job-detail>
+      <name>125</name>
+      <group>AccMan</group>
+      <description>Transaction 125 - Hide In Email Address Lists</description>
+      <job-type>Salford.Library.SchedulerService.Model.SerialServiceProcess, SchedulerServiceLibrary</job-type>
+      <volatile>false</volatile>
+      <durable>false</durable>
+      <recover>false</recover>
+      <job-data-map>
+        <entry>
+          <key>ID</key>
+          <value>125</value>
+        </entry>
+        <entry>
+          <key>DllFile</key>
+          <value>C:\AccManBackEndLibrary\AccManBackEndLibrary.dll</value>
+        </entry>
+        <entry>
+          <key>ClassName</key>
+          <value>Salford.AccMan.BackEnd.Processes.StudentEmail.HideInEmailAddressLists</value>
+        </entry>
+        <entry>
+          <key>AccManDatabase</key>
+          <value>Server=accman.salford.ac.uk;Uid=accman;Pwd=w3w2g,wnam!;Database=mail;</value>
+        </entry> 
+        <entry>
+          <key>AssociateDatabase</key>
+          <value>Server=accman.salford.ac.uk;Uid=accman;Pwd=w3w2g,wnam!;Database=associates;</value>
+        </entry>
+        <entry>
+          <key>LogLevel</key>
+          <value>Debug</value>
+        </entry>
+        <entry>
+          <key>LogDirectory</key>
+          <value>C:\Logs\HideInEmailAddressLists</value>
+        </entry>
+	<entry>			
+          <key>SkipSecurityChecks</key>
+          <value>TRUE</value>
+        </entry> 
+	<entry>
+          <key>ExchangeAuthenticationMethod</key>
+          <value>Kerberos</value>
+    	</entry>            
+        <entry>
+          <key>ExchangeUsername</key>
+          <value>isdads\svc-prd-accman</value>
+        </entry>
+        <entry>
+          <key>ExchangePassword</key>
+          <value>**********</value>
+        </entry>
+        <entry>
+          <key>ExchangeURI</key>
+          <value>http://uos-p-exch-04.isdads.salford.ac.uk/PowerShell</value>
+        </entry>
+        <entry>
+          <key>ExchangeSchemaURI</key>
+          <value>http://schemas.microsoft.com/powershell/Microsoft.Exchange</value>
+        </entry>
+	<entry>
+          <key>LiveEduAuthenticationMethod</key>
+          <value>Basic</value>
+    	</entry>          
+        <entry>
+          <key>LiveEduUsername</key>
+          <value>accmanprod@edu.salford.ac.uk</value>
+        </entry>
+        <entry>
+          <key>LiveEduPassword</key>
+          <value>************</value>
+        </entry>        
+        <entry>
+          <key>LiveEduURI</key>
+          <value>https://ps.outlook.com/powershell/</value>
+        </entry>
+        <entry>
+	  <key>LiveEduSchemaURI</key>
+	  <value>http://schemas.microsoft.com/powershell/Microsoft.Exchange</value>
+        </entry>
+        <entry>
+          <key>DomainController</key>
+          <value>uos-p-domc-02.isdads.salford.ac.uk</value>
+        </entry>
+        <entry>
+          <key>ADConfigRoot</key>
+          <value>CN=Configuration,DC=isdads,DC=salford,DC=ac,DC=uk</value>
+        </entry>
+        <entry>
+          <key>ADHost</key>
+          <value>146.87.174.120</value>
+        </entry>
+        <entry>
+          <key>ADRoot</key>
+          <value>DC=isdads,DC=salford,DC=ac,DC=uk</value>
+        </entry>
+        <entry>
+          <key>ADUserBase</key>
+          <value>OU=Students,OU=Users,OU=Non Datacentre</value>
+        </entry>
+        <entry>
+          <key>ADFunctionalPath</key>
+          <value>OU=Functional,OU=Users,OU=Non Datacentre</value>
+        </entry>   
+        <entry>
+          <key>ADStaffPath</key>
+          <value>OU=Staff,OU=Users,OU=Non Datacentre</value>
+        </entry>
+        <entry>
+          <key>ADStudentPath</key>
+          <value>OU=Students,OU=Users,OU=Non Datacentre</value>
+        </entry> 
+	<entry>
+          <key>ADUnknownPath</key>
+          <value>OU=Other,OU=Users,OU=Non Datacentre</value>
+        </entry>         
+        <entry>
+          <key>ADUsername</key>
+          <value>Svc-prd-accman</value>
+        </entry>
+        <entry>
+          <key>ADPassword</key>
+          <value>*************</value>
+        </entry>
+        <entry>
+          <key>TransactionLogDirectory</key>
+          <value>C:\Logs\TransactionLogs</value>
+        </entry>
+        <entry>
+          <key>Limit</key>
+          <value>1000</value>
+        </entry>
+      </job-data-map>
+    </job-detail>
+
+    <trigger>
+      <cron>
+        <name>125-cron-trigger</name>
+        <job-name>122</job-name>
+        <cron-expression>0/5 * * * * ?</cron-expression>
+        <misfire-instruction>DoNothing</misfire-instruction>
+      </cron>
+    </trigger>
+  </job>  

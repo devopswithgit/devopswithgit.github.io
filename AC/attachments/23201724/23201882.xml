@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quartz xmlns="http://quartznet.sourceforge.net/JobSchedulingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" overwrite-existing-jobs="true">
+
+    <job>
+    <job-detail>
+      <name>1509</name>
+      <group>AccMan</group>
+      <description>Transaction 1509 - STUDENT_AUTO_STATE</description>
+      <job-type>Salford.Library.SchedulerService.Model.SerialServiceProcess, SchedulerServiceLibrary</job-type>
+      <volatile>false</volatile>
+      <durable>true</durable>
+      <recover>false</recover>
+      <job-data-map>
+        <entry>
+          <key>ID</key>
+          <value>1509</value>
+        </entry>
+        <entry>
+          <key>DllFile</key>
+          <value>C:\AccmanNetTest_JULIA\AccmanBackendLibrary\AccManBackEndLibrary.dll</value>
+        </entry>
+        <entry>
+          <key>ClassName</key>
+          <value>Salford.AccMan.BackEnd.Processes.Scheduled.SISImport.StudentAutoState</value>
+        </entry>
+        <entry>
+          <key>LogLevel</key>
+          <value>All</value>
+        </entry>
+        <entry>
+          <key>LogDirectory</key>
+          <value>C:\AccmanNetTest_JULIA\logs\Scheduled\SISImport\StudentAutoState</value>
+        </entry>
+        <entry>
+          <key>AccManDatabase</key>
+          <value>Server=uos-t-rhel-03.isdads.salford.ac.uk;Uid=accman;Pwd=w3w2g,wnam!;Database=mailnet;Allow Zero Datetime=True;</value>
+        </entry>
+        <entry>
+          <key>TransactionLogDirectory</key>
+          <value>C:\AccmanNetTest_JULIA\logs\TransactionLogs</value>
+        </entry>
+        <entry>
+          <key>LeftReasonFilter</key>
+          <value>Student has left</value>
+        </entry>
+        <entry>
+          <key>AbsentReasonFilter</key>
+          <value>Student is absent</value>
+        </entry>
+        <entry>
+          <key>ExtendReasonFilter</key>
+          <value>User has left - extension expired</value>
+        </entry>
+        <entry>
+          <key>AlternateReasonFilter</key>
+          <value>Student has probably left</value>
+        </entry>
+        <entry>
+          <key>DisableReason</key>
+          <value>Now using {0}</value>
+        </entry>
+        <entry>
+          <key>EnableReasonForPersentState</key>
+          <value>Student has returned</value>
+        </entry>
+        <entry>
+          <key>EnableReasonForGraduatingState</key>
+          <value>Student is graduating</value>
+        </entry>
+      </job-data-map>
+    </job-detail>
+    <!-- trigger>
+      <cron>
+        <name>1509-cron-trigger-1</name>
+        <job-name>1509</job-name>
+        <cron-expression>0 * * * * ?</cron-expression>
+        <misfire-instruction>DoNothing</misfire-instruction>
+      </cron>
+    </trigger>
+	<trigger>
+      <cron>
+        <name>1509-cron-trigger-inc</name>
+        <job-name>1509</job-name>
+        <cron-expression>0 * * * * ?</cron-expression>
+        <misfire-instruction>DoNothing</misfire-instruction>
+      </cron>
+    </trigger -->
+  </job>
+</quartz>

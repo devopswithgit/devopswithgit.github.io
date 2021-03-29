@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : ISA006 - Access to Library on change of Interruption Status</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Access-for-Interrupted-Students-2015_23855164.html">Access for Interrupted Students 2015</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : ISA006 - Access to Library on change of Interruption Status
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Jeremy Sugden</span>, last modified on Jan 06, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="ISA006-AccesstoLibraryonchangeofInterruptionStatus-UserStory">User Story</h2><div class="table-wrap"><table class="confluenceTable"><thead><tr><th class="confluenceTh"><div class="tablesorter-header-inner">Prefix</div></th><th class="confluenceTh"><div class="tablesorter-header-inner">Detail</div></th></tr></thead><tbody><tr><td class="confluenceTd">As a &lt;Actor&gt;</td><td class="confluenceTd">Librarian</td></tr><tr><td class="confluenceTd">I want &lt;Need&gt;</td><td class="confluenceTd">to have all access to the library <span>provided by the temporary card withdrawn when the student stops interrupting study.</span></td></tr><tr><td class="confluenceTd">So that &lt;Reason&gt;</td><td class="confluenceTd">To ensure the correct level of access to Library facilities is provided to the card holder.</td></tr><tr><td class="confluenceTd">JIRA</td><td class="confluenceTd">Out of Scope</td></tr><tr><td class="confluenceTd">MoSCow Priority</td><td class="confluenceTd">M</td></tr></tbody></table></div><h2 id="ISA006-AccesstoLibraryonchangeofInterruptionStatus-SupportingContext">Supporting Context</h2><p>When the student stops interrupting the existing process will provide the student ID card with the correct level of access for that student/registration status. The student ID card will continue to be disabled if the student does not return to study or will attract full student access if they do. Any change to the process must ensure that current functionality is maintained.</p><p>The Interrupters temporary card  accounts will be disabled manually by the library staff, using the same process as that used for external borrowers. A returning student will be informed of the disabled interrupters temporary account and the activation of their full student account by (a manually produced) email from Student Admin. This process is wholly out of scope for the ITS solution.</p><p>A report of all students whose student and/or registration status  changes from ‘IN’ between 2 (inclusive) dates is required to identify interrupters temporary cards that need to be disabled. For each student identified the following information is required:</p><ul><li>Roll number</li><li>First name</li><li>Last name</li><li>University email address</li><li>Registration Status</li><li>Student Status</li><li>Last Registration status change date.  </li><li>Last Student status change date</li></ul><p>This report will be needed on an ad hoc basis by the Library team to identify cards that need to be disabled. Reports will not be run in the period after roll-over and before registration as this will not provide reliable information.</p><h2 id="ISA006-AccesstoLibraryonchangeofInterruptionStatus-MeasurableQualities">Measurable Qualities</h2><p>Qualities expressed that have a measurable attribute needing a parameter to be designed, built and tested. </p><p> </p><div class="table-wrap"><table style="line-height: 1.4285;" class="confluenceTable"><tbody><tr><th class="confluenceTh">Measurable Qualities of User Story</th><th class="confluenceTh"><span>Interpretation</span></th><th colspan="1" class="confluenceTh"><span>Reference Link</span></th></tr><tr><td class="confluenceTd"><span>Student Status</span></td><td class="confluenceTd">SGBSTDN_STST_CODE on Banner, set to 'IN' when the student is interrupted</td><td colspan="1" class="confluenceTd"> </td></tr><tr><td class="confluenceTd">Student<span> Registration  Status</span></td><td class="confluenceTd">SFBETRM_ESTS_CODE <span>on Banner, set to 'IN' when the student is interrupted</span></td><td colspan="1" class="confluenceTd"> </td></tr></tbody></table></div><h2 id="ISA006-AccesstoLibraryonchangeofInterruptionStatus-Source:">Source:</h2><p>Name: Regina O'Brien, Annette Cooke</p><p>Role: Library Collections Manager, Quality and Enhancement Manager</p><p>Location / Event: Email correspondence </p><p>Date: 3/12/2015</p><h2 id="ISA006-AccesstoLibraryonchangeofInterruptionStatus-LinktoUseCase">Link to Use Case</h2><h2 id="ISA006-AccesstoLibraryonchangeofInterruptionStatus-"> </h2>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-23855927"></a>
+                                    <font class="smallfont"><p>Hi <a class="confluence-userlink user-mention" data-username="uis072" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis072" data-linked-resource-id="821133" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (uis072)</a> are the reporting requirements shown above correct?  Are there any additional fields you would want on the report?  Are you happy with the report being requested, not automatically produced, and the date parameters being used to identify the reporting period? </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis440 at Dec 17, 2015 09:45
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23856109"></a>
+                                    <font class="smallfont"><p>Hi <a class="confluence-userlink user-mention" data-username="ass477" href="https://confluence.salford.ac.uk:8444/confluence/display/~ass477" data-linked-resource-id="832995" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Margaret Gemmell</a> we would like to include the student e-mail address in the above report. We would want this report sent to us at the start of each semester so we can contact the IN students with the support we can offer.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis072 at Jan 06, 2016 10:23
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23856112"></a>
+                                    <font class="smallfont"><p>Sorry <a class="confluence-userlink user-mention" data-username="uis072" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis072" data-linked-resource-id="821133" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (uis072)</a> you will also need to complete the report request for this report, the form can be found at the link below;</p><p><a href="http://sa.salford.ac.uk/page/report-requests" class="external-link" rel="nofollow">http://sa.salford.ac.uk/page/report-requests</a>.</p><p><a class="confluence-userlink user-mention" data-username="ass477" href="https://confluence.salford.ac.uk:8444/confluence/display/~ass477" data-linked-resource-id="832995" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Margaret Gemmell</a>  Is this available in the current view?</p><p> </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis440 at Jan 06, 2016 11:02
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23856113"></a>
+                                    <font class="smallfont"><p><a class="confluence-userlink user-mention" data-username="uis440" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis440" data-linked-resource-id="831667" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Jeremy Sugden</a> yes the email is available in the current view</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ass477 at Jan 06, 2016 11:55
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23856114"></a>
+                                    <font class="smallfont"><p>Thanks <a class="confluence-userlink user-mention" data-username="ass477" href="https://confluence.salford.ac.uk:8444/confluence/display/~ass477" data-linked-resource-id="832995" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Margaret Gemmell</a> there will be no further work needed from ITS to fulfill this requirement. </p><p><a class="confluence-userlink user-mention" data-username="uis072" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis072" data-linked-resource-id="821133" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (uis072)</a> I have updated this requirement with the student email address, but you will need to put the full details on the  BI Query Report Request when you create it..</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis440 at Jan 06, 2016 12:08
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23856124"></a>
+                                    <font class="smallfont"><p>Hi, <a class="confluence-userlink user-mention" data-username="ass477" href="https://confluence.salford.ac.uk:8444/confluence/display/~ass477" data-linked-resource-id="832995" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Margaret Gemmell</a> I'm completing the general information section on the BI query report request form - is it an existing report that I'm asking to be amended? If it is, what is the report name and number?</p><p> </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis072 at Jan 06, 2016 17:11
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23856137"></a>
+                                    <font class="smallfont"><p>Hi <a class="confluence-userlink user-mention" data-username="uis072" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis072" data-linked-resource-id="821133" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (uis072)</a> can you fill out the New Report request form please. The purpose of the form is so I can fully understand your requirements and so we have a record of these requirements for future reference</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ass477 at Jan 07, 2016 10:14
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23856358"></a>
+                                    <font class="smallfont"><p>Hi <a class="confluence-userlink user-mention" data-username="uis072" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis072" data-linked-resource-id="821133" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (uis072)</a> I've been able to amend an existing report in BIQuery to meet your reporting needs. The report is located in the BIQuery Registration Model on the Student Records Reports 1 screen (accessed from the Main Menu Screen) : SR WD 16 Students with Interruption of Study.</p><p>The only thing I've not been able to include is Student Status Change date, this is because this is not stored in Banner.</p><p>Also are you aware that we do record Interruption Start and End Dates as this was not part of the report request, but I thought you might find it useful.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ass477 at Jan 12, 2016 17:02
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23856530"></a>
+                                    <font class="smallfont"><p>Thanks <a class="confluence-userlink user-mention" data-username="ass477" href="https://confluence.salford.ac.uk:8444/confluence/display/~ass477" data-linked-resource-id="832995" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Margaret Gemmell</a> I didn't know we could include Interruption Start and End Dates, that would be useful information to have. Can you add them to the report? Thanks. </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis072 at Jan 14, 2016 14:47
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23856732"></a>
+                                    <font class="smallfont"><p>Hi Regina, rather than adding the dates to the existing report I've created a new report with Start and End dates included, its in the same location and called SR WD 17 - Students with Interruption of Study with dates - excel</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ass477 at Jan 22, 2016 14:13
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:57</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

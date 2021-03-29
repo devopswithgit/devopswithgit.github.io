@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Exchange</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Rewrite-Documentation-2013_16384056.html">Accman Rewrite Documentation 2013</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="External-Systems_16384049.html">External Systems</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Exchange
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified by <span class='editor'> Paul Daniels</span> on Jan 07, 2014
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Exchange-Introduction">Introduction</h1><p>Staff, Functional accounts and some Associates (determined by their associate class) are given an Exchange mailbox as part of the account-creation process. Students do not get an Exchange mailbox, because the university uses Mocrosoft's hosted <em>Office 365</em> for student email accounts. </p><p>Exchange accounts are created after the <a href="Active-Directory_16384050.html">Active Directory</a> account has been created, since an Exchange mailbox has to be linked to an AD account. </p><div class="confluence-information-macro confluence-information-macro-warning"><span class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>When the AD account is created, it can take some time for the details of the new account to be replicated across all domain servers, so Accman deliberately introduces a delay in between the AD account being created, and the Exchange mailbox being created. It is currently set to 100 minutes.</p></div></div><h1 id="Exchange-Summary">Summary</h1><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"><div class="tablesorter-header-inner"> </div></th><th class="confluenceTh"><div class="tablesorter-header-inner">Process</div></th><th colspan="1" class="confluenceTh"><div class="tablesorter-header-inner">Transaction Type ID</div></th><th colspan="1" class="confluenceTh"><div class="tablesorter-header-inner">Script / Class</div></th><th colspan="1" class="confluenceTh"><div class="tablesorter-header-inner">.NET / Perl</div></th></tr><tr><th class="confluenceTh">Triggered by</th><td class="confluenceTd"><span>ActiveDirectoryNewUser </span></td><td colspan="1" class="confluenceTd">93</td><td colspan="1" class="confluenceTd"><span>Salford.AccMan.BackEnd.Processes.ActiveDirectoryNewUser</span></td><td colspan="1" class="confluenceTd">.NET</td></tr><tr><th colspan="1" class="confluenceTh">Executed by</th><td colspan="1" class="confluenceTd">CreateExchangeMailboxProcessor</td><td colspan="1" class="confluenceTd">115</td><td colspan="1" class="confluenceTd">Salford.AccMan.BackEnd.Processes.CreateExchangeMailboxProcessor</td><td colspan="1" class="confluenceTd">.NET</td></tr></tbody></table></div><h1 id="Exchange-TransactionFormat">Transaction Format</h1><ol><li>Mail.AffectsID set to user's AccountID</li><li>No Transaction_param records required.</li></ol><h1 id="Exchange-Process">Process</h1><ol><li>Obtain the Accman record from the Mail database.<span> </span></li><li>Obtain the AD record from AD.</li><li>Update Dispose Domain on Mail.Account record.<br/><ol><li>Obtain the Exchange domain name as configured in the quartz config file. The parameter is called <em>EmailDomain </em>and is currently set to <em>isdads.salford.ac.uk.</em></li><li>Look up the corresponding record in the table Mail.EMAILDOMAIN based on Mail.primary_domainID.</li><li>On the user's Maill.Account record set the dispose_domainID property to the primary key of the EMAILDOMAIN record retrieved in the previous step.</li></ol></li><li>Create the Exchange mailbox<ol><li><strong>Note</strong>: communication with Exchange is performed via Powershell.</li><li>Connect to Exchange</li><li>Call the <strong>Enable-Mailbox</strong> cmdlet, with the following parameters<ol><li><strong>Identity</strong>: user's Username e.g. AAA1234</li><li><strong>DisplayName</strong>: see <a href="Active-Directory_16384050.html">Active Directory</a> to see how the Display Name is generated</li><li><strong>DomainController</strong>: a quartz configuration parameter (<em>DomainController</em>) currently set to uos-p-domc-02.isdads.salford.ac.uk</li><li><strong>Database</strong>: one of the options from quartz configuration param <em>ExchangeDatabase</em><em>s </em>(currently set to <span style="color: rgb(0,0,128);">DB01,DB02,DB03,DB04,DB05,DB06,DB07</span>). Which one is chosen depends on the last digit of the user's username using the function &lt;database-to-use&gt; = &lt;last-digit-of-username&gt; modulus &lt;number-of-databases-in-list&gt;. E.g. for user AAA123, and the list above, it would be 3 modulus 8 = 3. Since the list is zero-based, this would result in &quot;DB04&quot; being chosen. <strong>TG - Although this is correct and works we do have some issues with this causing an imbalance across the databases. DB01 and DB02 end up with more users because the last digit of the username will either be 1-7 in which case they will go to DB01 - DB07 or 8 and 9, in which case they will go to DB01 or DB02. i.e. there is a 2/9 chance of hitting DB01 and DB02 and 1/9 of the rest.</strong></li></ol></li><li>Finalise the mailbox by calling the <strong>Set-Mailbox</strong> cmdlet with the following parameters<ol><li><strong>Identity</strong>: user's Username e.g. AAA1234</li><li><strong>DomainController</strong>: a quartz configuration parameter (<em>DomainController</em>) currently set to uos-p-domc-02.isdads.salford.ac.uk</li><li><strong>EmailAddresses</strong>: a list containing the primary and secondary email addresses<ol><li>Primary email address: &quot;SMTP:&quot; + the AD attribute <em>Mail</em> (see <a href="Active-Directory_16384050.html">Active Directory</a> to see how this is calculated). E.g. &quot;SMTP:j.bloggs@salford.ac.uk&quot; ('SMTP' is uppercase)</li><li>Secondary email address: &quot;smtp:&quot; + &lt;username&gt; + &quot;@&quot; + &lt;value-of-quartz-config-param-<em>EmailDomain&gt;, </em>e.g. &quot;smtp:aaa123@isdex.isdads.salford.ac.uk&quot; ('smtp' is lowercase)</li></ol></li><li><strong>EmailAddressPolicyEnabled</strong>: false</li></ol></li></ol></li><li>Functional accounts only<ol><li>Create an AD security group with the name &quot;Mailbox - &quot; + &lt;surname-used-when-creating-functional-account&gt; e.g. &quot;<em>Mailbox - ITSServiceDesk</em>&quot;. The group is created under the <em>functional group</em> context in AD, configured in quartz as <em>AdFunctionalGroupsBase</em> (currently <em>OU=Functional,OU=Provisioned,OU=Groups,OU=Non Datacentre</em>).</li><li>Use the Add-MailboxPermission cmdlet to grant full rights to the mailbox group created above, using the following parameters<ol><li><strong>Identity</strong>: user's Username e.g. AAA1234</li><li><strong>User: </strong>the name of the group created above e.g. &quot;Mailbox - ITSServiceDesk&quot;</li><li><strong>AccessRights</strong>: the value &quot;FullAccess&quot;.</li><li><strong>DomainController</strong>: a quartz configuration parameter (<em>DomainController</em>) currently set to uos-p-domc-02.isdads.salford.ac.uk</li><li><strong>InheritanceType</strong>: the value &quot;All&quot;</li></ol></li><li><strong>TG - This functionality has never worked - The AD Security group isn't necessarily made on the same domain controller as the Add-MailboxPermission cmdlet runs - this causes the cmdlet to fail. This should be changed so group and permission are applied on the same domain controller.</strong></li></ol></li></ol><p> </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

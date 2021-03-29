@@ -1,0 +1,117 @@
+#----------------------------------------------------------------
+# Run a SQL Select query and return a datatable object
+#----------------------------------------------------------------
+#Function [system.Data.datatable] getSelectResultSet([string]$sql) {	
+Function getSelectResultSet([string]$sql) {	
+
+	#			Pre-requisites:
+	#			Assumes we already have an open db connection $global:conn
+	
+	#			NEXT
+	#			- use generic "DbCommand", "DbDataAdapter", etc
+	#             instead of Odbc versions
+
+	$cmd = New-Object system.Data.Odbc.OdbcCommand($sql,$global:conn)
+	$da = New-Object system.Data.Odbc.OdbcDataAdapter($cmd)
+	$dt = New-Object system.Data.datatable
+	$null = $da.fill($dt)
+	return ,$dt;
+	
+	# note
+	# 	return ,$dt;	 - with leading ","
+	# instead of just 
+	# 	return $dt;
+	# - see http://stackoverflow.com/questions/1918190/strange-behavior-in-powershell-function-returning-dataset-datatable
+	# Leading comma stops the return 'unrolling' the list-like object $dt into some other kind of object
+		
+}
+
+
+#----------------------------------------------------------------
+# Get SQL query string to get 0 or more cards given a user id
+#----------------------------------------------------------------
+Function q_get_valid_cards_given_user_id($user_id) {	
+
+#				Delivers text of a sql query that gets 0 or more valid cards
+#				belonging to a given user.
+
+#   Note: the where clause...
+#         st.TokenStatusId = 'e2b2abdf-76ee-498d-9013-20fbc8d9ee9e'
+#         ... selects valid (active) cards as opposed to 
+#         deactivated cards.
+
+$sql = @"
+select 
+ut._sequence, ut.securityTokenId, st.TokenData, st.ValidationData, st.ValidFrom, st.ValidTo, st.PublicId, st.Comment
+from 
+janus_user_SecurityToken ut,
+janus_securityTokens st
+where 
+ut.securityTokenId = st.securityTokenId
+and
+st.TokenStatusId = 'e2b2abdf-76ee-498d-9013-20fbc8d9ee9e'
+and
+ut.UserId = '$user_id'
+order by 
+ut._sequence
+"@
+
+return $sql
+}
+
+#----------------------------------------------------------------
+$global:conn = new-object system.data.odbc.odbcconnection
+$global:conn.connectionstring = "dsn=janus_case_236958;uid=svc-janus-accman;pwd=********;"   # SQL Authentication
+$global:conn.open()
+[string]$sql
+
+#----------------------------------------------------------------
+#				Loop through csv file 
+#				BARCODE_list_of_janus_user_ids.csv
+#
+#				Columns of csv file are:
+#				"EmpNumber","UserId"
+
+$path = ".\BARCODE_list_of_janus_user_ids.csv"
+Import-csv -path $path | 
+foreach-object `
+{ 
+	write-host $( "-" * 60 )	
+	write-host $_.EmpNumber $_.UserId
+
+	$dt = getSelectResultSet( q_get_valid_cards_given_user_id($_.UserId) ) 
+
+	write-host $dt.Rows.Count
+	if ($dt.Rows.Count -gt 1) {
+		write-host "More than one valid card - skip this user [can't determine the current Barcode unambiguously]"
+	} elseif ($dt.Rows.Count -lt 1) {
+		write-host "No valid cards - skip this user [can't determine the current Barcode]"
+	} else {
+		write-host "Exactly one valid card"
+		foreach ($row in $dt.Rows)			# Should loop once only
+		{ 
+			#write-host 
+			#$row._sequence $row.securityTokenId	$row.TokenData $row.ValidFrom $row.ValidTo $row.PublicId $row.validationData $row.PublicId $row.Comment	
+ 
+			write-host $row._sequence $row.TokenData
+			
+			#			Output one object to object stream (to be piped into Export-csv)	
+			New-Object -TypeName PSObject -Property @{
+			EmpNumber = $_.EmpNumber 
+			UserId = $_.UserId
+			_sequence = $row._sequence
+			TokenData = $row.TokenData
+			} | Select-Object EmpNumber, UserId, _sequence, TokenData		
+		
+		}
+	}
+} |
+Export-csv -path "BARCODE_list_of_janus_card_records.csv"
+
+
+
+#----------------------------------------------------------------
+
+#----------------------------------------------------------------
+$global:conn.close()
+#----------------------------------------------------------------

@@ -1,0 +1,101 @@
+#----------------------------------------------------------------
+# Run a SQL Select query and return a datatable object
+#----------------------------------------------------------------
+#Function [system.Data.datatable] getSelectResultSet([string]$sql) {	
+Function getSelectResultSet([string]$sql) {	
+
+	#			Pre-requisites:
+	#			Assumes we already have an open db connection $global:conn
+	
+	#			NEXT
+	#			- use generic "DbCommand", "DbDataAdapter", etc
+	#             instead of Odbc versions
+
+	$cmd = New-Object system.Data.Odbc.OdbcCommand($sql,$global:conn)
+	$da = New-Object system.Data.Odbc.OdbcDataAdapter($cmd)
+	$dt = New-Object system.Data.datatable
+	$null = $da.fill($dt)
+	return ,$dt;
+	
+	# note
+	# 	return ,$dt;	 - with leading ","
+	# instead of just 
+	# 	return $dt;
+	# - see http://stackoverflow.com/questions/1918190/strange-behavior-in-powershell-function-returning-dataset-datatable
+	# Leading comma stops the return 'unrolling' the list-like object $dt into some other kind of object
+		
+}
+
+
+#----------------------------------------------------------------
+# Get SQL query string to get user_id given an emp_no
+#----------------------------------------------------------------
+Function q_get_user_id_given_emp_no($EmpNumber) {	
+
+#				Delivers text of a sql query that gets a Janus user_id
+#				belonging to a given user identified by their Janus
+#               emp_no (same as rollnumber in Accman).
+
+#				Note: could get Title, Surname, Firstname as well as UserId
+#				Note: could get EmpNumber as an outpu even though it is already known as an inout
+#				Note: could get DepartmentId [and pull in janus_Departments.Name]
+
+$sql = @"
+select 
+u.UserId
+from 
+janus_users u
+where 
+u.EmpNumber = '$EmpNumber'
+"@
+
+return $sql
+}
+
+#----------------------------------------------------------------
+$global:conn = new-object system.data.odbc.odbcconnection
+$global:conn.connectionstring = "dsn=janus_case_236958;uid=svc-janus-accman;pwd=********;"   # SQL Authentication
+$global:conn.open()
+[string]$sql
+
+#----------------------------------------------------------------
+#				Loop through csv file 
+#				BARCODE_list_of_janus_emp_nos.csv
+#
+#				Columns of csv file are:
+#				"EmpNumber"
+
+$path = ".\BARCODE_list_of_janus_emp_nos.csv"
+Import-csv -path $path | 
+foreach-object `
+{ 
+	write-host $( "-" * 60 )	
+	write-host $_.EmpNumber
+	
+	$dt = getSelectResultSet( q_get_user_id_given_emp_no($_.EmpNumber) )
+	
+	write-host $dt.Rows.Count			#Expect this to be 1
+	
+	foreach ($row in $dt.Rows)			#Expect this to loop once only	
+	{ 
+		$UserId = $row.UserId
+	}
+	write-host $UserId
+
+	#			Output one object to object stream (to be piped into Export-csv)	
+	New-Object -TypeName PSObject -Property @{
+		EmpNumber = $_.EmpNumber
+		UserId = $UserId
+    } | Select-Object EmpNumber, UserId
+		
+		#Ref: http://stackoverflow.com/questions/9383762/gather-info-through-several-foreach-and-then-export-csv-at-the-end-of-script
+		
+} |
+Export-csv -path "BARCODE_list_of_janus_user_ids.csv"
+
+write-host $( "-" * 60 )	
+#----------------------------------------------------------------
+
+#----------------------------------------------------------------
+$global:conn.close()
+#----------------------------------------------------------------

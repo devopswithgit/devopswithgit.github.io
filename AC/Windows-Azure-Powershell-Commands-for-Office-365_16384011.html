@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Windows Azure Powershell Commands for Office 365</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Documentation_16384018.html">Documentation</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Windows Azure Powershell Commands for Office 365
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Julia Kelbrick</span>, last modified on Sep 11, 2013
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><strong><u><br/></u></strong></p><h2 id="WindowsAzurePowershellCommandsforOffice365-WindowsAzurePowershellCommandsforOffice365"><strong><u>Windows Azure Powershell Commands for Office 365</u></strong></h2><p> </p><p><strong>Prerequisite Software to be Downloaded and Installed on Your Workstation / Server</strong></p><ul><li>Download and install Microsoft Online Services Sign-In Assistant for IT Professionals BETA from:</li></ul><p style="margin-left: 60.0px;"><a href="http://www.microsoft.com/en-us/download/details.aspx?id=39267" class="external-link" rel="nofollow">http://www.microsoft.com/en-us/download/details.aspx?id=39267</a></p><p> </p><ul><li>Download and install Windows Azure Active Directory Module for Windows Powershell (64-bit version) from:</li></ul><p style="margin-left: 60.0px;"><a href="http://technet.microsoft.com/en-us/library/jj151815.aspx#BKMK_Requirements" class="external-link" rel="nofollow">http://technet.microsoft.com/en-us/library/jj151815.aspx#BKMK_Requirements</a></p><p> </p><p><strong>To Create Initial Connection to O365</strong></p><pre>$secpasswd = ConvertTo-SecureString '[PASSWORD]' -AsPlainText -Force;</pre><p style="margin-left: 30.0px;">(The  password can be found on AccMan B E Server in C:\accman\PowershellScripts\Office365Processors\Settings.csv )</p><pre>$LiveCred = New-Object System.Management.Automation.PSCredential (<a href="http://uos-d-dbld-01:8090/confluence/mailto:" class="external-link" rel="nofollow">'accmanprod@edu.salford.ac.uk</a>' , $secpasswd);</pre><pre>Import-Module MSOnline;</pre><pre>Connect-MsolService -Credential $LiveCred;</pre><p> </p><p> </p><p><strong>To list users</strong></p><pre>Get-MsolUser –MaxResults 10           (Lists 10 mailboxes only)</pre><pre>Get-MsolUser –All                     (Lists all mailboxes)</pre><pre>get-msoluser -SearchString Meaney     (List all users with the string “Meaney” in their display name or email address)</pre><p> </p><p><strong> </strong></p><p><strong>To get licenses held by a single user</strong></p><pre>Get-MsolUser -SearchString M.T.Meaney | Ft displayname,Licenses</pre><p style="margin-left: 30.0px;"><strong> </strong>Meaney, Michael Test (UG)               {testlivesalfordac:EXCHANGESTANDARD_...</p><p><strong> </strong></p><p><strong> </strong></p><p><strong>To set a license for a user</strong></p><pre> Set-MsolUserLicense –UserPrincipalName <a href="mailto:M.T.Meaney@edu.salford.ac.uk" class="external-link" rel="nofollow">M.T.Meaney@edu.salford.ac.uk</a> –AddLicenses testlivesalfordac:STANDARDWOFFPACK_STUDENT</pre><p> (NB:  Although our company name part of the licence name starts with the letters &quot;test&quot; . . . . i.e. &quot;testlivesalfordac&quot; . . . .  THIS ACTUALLY IS THE PRODUCTION SYSTEM LICENCE! )</p><p><strong><br/></strong></p><p><strong><br/></strong></p><p><strong>To remove current Exchange Online Licenses and assign Plan A2 for ALL STUDENTS in one step </strong></p><pre>Get-MsolUser -all | Where {$_.Licenses[0].AccountSkuId -contains &quot;testlivesalfordac:EXCHANGESTANDARD_STUDENT&quot;} | Set-MsolUserLicense -AddLicenses &quot;testlivesalfordac:STANDARDWOFFPACK_STUDENT&quot; -RemoveLicenses &quot;testlivesalfordac:EXCHANGESTANDARD_STUDENT&quot;</pre><p><strong><br/></strong></p><p style="margin-left: 30.0px;"><strong>Things to check before doing this . . . . <br/></strong></p><ul><li style="list-style-type: none;background-image: none;"><ul><li>Get the current statistics of users on each of these licences and compare this with the final result.</li><li>60,000 Students to be migrated to the new licence, but we only have approx 31,000 A2 licences.  Presumably we need to add an additional filter added to the above statement ? ? ?  </li><li>Paul Daniels' issue about enabling OWA</li><li>If OWA does need enabling then the PowerShell scripts on AccMan BE will need modifying. and committing to SVN</li><li>The AccmanProd mailbox is filling up with emails confirming student password changes.</li><li>I feel sure that there's an additional issue . . .  but I can't recall what it is at the moment . . . . .</li></ul></li></ul><p><strong><br/></strong></p><p><strong><br/></strong></p><p><strong>To remove current Exchange Online Licenses and assign Plan A2 for A SINGLE STUDENT in one step</strong></p><pre>Get-MsolUser –UserPrincipalName <a href="mailto:M.T.Meaney@edu.salford.ac.uk" class="external-link" rel="nofollow">M.T.Meaney@edu.salford.ac.uk</a> | Where {$_.Licenses[0].AccountSkuId -contains &quot;testlivesalfordac:EXCHANGESTANDARD_STUDENT&quot;} | Set-MsolUserLicense -AddLicenses testlivesalfordac:STANDARDWOFFPACK_STUDENT -RemoveLicenses testlivesalfordac:EXCHANGESTANDARD_STUDENT</pre><p><strong> </strong></p><p><strong>  <br/></strong></p><p><strong>To get a list of licence types in use by an organisation</strong></p><pre>Get-MsolAccountSku | Select –ExpandProperty AccountSkuId</pre><p> </p><p style="margin-left: 30.0px;">testlivesalfordac:EXCHANGESTANDARD_STUDENT</p><p style="margin-left: 30.0px;">testlivesalfordac:STANDARDWOFFPACK_STUDENT</p><p>(NB:  Although our company name part of the licence name starts with the letters &quot;test&quot; . . . . i.e. &quot;testlivesalfordac&quot; . . . .  THIS ACTUALLY IS THE PRODUCTION SYSTEM LICENCE! )</p><p> </p><p> </p><p><strong>To change a user’s password</strong></p><pre>Set-MsolUserPassword -UserPrincipalName <a href="mailto:M.T.Meaney@edu.salford.ac.uk" class="external-link" rel="nofollow">M.T.Meaney@edu.salford.ac.uk</a> -ForceChangePassword $true -NewPassword Salford11</pre><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-16384637"></a>
+                                    <font class="smallfont"><p>P o w e r h e l l   i s   y o  u r   f r i e n d ! ! ! !</p><p> </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by mis838 at Sep 10, 2013 23:53
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

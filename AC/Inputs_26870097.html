@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Inputs</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Rewrite-Documentation-2013_16384056.html">Accman Rewrite Documentation 2013</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Logging_25628446.html">Logging</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Centralised-logging-with-ELK_26870078.html">Centralised logging with ELK</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Logstash_26870088.html">Logstash</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Inputs
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (aaa45815)</span>, last modified on May 16, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>Logstash provides numerous input plugins to consume data from. The two that we are primarily interested in are as follows:</p><h5 id="Inputs-Fileinput">File input</h5><p>This plugin will keep track of a file or set of files (including the use of wildcards) and will read new data as and when it appears. A sample input cofiguration that consumes the accman log is:</p><pre>input {</pre><pre>    file {</pre><pre>        codec =&gt; multiline {</pre><pre>          pattern =&gt; &quot;^\s&quot;</pre><pre>          what =&gt; &quot;previous&quot;</pre><pre>        }    </pre><pre>        path =&gt; &quot;C:/Logs/AccMan.log&quot;</pre><pre>        start_position =&gt; &quot;beginning&quot;</pre><pre>    }    </pre><pre>}</pre><p>This basically sets up a log entry capturing input that will match multiline entries that will then get passed onto any filters. We could modify the path so that it captures all AccMan.log files using a wildcard e.g. &quot;C:/Logs/AccMan*.log&quot;</p><h5 id="Inputs-JDBCInput">JDBC Input</h5><p>This plugin allows us to query an arbitrary database and also keeps track of the data it has read so far using an appropriate discrimination field and query that utilises said field.</p><pre> input {<br/>    jdbc {<br/>        jdbc_user =&gt; &quot;accman&quot;<br/>        jdbc_connection_string =&gt; &quot;jdbc:<a href="mysql://localhost:3306/mail?user=accman&amp;password=w3w2g,wnam%21&amp;serverTimezone=GMT&amp;zeroDateTimeBehavior=convertToNull" rel="nofollow">mysql://localhost:3306/mail?user=accman&amp;password=nopass&amp;serverTimezone=GMT&amp;zeroDateTimeBehavior=convertToNull</a>&quot;    <br/>        jdbc_driver_class =&gt; &quot;com.mysql.cj.jdbc.Driver&quot; <br/>        jdbc_driver_library =&gt; &quot;mysql-connector-java-6.0.2.jar&quot;<br/>        statement =&gt; &quot;select trid, tr_type_id, affectsID, tr_state, DelphiID, tr_parent_id, CONVERT_TZ(tr_when, @@session.time_zone, '+00:00') as tr_when_utc, ExecuteAt from mail.transactions  where tr_when &gt;  CONVERT_TZ( :sql_last_value, '+00:00', @@session.time_zone)&quot;        <br/>        schedule =&gt; &quot;* * * * *&quot;<br/>        jdbc_page_size =&gt; &quot;50000&quot;<br/>        jdbc_paging_enabled =&gt; true<br/>    }<br/>}<br/><br/></pre><p>This sample will pull all data from the AccMan transactions table in ready for any filtering.</p><p> </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

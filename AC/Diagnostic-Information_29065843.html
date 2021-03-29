@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Diagnostic Information</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Completed_19595586.html">Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Diagnostic Information
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Jun 10, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Add diagnostic information to the Accman screens<br/> </td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Enhancement</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">Medium</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis894" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis894" data-linked-resource-id="655361" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (uis894)</a></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd"><time datetime="2016-06-09" class="date-past">09 Jun 2016</time> </td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis833" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis833" data-linked-resource-id="819233" data-linked-resource-version="2" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Stephen Harrison</a><br/> </td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-364" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-364?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-364</a>
+                            -
+            <span class="summary">Diagnostics for Accounts and External Systems</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+</td></tr></tbody></table></div></div><h2 id="DiagnosticInformation-Summary">Summary</h2><p>Modify Accman so that it is easy to see some diagnostic information to assist in solving some issues that occur regularly. There are two main types of information to display.</p><ol><li>Information relating to an individual account/person e.g. the date they last appeared on a Banner/SAP import</li><li>System-wide information such as whether Accman is having difficulty connecting to an external system e.g. Janus</li></ol><h2 id="DiagnosticInformation-Acocunt/PersonRelatedDiagnostics">Acocunt/Person Related Diagnostics</h2><p>This should be another tab on the account screen and can display a variety of information.</p><p><div class="balsamiq_mockup" align="center"><a class="balsamiq_mockup" name="mockup_AccountDetails"><img class="balsamiq_mockup" src="attachments/29065843/29065847.png"/></a><br/></div></p><p>Suggest creating a new table for storing this kind of information rather than adding extra columns e.g. to the Person table. The table can be generic so that it can hold lots of different types of details</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Type</th><th class="confluenceTh">Value</th><th class="confluenceTh">Identifier</th><th colspan="1" class="confluenceTh">Description</th></tr><tr><td colspan="1" class="confluenceTd">DateLastOnBannerImport</td><td colspan="1" class="confluenceTd"><time datetime="2016-06-01" class="date-past">01 Jun 2016</time> </td><td colspan="1" class="confluenceTd">12345</td><td colspan="1" class="confluenceTd">Date a student was last imported. Identifier is PersonID</td></tr><tr><td colspan="1" class="confluenceTd">DateBecameAlumnus</td><td colspan="1" class="confluenceTd"><time datetime="2016-06-09" class="date-past">09 Jun 2016</time> </td><td colspan="1" class="confluenceTd">98765</td><td colspan="1" class="confluenceTd">Date a student last became an alumnus</td></tr></tbody></table></div><p>The tab can also be used to show other information i.e. not just from the above table. For example, it could display their current status in Active Directory or the data Accman would send to ALMA if a type-127 transaction were to be generated (as a kind of preview).</p><h2 id="DiagnosticInformation-SystemDiagnostics">System Diagnostics</h2><p>This would be a completely new page in Accman that can show all kinds of health-checks such as</p><ol><li>Current status of External Systems </li><li>Which transactions are queuing up</li><li>Which back-end jobs are currently running</li></ol><p><div class="balsamiq_mockup" align="center"><a class="balsamiq_mockup" name="mockup_SystemHealth"><img class="balsamiq_mockup" src="attachments/29065843/29065858.png"/></a><br/></div></p><p><a rel="nofollow">V Drive</a></p><p> </p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/29065843/29065849.bmml">mockup_AccountDetails.bmml</a> (text/xml)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/29065843/29065850.png">mockup_AccountDetails.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/29065843/29065854.bmml">mockup_AccountDetails.bmml</a> (text/xml)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/29065843/29065855.png">mockup_AccountDetails.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/29065843/29065846.bmml">mockup_AccountDetails.bmml</a> (text/xml)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/29065843/29065847.png">mockup_AccountDetails.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/29065843/29065859.bmml">mockup_SystemHealth.bmml</a> (text/xml)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/29065843/29065860.png">mockup_SystemHealth.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/29065843/29065857.bmml">mockup_SystemHealth.bmml</a> (text/xml)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/29065843/29065858.png">mockup_SystemHealth.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:55</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

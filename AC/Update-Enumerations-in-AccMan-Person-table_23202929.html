@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Update Enumerations in AccMan Person table</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Update Enumerations in AccMan Person table
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Julia Kelbrick</span>, last modified by <span class='editor'> Jon Besson</span> on Dec 04, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Validation on Accman Person tables need updating</td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Bug</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">Medium</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><p><a class="confluence-userlink user-mention" data-username="mis838" href="https://confluence.salford.ac.uk:8444/confluence/display/~mis838" data-linked-resource-id="833326" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Julia Kelbrick</a></p></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd">11/11/2015</td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd">Julia</td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-296" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-296?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-296</a>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+</td></tr></tbody></table></div><p> </p><h2 id="UpdateEnumerationsinAccManPersontable-Details">Details</h2><p><strong>Summary:</strong></p><p>The AccMan.Mail database uses Enumerations to validate the values being changed in various columns in the Person table.  Over time, some of the codes being used in Banner have become out of synch with these enums in Accman.  Consequently, the BannerForImport process is unable to update these values, resulting in it attempting to do an update each time it runs and creating a corresponding transaction type 97 (UPDATE_JANUS_USER_DETAILS).</p><p><strong>Details:</strong></p><p>The following two SQL statements need to be run against the Production Accman.Mail databases and all of the test Accman databases in order to make these data updates work in future and to reduce the creation of type 97 transactions.</p><p><strong>ALTER TABLE mailnet.person CHANGE stu_styp stu_styp enum('C','E','N','R','T','D','F','0','Y','Z','S');                          To add codes 0, Y, Z, S</strong></p><p><strong>ALTER TABLE mailnet.person CHANGE stu_stst stu_stst enum</strong><strong>('AS','IS','DE','IG','RR','SU','WD','WU','IN','WN', 'EA','XP');                   To add codes EA and XP</strong></p></div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

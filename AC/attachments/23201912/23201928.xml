@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quartz xmlns="http://quartznet.sourceforge.net/JobSchedulingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" overwrite-existing-jobs="true">
+  <job>
+    <job-detail>
+      <name>1503</name>
+      <group>AccMan</group>
+      <description>Transaction 1503 - BANNER_FOR_IMPORT</description>
+      <job-type>Salford.Library.SchedulerService.Model.SerialServiceProcess, SchedulerServiceLibrary</job-type>
+      <volatile>false</volatile>
+      <durable>true</durable>
+      <recover>false</recover>
+      <job-data-map>
+        <entry>
+          <key>ID</key>
+          <value>1503</value>
+        </entry>
+        <entry>
+          <key>DllFile</key>
+          <value>C:\AccmanNetTest_JULIA\AccmanBackendLibrary\AccManBackEndLibrary.dll</value>
+        </entry>
+        <entry>
+          <key>ClassName</key>
+          <value>Salford.AccMan.BackEnd.Processes.Scheduled.SISImport.BannerForImport</value>
+        </entry>
+        <entry>
+          <key>LogLevel</key>
+          <value>All</value>
+        </entry>
+        <entry>
+          <key>LogDirectory</key>
+          <value>C:\AccmanNetTest_JULIA\logs\Scheduled\SISImport\BannerForImport</value>
+        </entry>
+        <entry>
+          <key>AccManDatabase</key>
+          <value>Server=uos-t-rhel-03.isdads.salford.ac.uk;Uid=accman;Pwd=w3w2g,wnam!;Database=mailnet;Allow Zero Datetime=True;</value>
+        </entry>
+        <entry>
+          <key>TransactionLogDirectory</key>
+          <value>C:\AccmanNetTest_JULIA\logs\TransactionLogs</value>
+        </entry>
+        <entry>
+          <key>BannerDatabase</key>
+          <value>Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=uos-u-rhel-02.isdads.salford.ac.uk)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=UBANO1.salford.ac.uk)));User Id=salford;Password=who_done_it;</value>
+        </entry>
+        <entry>
+          <key>MySqlBulkUpload</key>
+          <value>false</value>
+        </entry>
+      </job-data-map>
+    </job-detail>
+    <!-- trigger>
+      <cron>
+        <name>1503-cron-trigger-1</name>
+        <job-name>1503</job-name>
+        <cron-expression>0 47 19 ? * MON-FRI</cron-expression>
+        <misfire-instruction>DoNothing</misfire-instruction>
+      </cron>
+    </trigger -->
+  </job>
+</quartz>
+

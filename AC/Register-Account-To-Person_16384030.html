@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Register Account To Person</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Rewrite-Documentation-2013_16384056.html">Accman Rewrite Documentation 2013</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Transaction-Processes_16384008.html">Transaction Processes</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Register Account To Person
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Nov 05, 2013
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="RegisterAccountToPerson-Introduction">Introduction</h1><p>The register script applies account settings from student account assignment and staff self-registration. <br/>Links an Mail.ACCOUNT database record to its Mail.PERSON database record &amp; many other things such as setting up email, setting quotas etc.<br/>Contains a lot of NDS functionality that will be (has been) phased out after transformation.</p><h2 id="RegisterAccountToPerson-Scriptnameandlocation">Script name and location</h2><p><span style="color: rgb(0,51,102);">C:\accman\scripts\register.pl</span> on <span style="color: rgb(0,51,102);">uos-p-acbe-01.iusdads.salford.ac.uk.</span></p><h2 id="RegisterAccountToPerson-Transactionparameters">Transaction parameters</h2><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Parameter Name</th><th class="confluenceTh">Example Value</th><th colspan="1" class="confluenceTh">Required</th><th class="confluenceTh">Decription</th></tr><tr><td class="confluenceTd">accID</td><td class="confluenceTd">12345</td><td colspan="1" class="confluenceTd">Yes</td><td class="confluenceTd"><span>Primary key of the ACCOUNT record</span></td></tr><tr><td class="confluenceTd">personID</td><td class="confluenceTd">67890</td><td colspan="1" class="confluenceTd">Yes</td><td class="confluenceTd"><span>Primary key of the PERSON record</span></td></tr><tr><td class="confluenceTd">username </td><td class="confluenceTd">AAA1234</td><td colspan="1" class="confluenceTd">Yes</td><td class="confluenceTd"><span>The username of the new account</span></td></tr><tr><td class="confluenceTd">disabledReason </td><td class="confluenceTd"><span>User has been deported</span></td><td colspan="1" class="confluenceTd">No</td><td class="confluenceTd"><span><span>Reason for the account being disabled</span></span></td></tr><tr><td colspan="1" class="confluenceTd">trState</td><td colspan="1" class="confluenceTd">11</td><td colspan="1" class="confluenceTd">No</td><td colspan="1" class="confluenceTd"><p>The script is broken down into steps or <em>states</em>. On reaching a new state, the script records its progress by updating the value of this parameter. If the script fails on step 11 for some reason, it can be restarted and because it knows that it reached step 11 last time, it can ignore the previous steps and just continue from where it left off.</p><p>There are 24 states in total. Upon successfully completed step 24, the transaction's TR_STATE flag is marked 'processed'.</p></td></tr></tbody></table></div><h1 id="RegisterAccountToPerson-Process">Process</h1><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">State</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">0</td><td class="confluenceTd">Link the account and person records together by setting the personID column in the account table</td></tr><tr><td class="confluenceTd">1</td><td class="confluenceTd">Get the default email system by calling getDefaultDisposeDomain()</td></tr><tr><td class="confluenceTd">2</td><td class="confluenceTd">Generate a random email password and insert it into the account_details table (for the EMAIL system)</td></tr><tr><td class="confluenceTd">3</td><td class="confluenceTd">Create a mail account by calling createMailAccount() from mailAccount.pl. This inserts a record into mail_account table in the IDM database.</td></tr><tr><td class="confluenceTd">4</td><td class="confluenceTd">Generates the email address which takes the form of the initials followed by the surname (with some checking and formatting). Works out their domain (e.g. salford.ac.uk or live.salford.ac.uk) based on whether they are staff or student. Adds the primary and alias addresses to the account.</td></tr><tr><td class="confluenceTd">5</td><td class="confluenceTd">Generates a random password for Athens and inserts it into the account_details table</td></tr><tr><td class="confluenceTd">6</td><td class="confluenceTd">Insert a new transaction to create the Athens account (type 7)</td></tr><tr><td class="confluenceTd">7</td><td class="confluenceTd">Insert a new transaction to create the password.txt file in the user’s F: drive (type 39)</td></tr><tr><td class="confluenceTd">8</td><td class="confluenceTd">Set the property ‘NetAPPIMAPhomeDirectory’ on the users NDS account (students only)</td></tr><tr><td class="confluenceTd">9</td><td class="confluenceTd">Set the email quota by updating the account_details table (where type = ‘EMAIL’)</td></tr><tr><td class="confluenceTd">10</td><td class="confluenceTd">Set the GPAS Balance (obsolete) for printing</td></tr><tr><td class="confluenceTd">11</td><td class="confluenceTd">Set the NDS file quota by updating the account_details table (where type = @NDS’)</td></tr><tr><td class="confluenceTd">12</td><td class="confluenceTd"><p>Remove the account expiry date from NDS</p></td></tr><tr><td class="confluenceTd">13</td><td class="confluenceTd"><p>Sets some more NDS attributes (username, rollnumber, name).</p></td></tr><tr><td class="confluenceTd">14</td><td class="confluenceTd"><p>Sets the ACLs in NDS so that the user cannot change the rollnumber and lastname attributes.</p></td></tr><tr><td class="confluenceTd">15</td><td class="confluenceTd">Create the import and control files for the NDS account, and then run JRBImprt to set all the relevant values for this user.</td></tr><tr><td class="confluenceTd">16</td><td class="confluenceTd">Update the account so that it is valid.</td></tr><tr><td class="confluenceTd">17</td><td class="confluenceTd">Disable the account if there is a disabled reason associated with the account</td></tr><tr><td class="confluenceTd">18</td><td class="confluenceTd">Update the mail account (calls updateMailAccount()) to update table mail_account in the IDM database.</td></tr><tr><td colspan="1" class="confluenceTd">19</td><td colspan="1" class="confluenceTd">A type 42 (set email quota) transaction used to be generated here, but it doesn’t happen any more.</td></tr><tr><td colspan="1" class="confluenceTd">20</td><td colspan="1" class="confluenceTd">Insert a transaction to create the Live@Edu account for students (type 48).</td></tr><tr><td colspan="1" class="confluenceTd">21</td><td colspan="1" class="confluenceTd">Update the account table with some email-related values</td></tr><tr><td colspan="1" class="confluenceTd">22</td><td colspan="1" class="confluenceTd">Insert a transaction to create a new Janus account (type 97)</td></tr><tr><td colspan="1" class="confluenceTd">23</td><td colspan="1" class="confluenceTd">Insert a transaction to create the AD account (type  93)</td></tr><tr><td colspan="1" class="confluenceTd">24</td><td colspan="1" class="confluenceTd">Finished</td></tr></tbody></table></div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384030/16581206.xml">state0.xml</a> (application/diagramly)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384030/16581207.png">state0-17170556.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384030/16581196.xml">state0.xml</a> (application/diagramly)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384030/16581205.png">state0-17170556.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

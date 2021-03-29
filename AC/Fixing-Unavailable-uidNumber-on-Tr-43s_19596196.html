@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Fixing Unavailable uidNumber on Tr 43s</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Completed_19595586.html">Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Fixing Unavailable uidNumber on Tr 43s
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Paul Daniels</span>, last modified on Aug 10, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Fixing Unavailable uidNumber on Tr 43s</td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Bug</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">Low</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis876" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis876" data-linked-resource-id="824264" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Daniels</a></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd"><time datetime="2015-04-21" class="date-past">21 Apr 2015</time> </td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis876" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis876" data-linked-resource-id="824264" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Daniels</a></td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-221" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-221?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-221</a>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Resolved</span>
+                </span>
+</td></tr></tbody></table></div><p> </p><h2 id="FixingUnavailableuidNumberonTr43s-Details">Details</h2><p>At times the Accman system will run out of free PosixAccount records. This will stop the processing of all type 43 at state 15. The .NET version of Register gives the following error when there are no posixaccount records available:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"><pre>Processing transaction 9209201</pre><pre>Processing the Register transaction: 9209201</pre><pre>Register - Error whilst attempting to Register an Account in Transaction 9209201.</pre><pre>System.NullReferenceException: Object reference not set to an instance of an object.</pre><pre>   at Salford.AccMan.BackEnd.Processes.Register.DoRegister(RegisterProgress progress, Transaction transaction) in C:\VS2010\Accman.NET\AccManBackEndLibrary\Processes\Refresh\Register.cs:line 579</pre><pre>Finished processing the Register transaction: 9209201</pre><pre>Response was false from ProcessTransaction for Transaction 9209201</pre></th></tr></tbody></table></div><p>Not the most intuitive. This needs to be replaced with something meaningful.</p><p>Do we still need this for Computer Science's students and their Ubuntu dual-boots?</p><p>If so can we have a nightly process to free up records. The SQL required would be:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"><pre>update posixAccount</pre><pre>set accID = 0, username = '', completed = 'N'</pre><pre>WHERE accID in</pre><pre>(</pre><pre>select a.accID</pre><pre>from</pre><pre>account a,</pre><pre>person p</pre><pre>where</pre><pre>a.personID = p.personID</pre><pre>and a.state = 'disabled'</pre><pre>and a.disabledReason = 'Account has reached end date'</pre><pre>and p.source_code='A'</pre><pre>);</pre></th></tr></tbody></table></div><p><strong>Free up records used by Associates:</strong></p><p> </p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"><pre>update posixAccount</pre><pre>set accID = 0, username = '', completed = 'N'</pre><pre>where accID in</pre><pre>(</pre><pre>select a.accID</pre><pre>from</pre><pre>account a,</pre><pre>person p</pre><pre>where</pre><pre>a.personID = p.personID</pre><pre>and a.state = 'disabled'</pre><pre>and a.manually_disabled=0</pre><pre>and p.source_code='P'</pre><pre>and p.person_state='left'</pre><pre>);</pre></th></tr></tbody></table></div><p><strong>Free up records used by Staff</strong></p><p> </p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"><pre>update posixAccount</pre><pre>set accID = 0, username = '', completed = 'N'</pre><pre>where accID in</pre><pre>(</pre><pre>select a.accID</pre><pre>from</pre><pre>account a,</pre><pre>person p</pre><pre>where</pre><pre>a.personID = p.personID</pre><pre>and a.state = 'disabled'</pre><pre>and a.manually_disabled=0</pre><pre>and p.source_code='S'</pre><pre>and p.person_state='left'</pre><pre>);</pre></th></tr></tbody></table></div><p><strong>Free up records used by Students</strong></p><p> </p><p> </p></div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:55</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

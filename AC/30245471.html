@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Extend Account &amp; Cancel Extension</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Support-Notes_16384017.html">Support Notes</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="16384073.html">Accman Transactions &amp; ConsoleSchedulerService</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Extend Account &amp; Cancel Extension
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Aug 24, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="ExtendAccount&amp;CancelExtension-Introduction">Introduction</h1><p>The ACCOUNT_EXTENDED (also known as Extend Account) transaction allows someone to stay at the university a bit longer. The transaction type is 40. </p><p>Be aware, the CANCEL_EXTENSION transaction also has a type of 40. They are two actions that were historically carried out by the same Perl script. That script has since been rewritten as a .NET processor called ExtendAccount.cs. Whether it extends an account, or cancels an extension that already exists depends on the extension date specified as a transaction parameter. If the date is in the past, it's a cancellation. If it is in the future (or exactly equal to the current datetime), its a new extension.</p><div class="confluence-information-macro confluence-information-macro-information"><p class="title">Expired Extensions</p><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>Looking for information on how extensions expire when their extension date is reached? Take a look at the <span><a href="Extend-Daily_30245488.html">Extend Daily</a> process (transaction type 1108).</span></p></div></div><h1 id="ExtendAccount&amp;CancelExtension-Extending">Extending</h1><div class="confluence-information-macro confluence-information-macro-information"><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>The account is extended if the extension date is in the future</p></div></div><p>When a user extends an account via the Accman Front End (found on tab 2 on the account details screen), the processor does the following</p><ol><li>Insert a record into the EXTENSION table with the person's PersonID, an ExtensionDate (when the extension runs out) and an ExtensionReason (e.g. &quot;Staying here for another month to finish the job&quot;).</li><li>If the person's current person status is <strong>Absent</strong> or <strong>Left</strong>, it is changed to <strong>Extended</strong>.</li><li>Creates an Enable Account transaction.</li></ol><h1 id="ExtendAccount&amp;CancelExtension-CancellinganExistingExtension">Cancelling an Existing Extension</h1><div class="confluence-information-macro confluence-information-macro-information"><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>If the extension date is in the past, the assumption is that we are cancelling an existing extension</p></div></div><ol><li>If the person's current status is unknown, they are marked as <strong>Missing</strong></li><li>If the person's current status is <strong>Extended</strong>, they are marked as <strong>Left</strong></li><li>Providing the Person's state isn't <strong>Present</strong> the following takes place<ol><li>The account state is set to <strong>Disabled</strong> and the DisabledReason column is set to &quot;<strong>User has left - extension expired</strong>&quot;</li><li>The account is disabled by creating a Disable Account (type 12) transaction</li><li>Providing the account does not belong to an Alumnus, the Office365 mail account is also disabled. This is a change introduced by 
+<span class="jira-issue resolved" data-jira-key="ARF-407" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-407?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-407</a>
+                            -
+            <span class="summary">Accman extension expiries disabling office 365</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Resolved</span>
+                </span>
+. Previously, the Office365 account was <em>always</em> disabled.</li></ol></li></ol><p> </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

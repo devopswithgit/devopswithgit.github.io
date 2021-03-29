@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Testing</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Testing
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Julia Kelbrick</span>, last modified on Oct 09, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>This section is concerned with describing procedures for testing AccMan and includes details of the configuration steps required to support this.</p><h2 style="margin-left: 30.0px;" id="Testing-1.TestingoftheAccManRewrite2015"><strong>1. Testing of the AccMan Rewrite 2015</strong></h2><p style="margin-left: 60.0px;">Following the rewrite of the AccMan Perl scripts to .Net, two test processes were developed to ensure that the processing results of the .Net application is the same as that of the Perl scripts being replaced.  The following sections describe how to reproduce these tests.</p><h2 style="margin-left: 60.0px;" id="Testing-1.1Theend-to-endtestingofPerlScriptscomparedto.NetprocessesexcludingtheBannerImportstage."><strong>1.1  The end-to-end testing of Perl Scripts compared to .Net processes excluding the Banner Import stage.</strong></h2><p style="margin-left: 60.0px;"><strong>Summary:</strong>  This stage of testing utilised two new temporary copies of the AccMan database, copied from the production database.  One database (MailPerl) was used to run the Perl Scripts against and the second database (MailNet) was used by the new .Net application.  6350 test cases were inserted in to the <strong>Banner_Import</strong> tables of each of the databases.  The result of the processing was to create and update records in the AccMan <strong>Person</strong> table.  At the end of testing, the <strong>MailPerl.Person</strong> and the <strong>MailNet.Person</strong> tables were compared in order to identify any differences in processing between the new .Net application and the Perl scripts being replaced.</p><p style="margin-left: 60.0px;"><strong><a href="The-end-to-end-testing-of-Perl-Scripts-compared-to-.Net-processes-excluding-the-Banner-Import-stage_23201724.html">The end-to-end testing of Perl Scripts compared to .Net processes excluding the Banner Import stage</a></strong></p><p style="margin-left: 30.0px;"> </p><h2 style="margin-left: 60.0px;" id="Testing-1.2Theend-to-endtestingofPerlScriptscomparedto.NetprocessesincludingtheBannerImportstage."><strong>1.2  The end-to-end testing of Perl Scripts compared to .Net processes including the Banner Import stage.</strong></h2><p style="margin-left: 60.0px;"><strong>Summary:</strong>  In this stage of testing, <strong><u>production</u></strong> data copied to the <strong>MailPerl</strong> and <strong>MailNet</strong> databases was used as the basis for testing and the &quot;Banner Import&quot; process was added to the the test cycle in order to end-to-end test the processing of data from the start of the process when it is imported from Banner, right through to record creation and update of the Person table.</p><p style="margin-left: 60.0px;"><strong><a href="The-end-to-end-testing-of-Perl-Scripts-compared-to-.Net-processes-including-the-Banner-Import-stage._23201912.html">The end-to-end testing of Perl Scripts compared to .Net processes including the Banner Import stage.</a></strong></p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

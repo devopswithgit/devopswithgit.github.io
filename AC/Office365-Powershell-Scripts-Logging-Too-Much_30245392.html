@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Office365 Powershell Scripts Logging Too Much</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Completed_19595586.html">Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Office365 Powershell Scripts Logging Too Much
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Aug 22, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Office365 Powershell Scripts Logging Too Much </td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Bug</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">Low</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis737" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis737" data-linked-resource-id="824073" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Maggs</a></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd"><time datetime="2016-08-22" class="date-past">22 Aug 2016</time> </td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis737" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis737" data-linked-resource-id="824073" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Maggs</a><br/> </td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-410" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-410?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-410</a>
+                            -
+            <span class="summary">Office365 Powershell Scripts Logging Too Much</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Resolved</span>
+                </span>
+</td></tr></tbody></table></div></div><h2 id="Office365PowershellScriptsLoggingTooMuch-Details">Details</h2><p>There are many gigabytes worth of temporary log files in C:\users\svc-prd-accman\appdata\local\microsoft\office365\powershell on the Accman Back End server (uos-p-acbe-01).</p><p>These can be deleted to free up space but they shouldn't be getting written to the disk in the first place. They are not log files that we explicitly write ourselves and we do not need them. They seem to be written by the Powershell framework itself, rather than by our own scripts.</p><p>There are many posts on the internet such as <a href="https://social.technet.microsoft.com/Forums/windowsserver/en-US/0b333a02-8cad-4279-a661-154ee9606228/issue-with-powershell-temporary-logs?forum=winserverpowershell" class="external-link" rel="nofollow">this one</a> which suggest that it could be a result of less than perfect error handling in our Powershell Scripts (the Office365 ones running in Accman). However tracking down what is actually causing this logging will take some investigation. </p><p>The purpose of this issue is therefore to investigate what could be generating these logs and then fix whatever Powershell scripts are responsible. In the meantime, we will have to occasionally delete the log files when they start filling up the disk.</p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

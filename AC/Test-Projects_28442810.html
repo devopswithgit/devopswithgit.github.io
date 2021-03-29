@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Test Projects</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Unit-Testing_26869987.html">Unit Testing</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Test Projects
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (aaa45816)</span>, last modified on Jun 24, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="TestProjects-ProjectStructure"><span style="color: rgb(0,0,0);">Project Structure</span></h2><p>A new solution folder called 'Test' was added to the 'AccMan.sln' solution.</p><p style="text-align: left;">New unit test projects should be added under 'Test'. Example:<br/><br/><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" src="attachments/28442810/28442806.png" data-image-src="attachments/28442810/28442806.png" data-unresolved-comment-count="0" data-linked-resource-id="28442806" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2016-5-20 9:59:41.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="28442810" data-linked-resource-container-version="5"></span> </p><h3 style="text-align: left;" id="TestProjects-Helpers">Helpers</h3><p>Any Test helper code for extension classes and repetitive logic can be implemented in AccMan.Tests.Common project.</p><p>Import the &quot;AccMan.Tests.Common.Extensions&quot; namespace to get access to extension methods such as common MVC result model queries:</p><h4 id="TestProjects-Tocheckifmodelstateerrorshavebeenset:">To check if model state errors have been set:</h4><p>ModelState.ContainsErrorMessages(string[] errors)</p><p>e.g.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: c#; gutter: false; theme: Confluence" data-theme="Confluence">Assert.IsTrue(
+    _Controller.ModelState.ContainsErrorMessages(
+        new string[]
+        {
+            &quot;Name must be specified.&quot;,
+            &quot;Account Prefix must be specified.&quot;,
+            &quot;Status Code must be specified.&quot;
+        }));</pre>
+</div></div><p>Behind the scenes the following code Linqs the models state dictionary:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">public static bool ContainsErrorMessages(this ModelStateDictionary modelStateDict, IEnumerable&lt;string&gt; errors)
+{
+    return modelStateDict.SelectMany(x =&gt; x.Value.Errors)
+        .Select(x=&gt;x.ErrorMessage)
+        .All(errors.Contains);
+}</pre>
+</div></div><p> </p><h3 style="text-align: left;" id="TestProjects-CodeCoverage">Code Coverage</h3><p>Here is a zipped XML file of the vs2015 code coverage output to navigate through assemblies and components.</p><p><a href="attachments/28442810/29065640.zip" data-linked-resource-id="29065640" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="aaa45816_SALV09290 2016-06-06 14_33_10.zip" data-nice-type="Zip Archive" data-linked-resource-content-type="application/zip" data-linked-resource-container-id="28442810" data-linked-resource-container-version="5">aaa45816_SALV09290 2016-06-06 14_33_10.zip</a></p><p> </p><p>Target Code coverage</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Project Name</th><th class="confluenceTh"><p>Target Code</p><p>Coverage (%)</p></th><th class="confluenceTh">Considerations</th></tr><tr><td colspan="1" class="confluenceTd"><p>AccMan</p></td><td colspan="1" style="text-align: center;" class="confluenceTd">70</td><td colspan="1" class="confluenceTd"><p>With this being a Web Application a lot of the code will be framework related so it can be dismissed.</p><p>What should be tested are the controllers, models and and abstract types and derived types.</p></td></tr><tr><td colspan="1" class="confluenceTd">AccManBackEndLibrary</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><p> Good place to start :</p><p>Transactions - test that the process flows</p><p> </p><p>More effort required (needs heavily mocking):</p><p>Banner Import</p><p>Write password text files</p></td></tr><tr><td colspan="1" class="confluenceTd">AccManLibrary</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd">Models classes but some logic in there to perform data manipulation e.g. string formatting .</td></tr><tr><td colspan="1" class="confluenceTd">AccmanSelfActFE</td><td colspan="1" style="text-align: center;" class="confluenceTd">70</td><td colspan="1" class="confluenceTd"><p>With this being a Web Application a lot of the code will be framework related so it can be dismissed.</p><p>What should be tested are the controllers, models and and abstract types and derived types.</p></td></tr><tr><td colspan="1" class="confluenceTd">AccmanSelfActWebService</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">AccmanStaffSelfActivation</td><td colspan="1" style="text-align: center;" class="confluenceTd">70</td><td colspan="1" class="confluenceTd"><p>With this being a Web Application a lot of the code will be framework related so it can be dismissed.</p><p>What should be tested are the controllers, models and and abstract types and derived types.</p></td></tr><tr><td colspan="1" class="confluenceTd">AccManWebService</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">AlmaImportFromJanus</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">AssociateRequest</td><td colspan="1" style="text-align: center;" class="confluenceTd">70</td><td colspan="1" class="confluenceTd"><p>With this being a Web Application a lot of the code will be framework related so it can be dismissed.</p><p>What should be tested are the controllers, models and and abstract types and derived types.</p></td></tr><tr><td colspan="1" class="confluenceTd"><p>BulkPasswordUpdate</p></td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">BulkUpdatePasswords</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">CareerHubUserMigration</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">CMISLectureImport</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">ConsoleSchedulerService</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">JanusUserMigration</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">LoXSUserImport</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">SchedulerService</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">SchedulerServiceLibrary</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">SynchroniseStudentPasswords</td><td colspan="1" style="text-align: center;" class="confluenceTd">70</td><td colspan="1" class="confluenceTd"><p>With this being a Web Application a lot of the code will be framework related so it can be dismissed.</p><p>What should be tested are the controllers, models and and abstract types and derived types.</p></td></tr><tr><td colspan="1" class="confluenceTd">Utilities</td><td colspan="1" style="text-align: center;" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr></tbody></table></div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/28442810/28442805.png">image2016-5-20 9:57:56.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/28442810/28442806.png">image2016-5-20 9:59:41.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/28442810/29065640.zip">aaa45816_SALV09290 2016-06-06 14_33_10.zip</a> (application/zip)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:55</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Creating a New Student</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Support-Notes_16384017.html">Support Notes</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Creating a New Student
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Apr 15, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="CreatingaNewStudent-Introduction">Introduction</h1><p>The creation of a new student is a complex process involving Banner and Accman. The process is described below.</p><ol><li>Let's assume the student is an undergraduate and is in the Humanities department. This means their department status code will be HUA (the 'A' stands for 'Undergraduate').</li><li>We need to pregenerate a blank account for this department status, so we create a transaction with a type of '1' and the most important thing is a transaction_param with a name of 'department_status_code' with a value of HUA. Other transaction parameters are for specifying the number of accounts to pregenerate for this department and a state flag (used for working out how far through the process the transaction got before it bombed, so we can attempt to re-process it safely) </li><li>Make sure pregnerate.pl is configured in go.bat (this is the Perl script that will process the transaction).</li><li>Run go.bat so that it starts up the Perl script and processes the transaction. You can now check the ACCOUNT table, it should have a few new accounts in it that will have email addresses something like ZZZANON_PREGEN or something wierd like that to make it clear that this blank account is ready to be used. </li><li><p>However, Banner does not know about this account yet. So there is another Perl script called allocateNew.pl. This runs every 15 minutes in production. It finds any newly-generated accounts, and pushes them into Banner's SYRACCS table. They will have a value of 'N' in the SYRACCS_ACCMAN_STATUS and 'N' in the SYRACCS_SIS_STATUS columns. The new records will look like this:<br/><br/></p><div class="table-wrap"><table class="confluenceTable"><colgroup><col/> <col/> </colgroup><tbody><tr><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_ROWNUM</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_USERNAME</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_ACCMAN_STATUS</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_PIDM</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_SIS_STATUS</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_INIT_PASSWORD</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_DEPT_CODE</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_LEVL_CODE</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_ACTIVITY_DATE</td></tr><tr><td class="confluenceTd">137598</td><td class="confluenceTd">HUA012</td><td class="confluenceTd">N</td><td class="confluenceTd"> </td><td class="confluenceTd">N</td><td class="confluenceTd"><span>xxxxxxxxxx</span></td><td class="confluenceTd">HU</td><td class="confluenceTd">UG</td><td class="confluenceTd">18/07/2012 14:49</td></tr><tr><td class="confluenceTd">137599</td><td class="confluenceTd">HUA013</td><td class="confluenceTd">N</td><td class="confluenceTd"> </td><td class="confluenceTd">N</td><td class="confluenceTd"><span>xxxxxxxxxx</span></td><td class="confluenceTd">HU</td><td class="confluenceTd">UG</td><td class="confluenceTd">18/07/2012 14:49</td></tr><tr><td class="confluenceTd">137600</td><td class="confluenceTd">HUA014</td><td class="confluenceTd">N</td><td class="confluenceTd"> </td><td class="confluenceTd">N</td><td class="confluenceTd"><span>xxxxxxxxxx</span></td><td class="confluenceTd">HU</td><td class="confluenceTd">UG</td><td class="confluenceTd">18/07/2012 14:49</td></tr><tr><td class="confluenceTd">137601</td><td class="confluenceTd">HUA015</td><td class="confluenceTd">N</td><td class="confluenceTd"> </td><td class="confluenceTd">N</td><td class="confluenceTd"><span>xxxxxxxxxx</span></td><td class="confluenceTd">HU</td><td class="confluenceTd">UG</td><td class="confluenceTd">18/07/2012 14:49</td></tr></tbody></table></div></li><li>As you can see, Banner now has some usernames that it can allocate to any new students that it has to process. Note also that the SYRACCS_PIDM column has not yet been populated because it's just a blank account at this stage. It has not been associated with a student yet. </li><li>Now, back in Banner... a new student is created with a PIDM of e.g. 123456. When they become RE (registered), we need to link this student to an account, so Banner looks for a waiting pregenerated account in the SYRACCS table. It will find the first account that matches the following criteria:<br/><ol><li>Same department (HU - Humanities department)</li><li>Same level (UG - undergraduate)</li><li>SYRACCS_SIS_STATUS value of 'N'</li><li>If more than one possible accounts are found, it picks the one with the lowest SYRACCS_ROWNUM value.</li></ol></li><li><p>Using the above criteria, it will find HUA012, and populate the SYRACCS_PIDM column and also set SYRACCS_SIS_STATUS to 'A'. The table will look like this:<br/><br/></p><div class="table-wrap"><table class="confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_ROWNUM</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_USERNAME</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_ACCMAN_STATUS</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_PIDM</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_SIS_STATUS</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_INIT_PASSWORD</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_DEPT_CODE</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_LEVL_CODE</td><td class="highlight-grey confluenceTd" data-highlight-colour="grey">SYRACCS_ACTIVITY_DATE</td></tr><tr><td class="confluenceTd"><span style="color: rgb(153,153,153);">137598</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">HUA012</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">N</span></td><td class="confluenceTd"> <span style="color: rgb(255,0,0);"><strong>123456</strong></span></td><td class="confluenceTd"><span style="color: rgb(255,0,0);"><strong>A</strong></span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">xxxxxxxxxx</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">HU</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">UG</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">18/07/2012 14:49</span></td></tr><tr><td class="confluenceTd"><span style="color: rgb(153,153,153);">137599</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">HUA013</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">N</span></td><td class="confluenceTd"> </td><td class="confluenceTd"><span style="color: rgb(153,153,153);">N</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">xxxxxxxxxx</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">HU</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">UG</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">18/07/2012 14:49</span></td></tr><tr><td class="confluenceTd"><span style="color: rgb(153,153,153);">137600</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">HUA014</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">N</span></td><td class="confluenceTd"> </td><td class="confluenceTd"><span style="color: rgb(153,153,153);">N</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">xxxxxxxxxx</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">HU</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">UG</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">18/07/2012 14:49</span></td></tr><tr><td class="confluenceTd"><span style="color: rgb(153,153,153);">137601</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">HUA015</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">N</span></td><td class="confluenceTd"> </td><td class="confluenceTd"><span style="color: rgb(153,153,153);">N</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">xxxxxxxxxx</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">HU</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">UG</span></td><td class="confluenceTd"><span style="color: rgb(153,153,153);">18/07/2012 14:49</span></td></tr></tbody></table></div></li><li>Accman's assign.pl script, which is constantly running, will now see this record (because it matches certain criteria, including the SYRACCS_SIS_STATUS being 'A') and think to itself: &quot;<em>right, all the student information is now available in Banner for that account (HUA012).</em>&quot;</li><li>It reads the student data (first name, last name etc etc) from Banner, creates a record in the PERSON table.</li><li>Then, it creates a <strong><em>register</em> </strong>transaction (type 43) which links the account and person records, and then creates the <em><strong>New AD Account</strong></em> transaction (type 93).</li><li>The <em><strong>New AD Account</strong> </em>transaction in turn creates a <em><strong>New Exchange</strong></em> transaction (type 115) and all sorts of other things.</li><li>There's loads more that goes on and it's all horrible but that's generally how a new student appears in Accman.</li></ol>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-22676020"></a>
+                                    <font class="smallfont"><p>Hi <a class="confluence-userlink user-mention" data-username="uis894" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis894" data-linked-resource-id="655361" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (uis894)</a>, in step 7 you say when a student becomes registered. I think it is when a student becomes elligible as we have to be able to email students at that point.</p><p> </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis876 at Jun 09, 2015 13:27
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

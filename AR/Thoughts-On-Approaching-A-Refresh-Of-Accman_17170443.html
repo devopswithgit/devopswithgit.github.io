@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman Refresh : Thoughts On Approaching A Refresh Of Accman</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman Refresh</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Refresh-Home_17170433.html">Accman Refresh Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="17170437.html">Accman Refresh: Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman Refresh : Thoughts On Approaching A Refresh Of Accman
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis612)</span>, last modified on Aug 07, 2014
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="ThoughtsOnApproachingARefreshOfAccman-Introduction">Introduction</h1><p>This is a fairly stream-of-consciousness page that identifies some of the high-level steps required to re-imagine Accman as a stable system that can be easily maintained.</p><h1 id="ThoughtsOnApproachingARefreshOfAccman-IdentifyInputsAndOutputs">Identify Inputs And Outputs</h1><p>Rather than look at what Accman currently does and work backwards, it is suggested that the inputs to and outputs from the existing system are examined first. Then, the appropriate transformations that occur between them can be examined in a subsequent step.</p><h2 id="ThoughtsOnApproachingARefreshOfAccman-Inputs">Inputs</h2><p>Accman reads data from the following systems, which are the sources of users that require access to university facilities.</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">System</th><th class="confluenceTh">User Type</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">Banner</td><td class="confluenceTd">Students</td><td class="confluenceTd">Student Information System (S.I.S.)</td></tr><tr><td class="confluenceTd">S.A.P.</td><td class="confluenceTd">Staff</td><td class="confluenceTd">Payroll and human resources system</td></tr><tr><td class="confluenceTd">Associates</td><td class="confluenceTd">Associates</td><td class="confluenceTd"><p>Maintains individuals who are regarded as neither students nor staff,</p><p>(i.e. contractors, conference attendees, etc.)</p></td></tr></tbody></table></div><h3 id="ThoughtsOnApproachingARefreshOfAccman-AdditionalQuestions">Additional Questions</h3><ul><li>Is the above list complete? Do other systems act as a source of account users?</li><li>What about functional accounts?</li><li>What about group accounts?</li><li>Should 'generic' accounts (i.e. those that do not correspond to a single individual) be handled by Accman, or should they remain in their source system, i.e. Active Directory?</li></ul><h2 id="ThoughtsOnApproachingARefreshOfAccman-Outputs">Outputs</h2><p>Accman writes data to the following systems, which provide facilities to the account users sourced from the above systems.</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">System</th><th class="confluenceTh">Service Provided</th><th class="confluenceTh">User Type(s)</th></tr><tr><td class="confluenceTd">Janus</td><td class="confluenceTd">Access control via identity cards</td><td class="confluenceTd">Students, Staff, Associates</td></tr><tr><td class="confluenceTd">ALMA</td><td class="confluenceTd">Library access, e.g. book lending</td><td class="confluenceTd">Students, Staff, Associates</td></tr><tr><td class="confluenceTd">CMIS</td><td class="confluenceTd">Timetabling</td><td class="confluenceTd">Students, Staff</td></tr></tbody></table></div><h3 id="ThoughtsOnApproachingARefreshOfAccman-AdditionalQuestions.1">Additional Questions</h3><ul><li>The above list is far from exhaustive. What other systems does Accman write to?</li></ul><h2 id="ThoughtsOnApproachingARefreshOfAccman-IdentifyDataPoints">Identify Data Points</h2><p>This stage comprises the identification of both common and unique data elements from each of the input systems. This step could also usefully include highlighting elements (.e.g. 'department') that are represented differently on the input systems, with a view to creating a mapping set. Continuing the previous example, the 'departments' held on Banner may differ from the 'departments' held in S.A.P. It is likely that the level of granularity between the input systems could also differ, i.e. 'departments' and 'colleges' in Banner may not directly map to 'departments' and 'divisions' in S.A.P.</p><p>Where common elements are identified, analysis is required of data types and sizes used by all systems. Thus, a common denominator can be reached, i.e. a 60-character surname on Banner and a 75-character last name on S.A.P. could be mapped to a 100-character family name in Accman.</p><h2 id="ThoughtsOnApproachingARefreshOfAccman-IdentifyDataTransformations">Identify Data Transformations</h2><p>Immediately following the identification of the data points to be managed, consideration is required of the transformations of this data that will occur. This will entail reviewing all the existing Accman code and abstracting out each logical process. Example process may include adding a new student, graduating a student, employing a new staff member, retiring a staff member, and so on.</p><p> </p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/17170443/17301511.xml">Data Management.xml</a> (application/diagramly)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/17170443/17301510.png">Data Management-25296897.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 11:13</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

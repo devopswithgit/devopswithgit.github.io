@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Student Webmail Process</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RFC-and-Project-Work_16384025.html">RFC and Project Work</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Email-for-Life_16384064.html">Email for Life</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Student Webmail Process
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified by <span class='editor'> Julia Kelbrick</span> on Aug 08, 2013
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="StudentWebmailProcess-Introduction">Introduction</h1><p>This is how a student gets their Live@Edu account created.</p><h1 id="StudentWebmailProcess-Process">Process</h1><ul><li>During the <strong>register</strong> process when a new student is being created, we generate a transaction to create the Live@Edu account for a student. This transaction has a <strong>Type48</strong> and has lots of transaction parameters including their email address, Live@Edu identity, full name etc etc. </li><li>A Perl script processes the <strong>Type48</strong>transaction. </li><li>The AccMan Perl Scripts that process the type 48 (Create User), 61 (Change Password), 62 (Disable User) and 63 (Enable User) transactions are located as follows on the AccMan Back End Server:<ul><li><pre>C:\accman\scripts\LiveEduProcessors/CreateUsers/create_users_processor.pl</pre></li><li><pre>C:\accman\scripts\LiveEduProcessors/ChangePassword/change_password_processor.pl</pre></li><li><pre>C:\accman\scripts\LiveEduProcessors/EnableUsers/enable_users_processor.pl</pre></li><li><pre>C:\accman\scripts\LiveEduProcessors/DisableUsers/disable_users_processor.pl</pre></li></ul></li><li>The Perl script creates a CSV file containing the information in the transaction parameters. These are stored in <span style="color: rgb(0,0,255);">D:\AccMan\PowershellData\LiveEduData\CreateUsers</span>. The CSV file has a name based on the transaction ID, so if the transaction id had been <span style="color: rgb(0,0,255);">435672</span>, the file would be named <span style="color: rgb(0,0,255);">435672.csv</span>. The contents look like this:</li></ul><p style="margin-left: 60.0px;"><strong><span style="color: rgb(0,0,255);">TransactionId,TransactionTypeId,windowsLiveID,alias,name,password,firstName,lastName,displayName</span></strong><br/><span style="color: rgb(0,0,255);">2063833,48,<a href="mailto:A.July@testlive.salford.ac.uk" class="external-link" rel="nofollow"><span style="color: rgb(0,0,255);">A.July@testlive.salford.ac.uk</span></a>,A.July,A.July,7KCH2Q,A,July,&quot;July, Apple (UG)&quot;</span></p><ul><li>A flag file is also created alongside the CSV file. This has a <em>.flg</em> extension so would look like this: 435672.flg. It does not have any content and is just used to tell Accman that a new CSV file is waiting to be processed. </li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="500" confluence-query-params="effects=border-simple,blur-border,tape" src="attachments/16384046/16580630.png?effects=border-simple,blur-border,tape" data-image-src="attachments/16384046/16580630.png" data-unresolved-comment-count="0" data-linked-resource-id="16580630" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2012-7-10 11:56:45.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="16384046" data-linked-resource-container-version="6"></span></p><p> </p><ul><li>Powershell scripts then look for any files with a .flg extension and if they find one, they then look for the corresponding CSV file. </li><li>It renames the flag file with a <strong>.processing</strong> extension e.g. 435671.flg.processing to indicate that it is about to read the CSV file.</li><li>Then (in the case of a new user) it will create the user in Live@Edu and if successful, will rename the flag file to <strong>.complete</strong>. </li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" width="500" confluence-query-params="effects=border-simple,blur-border,tape" src="attachments/16384046/16580629.png?effects=border-simple,blur-border,tape" data-image-src="attachments/16384046/16580629.png" data-unresolved-comment-count="0" data-linked-resource-id="16580629" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2012-7-10 12:33:45.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="16384046" data-linked-resource-container-version="6"></span></p><p> </p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384046/16580630.png">image2012-7-10 11:56:45.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384046/16580628.png">image2012-7-10 12:33:0.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384046/16580627.png">image2012-7-10 12:33:12.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384046/16580629.png">image2012-7-10 12:33:45.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

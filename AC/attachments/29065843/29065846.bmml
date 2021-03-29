@@ -1,0 +1,50 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1251" measuredH="751" mockupW="1198" mockupH="728">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="53" y="23" w="1198" h="728" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>A%20Web%20Page%0Ahttp%3A//</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::TabBar" x="729" y="259" w="473" h="438" measuredW="209" measuredH="100" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <selectedIndex>0</selectedIndex>
+        <text>Page%20One%2C%20Page%20Two</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::SubTitle" x="81" y="119" w="-1" h="-1" measuredW="231" measuredH="27" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>View%20Account%20Details</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::TabBar" x="110" y="259" w="473" h="435" measuredW="321" measuredH="100" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <selectedIndex>1</selectedIndex>
+        <text>Account%20Details%2C%20Diagnostic%20Information</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Webcam" x="110" y="187" w="56" h="50" measuredW="177" measuredH="146" zOrder="4" locked="false" isInGroup="-1"/>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::Title" x="183" y="198" w="-1" h="-1" measuredW="322" measuredH="27" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>24</size>
+        <text>User%20account%20details%3A%20UIS123</text>
+      </controlProperties>
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::StickyNote" x="457" y="393" w="-1" h="-1" measuredW="109" measuredH="123" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>New%20tab%20for%20displaying%20account/person%20related%20diagnostics</text>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Title" x="125" y="319" w="-1" h="-1" measuredW="317" measuredH="17" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>Date%20last%20on%20Banner%20Import%3A%201st%20June%202016%20%2813%3A30%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::Title" x="125" y="351" w="-1" h="-1" measuredW="235" measuredH="17" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>Current%20status%20in%20AD%3A%20Account%20locked</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

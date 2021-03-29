@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : AD Sync Script</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Rewrite-Documentation-2013_16384056.html">Accman Rewrite Documentation 2013</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="External-Systems_16384049.html">External Systems</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Active-Directory_16384050.html">Active Directory</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : AD Sync Script
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified by <span class='editor'> Paul Maggs</span> on May 18, 2018
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="ADSyncScript-Introduction">Introduction</h1><p>This is a script that runs on uos-p-acbe-01.mgt.isdads.salford.ac.uk (the new Accman back end server). </p><p>It's a VB Script, which performs some further processing on Active Directory and Exchange. </p><p>Over the years, this script has also been known by the names &quot;SalSync&quot; and &quot;The Mike Hall Script&quot;.</p><p>This script works on <strong>Contacts ONLY</strong> - it does <strong>not</strong> create, alter or delete Users in any way.</p><p><br/></p><p>The script is responsible for the creation, updating and deletion of the student <strong>contact</strong> records in AD. A basic additional script runs on uos-p-admo-01 to update these contacts to 2010 format.</p><h1 id="ADSyncScript-InformationfromITSOperations">Information from ITS Operations</h1><p>TG/PM - This tables now contains a definitive list of attributes maintained by the AD Sync script.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/><col/><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh"><span>AD Field</span></th><th class="confluenceTh"><span>Accman Source</span></th><th class="confluenceTh"><span>Example</span></th><th colspan="1" class="confluenceTh">UoSAttribute name</th><th class="confluenceTh"><span>Notes</span></th><th colspan="1" class="confluenceTh">Used by?</th></tr><tr><td class="confluenceTd">department </td><td class="confluenceTd">Mail.Person.Program</td><td class="confluenceTd"><p>MST/FM/F</p></td><td colspan="1" class="confluenceTd"><p>UoSProgramCode</p><p>(also now extensionAttribute1)</p></td><td class="confluenceTd"><p><br/></p></td><td colspan="1" class="confluenceTd">Exchange as Banner Programme code</td></tr><tr><td class="confluenceTd"><p>displayName</p><p>and</p><p>cn</p></td><td class="confluenceTd">Mail.Person</td><td class="confluenceTd">Ugochukwu Alphaeus (A.C.Ugochukwu) PGT </td><td colspan="1" class="confluenceTd"><br/></td><td class="confluenceTd">Generated using some simple logic in the script.<br/><br/><br/></td><td colspan="1" class="confluenceTd">system</td></tr><tr><td colspan="1" class="confluenceTd">msExchPoliciesExcluded</td><td colspan="1" class="confluenceTd">N/A</td><td colspan="1" class="confluenceTd">{26491CFC-9E50-4857-861B-0CB8DF22B5D7}</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">Always set to the same</td><td colspan="1" class="confluenceTd">system</td></tr><tr><td colspan="1" class="confluenceTd">mAPIRecipient</td><td colspan="1" class="confluenceTd">N/A</td><td colspan="1" class="confluenceTd">TRUE</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">Always set to the same</td><td colspan="1" class="confluenceTd">system</td></tr><tr><td colspan="1" class="confluenceTd">proxyAddresses</td><td colspan="1" class="confluenceTd">Mail.Account, Mail.emailDomain</td><td colspan="1" class="confluenceTd">SMTP:<a href="mailto:A.C.Ugochukwu@edu.salford.ac.uk" class="external-link" rel="nofollow">A.C.Ugochukwu@edu.salford.ac.uk</a></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">&quot;concat(account.primary_mailname,&quot;&quot;@&quot;&quot;,pri_domains.domainName) as address&quot; concatenated with &quot;SMTP:&quot;</td><td colspan="1" class="confluenceTd">system</td></tr><tr><td colspan="1" class="confluenceTd">targetAddress</td><td colspan="1" class="confluenceTd">As above</td><td colspan="1" class="confluenceTd">As above</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">As above</td><td colspan="1" class="confluenceTd">system</td></tr><tr><td colspan="1" class="confluenceTd">internetEncoding</td><td colspan="1" class="confluenceTd">N/A</td><td colspan="1" class="confluenceTd">1310720</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">Always set to the same (I believe ensures correct mime type on outgoing email)</td><td colspan="1" class="confluenceTd">system</td></tr><tr><td colspan="1" class="confluenceTd">mail</td><td colspan="1" class="confluenceTd"><span>Mail.Account, Mail.emailDomain</span></td><td colspan="1" class="confluenceTd"><a href="mailto:A.C.Ugochukwu@edu.salford.ac.uk" class="external-link" rel="nofollow">A.C.Ugochukwu@edu.salford.ac.uk</a></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><span>&quot;concat(account.primary_mailname,&quot;&quot;@&quot;&quot;,pri_domains.domainName) as address&quot; </span></td><td colspan="1" class="confluenceTd">system and Staff (reading contact record for mail address)</td></tr><tr><td colspan="1" class="confluenceTd">sn</td><td colspan="1" class="confluenceTd">Mail.Person.RealName</td><td colspan="1" class="confluenceTd">Ugochukwu</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">system</td></tr><tr><td colspan="1" class="confluenceTd">initials</td><td colspan="1" class="confluenceTd">Mail.Person.Initials</td><td colspan="1" class="confluenceTd">AC</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">system</td></tr><tr><td colspan="1" class="confluenceTd">givenName</td><td colspan="1" class="confluenceTd">Mail.Person.preferredName</td><td colspan="1" class="confluenceTd">Alphaeus</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">system</td></tr><tr><td colspan="1" class="confluenceTd">company</td><td colspan="1" class="confluenceTd">Mail.Person.stu_degc</td><td colspan="1" class="confluenceTd">MST</td><td colspan="1" class="confluenceTd">UoSTypeOfAward <span>(also now extensionAttribute2)</span></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">Exchange as type of degree/award</td></tr><tr><td colspan="1" class="confluenceTd">physicalDeliveryOfficeName</td><td colspan="1" class="confluenceTd">Mail.dept.full_name</td><td colspan="1" class="confluenceTd">Salford Business School</td><td colspan="1" class="confluenceTd"><p>UoSSchool <span>(also now extensionAttribute3)</span></p></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">Exchange as School</td></tr><tr><td colspan="1" class="confluenceTd">title</td><td colspan="1" class="confluenceTd">Calculated from Mail.Person</td><td colspan="1" class="confluenceTd">PGT</td><td colspan="1" class="confluenceTd">UosStudentCategory <span>(also now extensionAttribute4)</span></td><td colspan="1" class="confluenceTd">if(stu_levl = 'PG', if(qual_aim_code = 02, 'PGR', 'PGT'), 'UG') as stu_type</td><td colspan="1" class="confluenceTd">Exchange as student category</td></tr><tr><td colspan="1" class="confluenceTd">postalCode</td><td colspan="1" class="confluenceTd">Mail.Person.yr_course</td><td colspan="1" class="confluenceTd"> 1</td><td colspan="1" class="confluenceTd">UoSYearOfStudy <span>(also now extensionAttribute5)</span></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">Exchange as current year of study</td></tr><tr><td colspan="1" class="confluenceTd">CountryOrRegion (Future use)</td><td colspan="1" class="confluenceTd">Wanted by schools to show a students international status</td><td colspan="1" class="confluenceTd">EU, Non-EU, UK?</td><td colspan="1" class="confluenceTd">UoSIntStatus <span>(also now extensionAttribute6 )</span></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td></tr><tr><td colspan="1" class="confluenceTd">StateOrProvince (Future use)</td><td colspan="1" class="confluenceTd">Wanted by schools to show physical location of student</td><td colspan="1" class="confluenceTd">?</td><td colspan="1" class="confluenceTd"><p>UoSLocation</p><p><span>(also now extensionAttribute7)</span></p></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td></tr></tbody></table></div><p><br/></p><p><br/></p>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-55313129"></a>
+                                    <font class="smallfont"><p>The branch for 
+<span class="jira-issue" data-jira-key="ARF-516" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-516?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10311&amp;avatarType=issuetype"/>ARF-516</a>
+                            -
+            <span class="summary">Support New Office365 Functionality</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-current
+     jira-macro-single-issue-export-pdf">In Progress</span>
+                </span>
+ now includes the code to populate the first five extension attributes</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis894 at Jun 12, 2018 14:41
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-56426591"></a>
+                                    <font class="smallfont"><p>It seems that the uosLocation (extensionAttribute 7) will be required for the Partner College workstream so that it can be released by Open Athens when authenticating against EZProxy.</p><p><br/></p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis737 at Jun 14, 2018 14:05
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-70915657"></a>
+                                    <font class="smallfont"><p><strong>Extension attribute 1</strong> - Can be used to create query based distribution lists in Exchange on premise and equivalent groups in office 365 (as they don't sync through AD connect) for emailing cohorts and setting permissions to groups in teams, sharepoint and other cloud based services that use Azure AD.</p><p><strong>Extension attribute 6</strong> - Can be used for mandatory reporting in Doc VAL going forward and other systems.</p><p><strong>Extension attribute 4</strong> - We need to watch out for variations of strings in older content and newer provisioned accounts when creating dynamic groups for students, for example: &quot;PGT&quot; can also be &quot;Postgraduate&quot; depending on which account you look at. &quot;UG&quot; can be &quot;Undergraduate&quot;</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis158 at Jul 31, 2019 17:23
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-70915658"></a>
+                                    <font class="smallfont"><p>Staff and Associates don't have the custom attributes populated during provisioning yet but should be introduced to drive automation.</p><p>We should review the values and usage of Associate classes e.t.c. before releasing an update of the staff and associate provisioning scripts though to identify opportunities.</p><p><br/></p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis158 at Jul 31, 2019 17:26
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

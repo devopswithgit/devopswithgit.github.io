@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Banner Import Transactions</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Rewrite-Documentation-2013_16384056.html">Accman Rewrite Documentation 2013</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Account-Life-Cycles_16384026.html">Account Life Cycles</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Student-Lifecycle_16384038.html">Student Lifecycle</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Banner Import Transactions
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on May 20, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="BannerImportTransactions-Introduction">Introduction</h1><p>Below are a few details regarding the Banner Import.</p><p>The only differences between a full and an incremental run are</p><ul><li>Full runs the whole suite of scripts, whereas an incremental only runs three of them</li><li>StudentAutoState has one trigger with &quot;-inc&quot; in the name (in quartz_jobs.xml). This indicates to the code that the <strong>academicyear</strong> parameter used in the select query should be one year earlier than the default. This parameter is used to query the Accman database, <strong>not</strong> the Banner database.This year. When running in <strong>full </strong>mode, <strong>academicyear</strong> is set to the current year if running Jan-July (inclusive) or next year if running between August and December (inclusive). </li></ul><h2 id="BannerImportTransactions-AcademicYearExamples(StudentAutoState)">AcademicYear Examples (StudentAutoState)</h2><p>Note, these derived dates are used to query Accman, not Banner i.e. look for accounts where PERSON.ACAD_SESS &gt;= <em><strong>academicyear</strong>.</em></p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Date Run</th><th colspan="1" class="confluenceTh">Full</th><th class="confluenceTh">Incremental</th></tr><tr><td class="confluenceTd">1st Jan 2016</td><td colspan="1" class="confluenceTd">2015</td><td class="confluenceTd">2016</td></tr><tr><td class="confluenceTd">31st July 2016</td><td colspan="1" class="confluenceTd">2015</td><td class="confluenceTd">2016</td></tr><tr><td class="confluenceTd">1st August 2016</td><td colspan="1" class="confluenceTd">2016</td><td class="confluenceTd">2017</td></tr><tr><td class="confluenceTd">31st December 2016</td><td colspan="1" class="confluenceTd">2016</td><td class="confluenceTd">2017</td></tr></tbody></table></div><h2 id="BannerImportTransactions-MinTermandMaxTerm(BannerForImport)">MinTerm and MaxTerm (BannerForImport)</h2><p>These are the dates ranges used by Banner Import when querying Banner, i.e. <em>where sfbetrm_term_code between <strong>MinTerm</strong> and <strong>MaxTerm</strong>.</em></p><p>As you can see, there's now no difference between a full and an incremental run as far as the dates are concerned.</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Date Run</th><th class="confluenceTh">Full</th><th class="confluenceTh">Incremental</th></tr><tr><td class="confluenceTd">1st Jan 2016</td><td class="confluenceTd"><p>MinTerm: 201500</p><p>MaxTerm: 201699</p></td><td class="confluenceTd"><p>MinTerm: 201500</p><p>MaxTerm: 201699</p></td></tr><tr><td class="confluenceTd">31st July 2016</td><td class="confluenceTd"><p>MinTerm: 201500</p><p>MaxTerm: 201699</p></td><td class="confluenceTd"><p>MinTerm: 201500</p><p>MaxTerm: 201699</p></td></tr><tr><td class="confluenceTd">1st August 2016</td><td class="confluenceTd"><p>MinTerm: 201600</p><p>MaxTerm: 201799</p></td><td class="confluenceTd"><p>MinTerm: 201600</p><p>MaxTerm: 201799</p></td></tr><tr><td class="confluenceTd">31st December 2016</td><td class="confluenceTd"><p>MinTerm: 201600</p><p>MaxTerm: 201799</p></td><td class="confluenceTd"><p>MinTerm: 201600</p><p>MaxTerm: 201799</p></td></tr></tbody></table></div><h2 id="BannerImportTransactions-Query">Query</h2><p>The full query that these dates get added to is</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Banner Import SQL</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">SELECT DISTINCT sp.SPRIDEN_PIDM, sp.SPRIDEN_ID, sp.SPRIDEN_LAST_NAME, sp.SPRIDEN_FIRST_NAME, 
+		sp.SPRIDEN_MI, pers.SPBPERS_BIRTH_DATE, pers.SPBPERS_SEX, pers.SPBPERS_NAME_PREFIX, sgb.SGBSTDN_TERM_CODE_EFF, 
+		sgb.SGBSTDN_STST_CODE, sgb.SGBSTDN_LEVL_CODE, sgb.SGBSTDN_STYP_CODE, sgb.SGBSTDN_DEGC_CODE_1, 
+		sgb.SGBSTDN_MAJR_CODE_1, sgb.SGBSTDN_BLCK_CODE, sgb.SGBSTDN_DEPT_CODE, sgb.SGBSTDN_PROGRAM_1, 
+		sfb.SFBETRM_AR_IND, sfb.SFBETRM_ADD_DATE, sfb.SFBETRM_ESTS_CODE, SKBHINS_ENDDATE, v.SHRDGMR_DEGS_CODE, 
+		v.SHRDGMR_GRAD_DATE, gm.GOREMAL_EMAIL_ADDRESS, v_lat.sprtele_intl_access as MOBILE_NUMBER
+FROM spriden sp 
+ JOIN spbpers pers ON sp.spriden_pidm = pers.spbpers_pidm 
+ JOIN sgbstdn sgb ON sp.spriden_pidm = sgb.sgbstdn_pidm 
+ JOIN sfbetrm sfb ON sp.spriden_pidm = sfb.sfbetrm_pidm 
+ LEFT JOIN
+( SELECT sprtele_pidm, sprtele_intl_access 
+FROM   sprtele s1
+WHERE  sprtele_tele_code = &#39;MOB&#39;
+AND    sprtele_seqno = (SELECT max(sprtele_seqno)
+						FROM   sprtele s2
+						WHERE  sprtele_tele_code = &#39;MOB&#39;   
+						AND    sprtele_primary_ind = &#39;Y&#39;   
+						AND    s2.sprtele_pidm = s1.sprtele_pidm                                     
+						AND    sprtele_status_ind is null)
+UNION ALL 
+SELECT sprtele_pidm, sprtele_intl_access 
+FROM   sprtele s1
+WHERE  sprtele_tele_code = &#39;MOB&#39;
+AND    sprtele_seqno = (SELECT max(sprtele_seqno)
+						FROM   sprtele s2
+						WHERE  sprtele_tele_code = &#39;MOB&#39;                 
+						AND    sprtele_status_ind is null
+						AND    s2.sprtele_pidm = s1.sprtele_pidm 
+						AND 0 = (SELECT COUNT(*) from sprtele s3 where sprtele_tele_code = &#39;MOB&#39; and   sprtele_primary_ind = &#39;Y&#39; AND    s3.sprtele_pidm = s2.sprtele_pidm))) v_lat 
+			  ON SP.SPRIDEN_PIDM = v_lat.SPRTELE_PIDM 
+ LEFT JOIN v_sal_shrdgmr_max_seq_no v ON sp.spriden_pidm = v.shrdgmr_pidm 
+ AND sgb.SGBSTDN_PROGRAM_1 = v.shrdgmr_program 
+ LEFT JOIN ( SELECT goremal_pidm,goremal_email_address
+			FROM  goremal           
+			WHERE GOREMAL_PREFERRED_IND = &#39;Y&#39; AND GOREMAL_EMAL_CODE = 2 AND GOREMAL_STATUS_IND = &#39;A&#39;
+			UNION ALL
+			SELECT goremal_pidm,goremal_email_address
+			FROM  goremal           
+			WHERE GOREMAL_EMAL_CODE = 2 AND GOREMAL_STATUS_IND = &#39;A&#39;
+			AND 0 = ( SELECT count (*) from goremal where GOREMAL_PREFERRED_IND = &#39;Y&#39; AND GOREMAL_EMAL_CODE = 2 AND GOREMAL_STATUS_IND = &#39;A&#39;)  )      
+			 GM
+		ON sp.spriden_pidm = gm.goremal_pidm                     
+ LEFT JOIN 
+	 (SELECT ins1.skbhins_pidm, stdn1.sgbstdn_term_code_admit, 
+		MAX(ins1.skbhins_enddate) AS skbhins_enddate 
+	 FROM skbhins ins1, sgbstdn stdn1 
+	 WHERE NOT EXISTS (
+		SELECT 1  
+		FROM skbhins ins2 
+		WHERE ins2.skbhins_pidm = ins1.skbhins_pidm 
+		AND ins2.skbhins_enddate IS NULL 
+		AND ins2.skbhins_term_code = ins1.skbhins_term_code 
+		AND ins1.skbhins_active_ind = &#39;Y&#39; 
+		AND ins2.skbhins_active_ind = &#39;Y&#39;) 
+	 AND ins1.skbhins_term_code = stdn1.sgbstdn_term_code_admit 
+	 AND ins1.SKBHINS_PIDM = stdn1.sgbstdn_pidm 
+	 GROUP BY ins1.skbhins_pidm, stdn1.sgbstdn_term_code_admit 
+	 UNION 
+	 SELECT ins1.skbhins_pidm, stdn1.sgbstdn_term_code_admit, 
+		NULL AS skbhins_enddate  
+	 FROM skbhins ins1, sgbstdn stdn1 
+	 WHERE EXISTS (
+		 SELECT 1  
+		 FROM skbhins ins2 
+		 WHERE ins2.skbhins_pidm = ins1.skbhins_pidm 
+		 AND ins2.skbhins_enddate IS NULL 
+		 AND ins2.SKBHINS_TERM_CODE = ins1.SKBHINS_TERM_CODE 
+		 AND ins1.skbhins_active_ind = &#39;Y&#39; 
+		 AND ins2.skbhins_active_ind = &#39;Y&#39;) 
+	 AND ins1.skbhins_term_code = stdn1.sgbstdn_term_code_admit 
+	AND ins1.skbhins_pidm = stdn1.sgbstdn_pidm) ains 
+ ON sp.spriden_pidm = skbhins_pidm AND ains.sgbstdn_term_code_admit = sgb.sgbstdn_term_code_admit 
+ WHERE sgb.sgbstdn_term_code_eff = sfb.sfbetrm_term_code 
+ AND sp.spriden_change_ind IS NULL 
+ AND SUBSTR(sfb.sfbetrm_term_code,1,4) = 
+		(SELECT MAX(SUBSTR(sfb2.sfbetrm_term_code,1,4))  
+		FROM spriden spri2, sfbetrm sfb2 
+		WHERE spri2.spriden_pidm = sp.spriden_pidm 
+		AND sfb2.sfbetrm_ests_code != &#39;EL&#39; 
+		 AND sfbetrm_term_code BETWEEN :MIN_TERM AND :MAX_TERM
+		AND spri2.spriden_pidm = sfb2.sfbetrm_pidm) 
+ ORDER BY sp.spriden_id, sgb.sgbstdn_term_code_eff, sfb.sfbetrm_add_date </pre>
+</div></div><h2 id="BannerImportTransactions-Timings">Timings</h2><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"> </th><th colspan="1" class="confluenceTh"><span>Transaction Number</span></th><th class="confluenceTh"><p>Name</p></th><th class="confluenceTh"><p>Time it runs</p></th><th class="confluenceTh"><p>Duration (approx. mins)</p></th></tr><tr><td class="confluenceTd"><p><strong>Banner Import (Incremental)</strong></p><p>Runs every 2 hours. Last run starts at 17:30</p></td><td colspan="1" class="confluenceTd"><span>1503</span></td><td class="confluenceTd"><p><a href="http://banner4import.pl" class="external-link" rel="nofollow">B</a>anner for Import</p></td><td class="confluenceTd"><p align="right">09:30</p></td><td class="confluenceTd"><p align="right">15</p></td></tr><tr><td class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>1504</span></td><td class="confluenceTd"><p><a href="http://banner4person.pl" class="external-link" rel="nofollow">B</a>anner for Person</p></td><td class="confluenceTd"><p align="right">09:45</p></td><td class="confluenceTd"><p align="right">25</p></td></tr><tr><td class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>1509</span></td><td class="confluenceTd"><p>Student AutoState</p></td><td class="confluenceTd"><p align="right">10:10</p></td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd"> </td><td class="confluenceTd"> </td><td class="confluenceTd"> </td></tr><tr><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh">Transaction Number</th><th colspan="1" class="confluenceTh"><p>Name</p></th><th colspan="1" class="confluenceTh"><p>Time it runs</p></th><th colspan="1" class="confluenceTh"><p>Duration (approx. mins)</p></th></tr><tr><td class="confluenceTd"><strong>Banner Import (Full)</strong></td><td colspan="1" class="confluenceTd"><span>1503</span></td><td class="confluenceTd"><p><a href="http://banner4import.pl/" style="text-decoration: underline;" class="external-link" rel="nofollow">B</a><span>anner for Import</span></p></td><td class="confluenceTd"><p align="right">19:30</p></td><td class="confluenceTd"><p align="right">15</p></td></tr><tr><td class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>1505</span></td><td class="confluenceTd"><p><a href="http://banner4prog.pl" class="external-link" rel="nofollow">B</a>anner for Prog</p></td><td class="confluenceTd"><p align="right">19:45</p></td><td class="confluenceTd"><p align="right">10</p></td></tr><tr><td class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>1507</span></td><td class="confluenceTd"><p><a href="http://noshow.pl" class="external-link" rel="nofollow">N</a>o Show</p></td><td class="confluenceTd"><p align="right">19:55</p></td><td class="confluenceTd"><p align="right">10</p></td></tr><tr><td class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>1504</span></td><td class="confluenceTd"><p><a href="http://banner4person.pl" class="external-link" rel="nofollow">B</a>anner for Person</p></td><td class="confluenceTd"><p align="right">20:05</p></td><td class="confluenceTd"><p align="right">25</p></td></tr><tr><td class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>1509</span></td><td class="confluenceTd"><p>Student AutoState</p></td><td class="confluenceTd"><p align="right">20:30</p></td><td class="confluenceTd"><p align="right">10</p></td></tr><tr><td class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>1508</span></td><td class="confluenceTd"><p><a href="http://restoreUFAA.pl" class="external-link" rel="nofollow">R</a>estore UFAA</p></td><td class="confluenceTd"><p align="right">20:40</p></td><td class="confluenceTd"><p align="right">10</p></td></tr><tr><td class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>1501</span></td><td class="confluenceTd"><p><a href="http://banner4address.pl" class="external-link" rel="nofollow">B</a>anner for Address</p></td><td class="confluenceTd"><p align="right">20:50</p></td><td class="confluenceTd"><p align="right">10</p></td></tr></tbody></table></div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman Refresh : AccMan Script Implementation Effort Matrix</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman Refresh</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Refresh-Home_17170433.html">Accman Refresh Home</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman Refresh : AccMan Script Implementation Effort Matrix
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Jon Besson</span>, last modified by <span class='editor'> Unknown User (ujs077)</span> on Dec 24, 2014
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>This matrix illustrates the effort required to move each AccMan script into production, and how difficult it might be.</p><h1 id="AccManScriptImplementationEffortMatrix-ColumnDescriptions"><span style="color: rgb(42,98,158);">Column Descriptions</span></h1><p><strong>Script</strong> - script name and JIRA task associated with it's conversion from Perl to C#.</p><p><strong>Complexity/Size</strong> - see <a href="ARF01---Complexity-Matrix_17170438.html">ARF01 - Complexity Matrix</a>. This takes into account dependencies on libraries, database touch points, size of script etc.</p><p><strong>Impact/Risk</strong> - a description of the riskiness of implementing the script. This includes what effects the script implementation might have on existing production systems.</p><p><strong>Testability</strong> - A description of how much effort it will take to test the implemented script, whether test beds for connecting systems are available etc.</p><p><strong>Roles Affected</strong> - who will be affected by the implemented script - Student, Staff, Associates</p><h1 id="AccManScriptImplementationEffortMatrix-Matrix"><span style="color: rgb(42,98,158);">Matrix</span></h1><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Script</th><th colspan="1" class="confluenceTh">Name</th><th class="confluenceTh">Complexity/Size</th><th class="confluenceTh">Impact Risk</th><th class="confluenceTh">Testability</th><th class="confluenceTh">Roles Affected</th><th colspan="1" class="confluenceTh">Tested</th><th colspan="1" class="confluenceTh">Implemented in Production</th><th class="confluenceTh">Notes</th></tr><tr><th colspan="2" class="confluenceTh"><strong><span style="color: rgb(0,0,0);">Transactions</span></strong></th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th></tr><tr><td rowspan="2" class="confluenceTd"><p>
+<span class="jira-issue resolved" data-jira-key="ARF-2" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-2?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-2</a>
+                            -
+            <span class="summary">enableDisable.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+</p><p><span style="color: rgb(153,153,153);"><s>enableDisable.pl</s> </span></p></td><td colspan="1" class="confluenceTd">EnableAccount.cs</td><td class="confluenceTd">Small</td><td class="confluenceTd">Updates the idm.mail_account with the users mail details then generates a transaction to either enable or create a new AD account (type 103, 93). <br/>Small Risk. </td><td class="confluenceTd"><span><span>Accman access required, to both MAIL and IDM databases. </span>A UAT Test system is available. </span></td><td class="confluenceTd"><span>Staff, Student, </span>Associate</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd"><span>No</span></td><td rowspan="2" class="confluenceTd"><span>enableDisable.pl separated into two .Net transactions.</span></td></tr><tr><td colspan="1" class="confluenceTd">DisableAccount.cs</td><td class="confluenceTd">Small</td><td class="confluenceTd"><span>Updates the </span><span>idm.mail_account with the users mail details then <span>generates a transaction to disable the user's AD account.<br/><span>Small risk.</span> </span></span></td><td class="confluenceTd">Accman access required, to both MAIL and IDM databases. <span>A UAT Test system is available. </span></td><td class="confluenceTd"><span>Staff, Student, </span>Associate</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd"><span>No</span></td></tr><tr><td class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-11" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-11?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-11</a>
+                            -
+            <span class="summary">extend.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+</td><td colspan="1" class="confluenceTd">extend.pl</td><td class="confluenceTd">Medium</td><td class="confluenceTd"><span>The Accman Person Status is amended. If the extension is cancelled the <span>Person's Extension </span> record is also <span>removed</span>. Several transactions are generated to enable/disable AD and mail accounts (See ARF-2)<br/>Small risk.</span></td><td class="confluenceTd"><span>Accman access required to the MAIL </span>database. A UAT Test system is available.</td><td class="confluenceTd">Staff, Associate</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd"><span>No</span></td><td class="confluenceTd">If the extension date is &gt; the current date the account is extended, otherwise the account is cancelled.</td></tr><tr><td class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-12" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-12?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-12</a>
+                            -
+            <span class="summary">newstaff.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">newstaff.pl</td><td class="confluenceTd">Small</td><td class="confluenceTd">Assigns an account to a person. Generates transactions to enable the AD and Mail accounts.</td><td class="confluenceTd"><span>Accman access required to the MAIL </span><span>database. A UAT Test system is available.</span></td><td class="confluenceTd"><span>Staff, Associate</span></td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd"><span>No</span></td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-13" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-13?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-13</a>
+                            -
+            <span class="summary">assign.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">assign.pl</td><td class="confluenceTd">Large</td><td class="confluenceTd"><p><span>Assign or Reinstate an Accman account which is allocated in SIS table SYRACCS </span>a bespoke table in Banner and disables all other personal accounts.</p></td><td class="confluenceTd">Accman access to the MAIL database and Banner environment.</td><td class="confluenceTd"><p><span>Staff, Student, </span><span>Associate</span></p></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-74" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-74?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-74</a>
+                            -
+            <span class="summary">create_users_processor.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">create_users_processor.pl</td><td class="confluenceTd">Small</td><td class="confluenceTd"><p>Gets one or more transactions from the Accman transactions table and writes their parameters<br/># to a CSV file - one transaction per line.</p><p><br/>This script was originally written to handle the &quot;Live@Edu Create Users&quot; transaction type but various clones of the script were then adapted to handle other transaction types related to the management of Live@Edu student email accounts<br/>- Change Password, Disable Users, Enable Users.</p></td><td class="confluenceTd">Accman access required to the MAIL database.</td><td class="confluenceTd"><p>Staff, Student, Associate</p></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td class="confluenceTd"><p>The value of affectsID (in the &quot;transactions&quot; table should be set to the account's accID) though the affectsID field is not actually referenced it this script - it's just a convention that helps with future reporting against the transactions table.</p></td></tr><tr><td class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-65" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-65?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-65</a>
+                            -
+            <span class="summary">change_password_processor.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">change_password_processor.pl</td><td class="confluenceTd">Small</td><td class="confluenceTd"><span>Find a batch of up to 50 [exact number to be configurable] type 61 tx's in accman tx q, get user params one by one and write to CSV file in powershell_data directory. When finished writing CSV file, write a &quot;flag file&quot; to indicate to powershell script that CSV file is ready to be processed.</span></td><td class="confluenceTd">Accman access required to the MAIL database.</td><td class="confluenceTd"><p>Staff, Student, Associate</p></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd">No</td><td class="confluenceTd"><p>The value of affectsID (in the &quot;transactions&quot; table should be set to the account's accID) though the affectsID field is not actually referenced it this script - it's just a convention that helps with future reporting against the transactions table.</p></td></tr><tr><td class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-67" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-67?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-67</a>
+                            -
+            <span class="summary">disable_users_processor.pl - NEW</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">disable_users_processor.pl</td><td class="confluenceTd">Small</td><td class="confluenceTd"><span>Find a batch of up to 50 [exact number to be configurable] type 62 tx's in accman tx q, get user params one by one and write to CSV file in powershell_data directory. When finished writing CSV file, write a &quot;flag file&quot; to indicate to powershell script that CSV file is ready to be processed.</span></td><td class="confluenceTd">Accman access required to the MAIL database.</td><td class="confluenceTd"><p>Staff, Student, Associate</p></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd">No</td><td class="confluenceTd"><p>The value of affectsID (in the &quot;transactions&quot; table should be set to the account's accID) though the affectsID field is not actually referenced it this script - it's just a convention that helps with future reporting against the transactions table.</p></td></tr><tr><td class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-68" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-68?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-68</a>
+                            -
+            <span class="summary">enable_users_processor.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">enable_users_processor.pl</td><td class="confluenceTd">Small</td><td class="confluenceTd"><p>Find a batch of up to 50 [exact number to be configurable] type 63 tx's in accman tx q, get user params one by one and write to CSV file in powershell_data directory. When finished writing CSV file, write a &quot;flag file&quot; to indicate to powershell script that CSV file is ready to be processed.</p></td><td class="confluenceTd">Accman access required to the MAIL database.</td><td class="confluenceTd"><p>Staff, Student, Associate</p></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd">No</td><td class="confluenceTd"><p>The value of affectsID (in the &quot;transactions&quot; table should be set to the account's accID) though the affectsID field is not actually referenced it this script - it's just a convention that helps with future reporting against the transactions table.</p></td></tr><tr><td class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-14" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-14?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-14</a>
+                            -
+            <span class="summary">password_txt.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">password_txt.pl</td><td class="confluenceTd">Small</td><td class="confluenceTd">Create a user's password.txt file at the user's home folder location from Active Directory</td><td class="confluenceTd"><span>Accman access required to the MAIL </span><span>database and read privileges </span>Active Directory Users.</td><td class="confluenceTd"><span>Student</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-15" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-15?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-15</a>
+                            -
+            <span class="summary">pregen.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Resolved</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">pregen.pl</td><td class="confluenceTd">Large</td><td class="confluenceTd"><p>Generate a specified number of accounts in AccMan with a specified 3-letter username prefix. Uses a state machine to process steps 0 - 12, steps 5 - 10 are no longer used.</p></td><td class="confluenceTd"><span>Accman access required to the MAIL </span><span>database.</span></td><td class="confluenceTd"><span>Student</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-16" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-16?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-16</a>
+                            -
+            <span class="summary">pregen_associate.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Resolved</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">pregen_associate.pl</td><td colspan="1" class="confluenceTd">Large</td><td colspan="1" class="confluenceTd">Generate a specified number of associate accounts in AccMan with a specified 3-letter username prefix. <span>Uses a state machine to process steps 0 - 13, steps 5 - 10 are no longer used.</span></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database.</span></td><td colspan="1" class="confluenceTd"><span>Staff, </span><span>Associate</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-17" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-17?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-17</a>
+                            -
+            <span class="summary">reconcile.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">reconcile.pl</td><td colspan="1" class="confluenceTd">Medium</td><td colspan="1" class="confluenceTd">Associates a new person record with an existing account in Accman.</td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database.</span></td><td colspan="1" class="confluenceTd"><span>Staff, Student, </span><span>Associate</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-18" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-18?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-18</a>
+                            -
+            <span class="summary">register.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">register.pl</td><td colspan="1" class="confluenceTd">Large</td><td colspan="1" class="confluenceTd"><p>Apply account settings from student account assignment and staff self-registration.</p><p>Creates mail settings for students and raises transactions to update Janus details and create a new Active Directory user. <span>Uses a state machine to process steps 0 - 24, steps 6, 8, 10, 12 - 14, 19 are no longer used.</span></p></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database.</span></td><td colspan="1" class="confluenceTd"><span>Staff, Student, </span><span>Associate</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd">Creates transactions which require Janus and AD.</td></tr><tr><th colspan="2" class="confluenceTh"><strong><span style="color: rgb(0,0,0);">Scheduled</span></strong></th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-42" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-42?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-42</a>
+                            -
+            <span class="summary">staffsequential.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">staffsequential.pl</td><td colspan="1" class="confluenceTd">Medium</td><td colspan="1" class="confluenceTd">Generates Reconcile transactions for personal accounts belonging to left sequential post holders (<span>accounts </span>that <span>are postgraduates </span>and not multi-post employees).</td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database.</span></td><td colspan="1" class="confluenceTd"><span>Staff, </span><span>Associate</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-41" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-41?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-41</a>
+                            -
+            <span class="summary">staffmultipost.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">staffmultipost.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd"><p>Updates multi-post details of staff person records imported from sap. It<span> looks for matches matches based on surname and secret (dob) match. The <span>corresponding personIDs are added to the t</span>able person_multi_post.</span></p></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database. </span></td><td colspan="1" class="confluenceTd"><span>Staff, </span><span>Associate</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd">Relies on the Sap_Import.pl script to provide person record data.</td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-40" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-40?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-40</a>
+                            -
+            <span class="summary">staffmultileft.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">staffmultileft.pl</td><td colspan="1" class="confluenceTd">Medium</td><td colspan="1" class="confluenceTd"><span>Generates Reconcile transactions for personal accounts belonging to </span>left multi-post holders <span>(</span><span>accounts </span><span>that </span><span>are postgraduates </span><span>and multi-post employees).</span></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database. </span></td><td colspan="1" class="confluenceTd"><span>Staff, </span><span>Associate</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-39" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-39?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-39</a>
+                            -
+            <span class="summary">staffautostate.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">staffautostate.pl</td><td colspan="1" class="confluenceTd">Medium</td><td colspan="1" class="confluenceTd"><p>Disable all accounts of staff who have 'left' or are not currently active and enable accounts for staff who have returned or are 'present'.</p></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database. </span></td><td colspan="1" class="confluenceTd"><span>Staff, </span><span>Associate</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-38" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-38?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-38</a>
+                            -
+            <span class="summary">sap_import.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">sap_import.pl</td><td colspan="1" class="confluenceTd">Extra Large</td><td colspan="1" class="confluenceTd"><p>Apply changes to AccMan Person table based on data in SAP ZaccMan database.</p></td><td colspan="1" class="confluenceTd">SAP database access required to Zaccman table. Accman access required to MAIL Database.</td><td colspan="1" class="confluenceTd">Staff / Person</td><td colspan="1" class="confluenceTd">Tested with only few data by creating local sap database and accman database.</td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"><p>Password generated is using inbuilt mysql function. This will only works if mysql is hosted on Linux server. Need more testing as it involves more actions in one single script.</p><p>Lastly would advice to split this script to make it lighter and easy to test.</p></td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-37" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-37?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-37</a>
+                            -
+            <span class="summary">sap_exportmail.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">sap_exportmail.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd">Exports account/mail details from Accman to a bespoke SAP table <span>ZACCEMAIL</span>.</td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database and SAP access to the QAS database.</span></td><td colspan="1" class="confluenceTd"><span>Staff, Student, </span><span>Associate</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd">Clears down the SAP table ZACCEMAIL table before export.</td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-33" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-33?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-33</a>
+                            -
+            <span class="summary">extendDaily.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">extendDaily.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd">Creates a type 40 (Account Extended) transaction if the extension date is less than the current date. Where the date if greater the person's status is updated.</td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database.</span></td><td colspan="1" class="confluenceTd"><span>Staff, Student, </span><span>Associate</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-32" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-32?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-32</a>
+                            -
+            <span class="summary">expirealias.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">expirealias.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd">Move expired aliases from Accman aliases to aliasesExpired.</td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL and IDM </span><span>databases.</span></td><td colspan="1" class="confluenceTd"><span>Staff, </span><span>Associate</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd">Removes data from <span>the </span>Accman <span>aliases table.</span></td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-31" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-31?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-31</a>
+                            -
+            <span class="summary">emailtotal.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">emailtotal.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd">Create email data in Banner from user emails of valid accounts in Accman if they do not already exist.</td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database and to a Banner environment. </span></td><td colspan="1" class="confluenceTd"><span>Staff</span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd">Marks all email records in banner inactive before importing data or reactivating existing email records.</td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-30" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-30?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-30</a>
+                            -
+            <span class="summary">emailbackfill.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">emailbackfill.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-27" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-27?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-27</a>
+                            -
+            <span class="summary">allocateNew.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">allocateNew.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd">Create a new Account in Banner if one does not exist for new Accman <span>student </span>accounts and updates the Accman user state to 'printed'.</td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database and to a Banner environment. </span></td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-26" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-26?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-26</a>
+                            -
+            <span class="summary">alignMailAccount.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">alignMailAccount.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><th colspan="2" class="confluenceTh"><strong><span style="color: rgb(0,0,0);">Scheduled \ SIS Import</span></strong></th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th><th colspan="1" class="confluenceTh"> </th></tr><tr><td colspan="1" class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-25" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-25?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-25</a>
+                            -
+            <span class="summary">banner4address.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+</td><td colspan="1" class="confluenceTd">banner4address.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd">This script reads from Banner and writes to a dedicated table in AccMan; it does not change Banner.</td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database and to a Banner environment. </span></td><td colspan="1" class="confluenceTd"><p>N / A</p><p>(Import script only)</p></td><td colspan="1" class="confluenceTd">No</td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd">Clears down banner_address table prior to import.</td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-44" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-44?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-44</a>
+                            -
+            <span class="summary">banner4import.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">banner4import.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd"><span>This script reads from <span>both AccMan and </span>Banner and writes to a dedicated table in AccMan<span>; it does not change Banner.</span></span></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database<span> and to a Banner environment</span>. </span></td><td colspan="1" class="confluenceTd"><p>N / A</p><p>(Import script only)</p></td><td colspan="1" class="confluenceTd">No</td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd">Clears down banner_import table prior to import.</td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-45" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-45?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-45</a>
+                            -
+            <span class="summary">banner4person.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Resolved</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">banner4person.pl</td><td colspan="1" class="confluenceTd">Medium</td><td colspan="1" class="confluenceTd"><span>This script reads from Banner and changes core tables in AccMan.</span></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database<span> and to a Banner environment</span>. </span></td><td colspan="1" class="confluenceTd">Student</td><td colspan="1" class="confluenceTd">No</td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-46" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-46?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-46</a>
+                            -
+            <span class="summary">banner4prog.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">banner4prog.pl</td><td colspan="1" class="confluenceTd">Small</td><td colspan="1" class="confluenceTd"><span>This script reads from Banner and writes to a dedicated table in AccMan<span>; it does not change Banner.</span></span></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database<span> and to a Banner environment</span>. </span></td><td colspan="1" class="confluenceTd"><p>N / A</p><p>(Import script only)</p></td><td colspan="1" class="confluenceTd">No</td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd">Clears down prog table prior to import.</td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-48" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-48?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-48</a>
+                            -
+            <span class="summary">noshow.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">noshow.pl</td><td colspan="1" class="confluenceTd"><span>Medium</span></td><td colspan="1" class="confluenceTd"><span>This script reads from both AccMan and Banner and changes core tables in AccMan<span>; it does not change Banner.</span></span></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database<span> and to a Banner environment</span>.</span></td><td colspan="1" class="confluenceTd">Student</td><td colspan="1" class="confluenceTd">No</td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-49" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-49?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-49</a>
+                            -
+            <span class="summary">restoreUFAA.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">restoreUFAA.pl</td><td colspan="1" class="confluenceTd"><span>Medium</span></td><td colspan="1" class="confluenceTd"><span>This script reads from both AccMan and Banner and changes core tables in AccMan and a bespoke table in Banner.</span></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database and to a Banner environment.</span></td><td colspan="1" class="confluenceTd"><span>Student</span></td><td colspan="1" class="confluenceTd">No</td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>
+<span class="jira-issue resolved" data-jira-key="ARF-50" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-50?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-50</a>
+                            -
+            <span class="summary">studentautostate.pl</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+<br/></span></td><td colspan="1" class="confluenceTd">studentautostate.pl</td><td colspan="1" class="confluenceTd">Large</td><td colspan="1" class="confluenceTd"><span>This script reads from both AccMan and Banner and changes core tables in AccMan<span>; it does not change Banner.</span></span></td><td colspan="1" class="confluenceTd"><span>Accman access required to the MAIL </span><span>database and to a Banner environment.</span></td><td colspan="1" class="confluenceTd"><span>Student</span></td><td colspan="1" class="confluenceTd">No</td><td colspan="1" class="confluenceTd"><span>No</span></td><td colspan="1" class="confluenceTd"> </td></tr></tbody></table></div>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-17170601"></a>
+                                    <font class="smallfont"><p>Looks good and has the concepts we talked about in the meeting. Would it make sence to have columns to indicate when a script has been tested sucessfully and when it has been installed in Production? That way we can keep track of where we are up to.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis876 at Nov 26, 2014 15:18
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-17170602"></a>
+                                    <font class="smallfont"><p>Only change I would make is put the JIRA issue in its own column and hide the summary (click 'Edit' on the JIRA issue when editing the page) since the summary just duplicates the script name. However hiding the summary will also hide the status too which might not be what you want - in which case ignore this comment <img class="emoticon emoticon-smile" src="images/icons/emoticons/smile.svg" data-emoticon-name="smile" alt="(smile)"/></p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis894 at Nov 26, 2014 15:46
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-17170614"></a>
+                                    <font class="smallfont"><p>Instead of a No/Yes for &quot;Implemented in Production&quot;, if we had the date instead we would know when a case is raised if it was caused by the c# version or not.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis876 at Dec 01, 2014 14:03
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-17170612"></a>
+                                    <font class="smallfont"><p>As we go along and deploy these to the Production environment we can change the Yes/No values (all No at the moment)  to dates.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ujs079 at Dec 01, 2014 14:17
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 11:13</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

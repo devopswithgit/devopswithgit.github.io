@@ -1,0 +1,83 @@
+#----------------------------------------------------------------
+# Run a SQL Select query and return a datatable object
+#----------------------------------------------------------------
+#Function [system.Data.datatable] getSelectResultSet([string]$sql) {	
+Function getSelectResultSet([string]$sql) {	
+
+	#			Pre-requisites:
+	#			Assumes we already have an open db connection $global:conn
+	
+	#			NEXT
+	#			- use generic "DbCommand", "DbDataAdapter", etc
+	#             instead of Odbc versions
+
+	$cmd = New-Object system.Data.Odbc.OdbcCommand($sql,$global:conn)
+	$da = New-Object system.Data.Odbc.OdbcDataAdapter($cmd)
+	$dt = New-Object system.Data.datatable
+	$null = $da.fill($dt)
+	return ,$dt;
+	
+	# note
+	# 	return ,$dt;	 - with leading ","
+	# instead of just 
+	# 	return $dt;
+	# - see http://stackoverflow.com/questions/1918190/strange-behavior-in-powershell-function-returning-dataset-datatable
+	# Leading comma stops the return 'unrolling' the list-like object $dt into some other kind of object
+		
+}
+
+
+#----------------------------------------------------------------
+# Get SQL query string to ...
+#----------------------------------------------------------------
+Function q_get_rollnumbers_for_Type_96_where_BARCODE_param_is_blank {
+
+#				Delivers text of a sql query that ...
+
+$sql = @"
+select 
+p.rollnumber EmpNumber, p.realname, a.username, t.trID, t.tr_state, tp.param_name, tp.param_value
+from 
+person p,
+account a,
+transactions t,
+transaction_params tp
+where 
+p.personID = a.personID
+and
+a.accID = t.affectsID 
+and
+t.trID = tp.trID
+and
+t.tr_type_id = 96
+and
+t.tr_state in ('waiting', 'pending')
+and
+tp.param_name = 'BARCODE'
+and
+tp.param_value = ''
+order by 
+p.rollnumber
+"@
+
+return $sql
+}
+
+
+#----------------------------------------------------------------
+$global:conn = new-object system.data.odbc.odbcconnection
+$global:conn.connectionstring = "dsn=Mail;uid=netware;pwd=********;"	# MySql ODBC Connector connection string
+
+$global:conn.open()
+[string]$sql
+
+#----------------------------------------------------------------
+
+$dt = getSelectResultSet( q_get_rollnumbers_for_Type_96_where_BARCODE_param_is_blank ) 
+write-host $dt.Rows.Count
+#$dt | Select -first 1000 | Export-csv -path ".\BARCODE_rollnumbers_for_Type_96_where_BARCODE_param_is_blank.csv"
+$dt | Export-csv -path ".\BARCODE_rollnumbers_for_Type_96_where_BARCODE_param_is_blank.csv"
+
+#----------------------------------------------------------------
+$global:conn.close()
+#----------------------------------------------------------------

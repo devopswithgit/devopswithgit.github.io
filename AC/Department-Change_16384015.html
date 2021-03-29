@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Department Change</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RFC-and-Project-Work_16384025.html">RFC and Project Work</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Department Change
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Jul 18, 2012
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="DepartmentChange-Introduction">Introduction</h1><p>This is a new piece of functionality to allow students to change departments without the need to have a new username. </p><p>Some triggers in Banner update a table in Banner's database, and Accman reads the changes, and then updates various things in Accman and AD.</p><h1 id="DepartmentChange-DetailedDescription">Detailed Description</h1><p>Note: there are no Perl script changes for this. We originally started by modifying the Perl scripts, but it turned into a complete farce and then we realised that it could be done more easily with a DB trigger and some .NET code. </p><h2 id="DepartmentChange-InBanner">In Banner</h2><p>A Banner user makes whatever changes they make to a student, and a trigger in Banner populates a new table called SYRAFLG. The contents of SYRAFLG look like this:</p><div class="table-wrap"><table class="confluenceTable"><colgroup><col/> <col/> </colgroup><tbody><tr><td class="highlight confluenceTd">SYRAFLG_ROWNUM</td><td class="highlight confluenceTd">SYRAFLG_PIDM</td><td class="highlight confluenceTd">SYRAFLG_ACCMAN_STATUS</td><td class="highlight confluenceTd">SYRAFLG_TYPE</td><td class="highlight confluenceTd">SYRAFLG_TERM</td><td class="highlight confluenceTd">SYRAFLG_ACTIVITY_DATE</td></tr><tr><td colspan="1" class="confluenceTd"><span style="color: rgb(0,128,0);">(Primary Key)</span></td><td colspan="1" class="confluenceTd"><span style="color: rgb(0,128,0);">(Student's PIDM)</span></td><td colspan="1" class="confluenceTd"><span style="color: rgb(0,128,0);">(Processed by Accman Y/N)</span></td><td colspan="1" class="confluenceTd"><span style="color: rgb(0,128,0);">(Type of change)</span></td><td colspan="1" class="confluenceTd"><span style="color: rgb(0,128,0);">(Student's Term)</span></td><td colspan="1" class="confluenceTd"><span style="color: rgb(0,128,0);">(Date)</span></td></tr><tr><td class="confluenceTd">1181</td><td class="confluenceTd">376580</td><td class="confluenceTd">Y</td><td class="confluenceTd">DEPT</td><td class="confluenceTd">201310</td><td class="confluenceTd">17/07/2012 16:13</td></tr><tr><td class="confluenceTd">1182</td><td class="confluenceTd">376581</td><td class="confluenceTd">Y</td><td class="confluenceTd">DEPT</td><td class="confluenceTd">201310</td><td class="confluenceTd">17/07/2012 16:15</td></tr><tr><td class="confluenceTd">1183</td><td class="confluenceTd">376582</td><td class="confluenceTd">Y</td><td class="confluenceTd">DEPT</td><td class="confluenceTd">201310</td><td class="confluenceTd">17/07/2012 16:16</td></tr><tr><td class="confluenceTd">1184</td><td class="confluenceTd">376583</td><td class="confluenceTd">Y</td><td class="confluenceTd">DEPT</td><td class="confluenceTd">201310</td><td class="confluenceTd">17/07/2012 16:18</td></tr><tr><td class="confluenceTd">1185</td><td class="confluenceTd">69968</td><td class="confluenceTd">N</td><td class="confluenceTd">DEPT</td><td class="confluenceTd">201210</td><td class="confluenceTd">17/07/2012 16:20</td></tr><tr><td class="confluenceTd">1186</td><td class="confluenceTd">350605</td><td class="confluenceTd">N</td><td class="confluenceTd">DEPT</td><td class="confluenceTd">201310</td><td class="confluenceTd">17/07/2012 16:21</td></tr></tbody></table></div><p>This table is used to indicate (to Accman) that something about a student has changed. We really only care about department changes for this piece of work, but have tried to make it generic by adding the SYRAFLG_TYPE column so it can be used for other things in the future too. Note, that the SYRAFLG_ACCMAN_STATUS column can be either Y/N. It will be set to Y when Accman has processed it. </p><h2 id="DepartmentChange-InAccman">In Accman</h2><h3 id="DepartmentChange-CheckForBannerUpdatesProcessor">CheckForBannerUpdates Processor</h3><p>We have a new ConsoleSchedulerService Processor that periodically checks the SYRAFLG table for any records marked N. The processor is called <em>CheckForBannerUpdates.cs </em>and has a transaction type of CHECK_FOR_BANNER_UPDATES (123). It is not transaction-driven though, it just runs on a cron schedule. The transaction type of 123 is just used for logging really. </p><p>When <em>CheckForBannerUpdates </em>runs it looks for records to process in SYRAFLG, For each row it finds, it does the following:</p><ul><li>Retrieve the Person record from the Accman database (is bases its search on the PIDM, which SYRAFLG gives us, and is also stored in the PERSON table, which is handy.</li><li>Read the department code from the BANNER database and sets this in the person record's <em>DepartmentCode</em> property.</li><li>Saves this value in Accman's PERSON table.</li><li>Retrieve the Account record from the Accman database</li><li>Update their Account record's department status code. This is slightly tricky; <br/><ul><li>for an undergraduate it becomes 'A' + the new department code e.g. AHU.</li><li>for a postgraduate it becomes 'P' + the new department code e.g. PHU</li></ul></li></ul><p>The PERSON and ACCOUNT records in the Accman database are now up to date. The next thing we need to do it update AD by doing the following.</p><ul><li>Write an ACTIVE_DIRECTORY_UPDATE_FIELDS transaction (type 121) in the Accman database.</li><li>Now everything has been completed, so set the SYRAFLG_ACCMAN_STATUS value to 'Y' so it will not get processed twice.</li></ul><h3 id="DepartmentChange-UpdateFieldsProcessor">UpdateFields Processor</h3><p>This is the ConsoleSchedulerService processor that processes the ACTIVE_DIRECTORY_UPDATE_FIELDS transaction written in the previous steps. It does the following:</p><ul><li>Reads the account record from the database</li><li>Gets the newly-modified department for this user</li><li>Updates the user's AD account so that their AD account has the new department</li><li>Updates their AD groups (because an AD account is added to certain groups based on what department they are in, so if their department changes, their groups need to be updated too).</li></ul><p>That's it.</p><h1 id="DepartmentChange-SampleConfiguration">Sample Configuration</h1><p> </p><p> </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

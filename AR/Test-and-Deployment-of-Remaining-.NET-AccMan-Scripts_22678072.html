@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman Refresh : Test and Deployment of Remaining .NET AccMan Scripts</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman Refresh</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Refresh-Home_17170433.html">Accman Refresh Home</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman Refresh : Test and Deployment of Remaining .NET AccMan Scripts
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Jon Besson</span>, last modified on Jul 09, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><em>On 03/07/15 a problem with AccMan caused a major incident notification &quot;Multiple active students have had their IT login accounts disabled.&quot;. The problem was fixed by backing out several of the rewritten .NET scripts and moving the original perl scripts back in.</em></p><p> </p><p><em>This document outlines what was discussed in a Business Apps follow-up meeting to decide what the next steps were to ensure the .NET scripts would be tested and deployed. Attending were Vipul Patel (VP), Julia Kelbrick (JK), Richard Gundersen (RG), Moin Ahmed, Jon Besson, Mark Wisniewski.</em></p><p> </p><p>The scripts that were backed out and therefore are now the original perl in production are : </p><div><p> </p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><td class="confluenceTd"><p>Student Autostate</p></td></tr><tr><td class="confluenceTd"><p>Restore UFAA</p></td></tr><tr><td class="confluenceTd"><p>No Show</p></td></tr><tr><td class="confluenceTd"><p>Assign</p></td></tr><tr><td class="confluenceTd"><p>Banner4Person</p></td></tr><tr><td class="confluenceTd"><p>Banner4Address</p></td></tr><tr><td class="confluenceTd"><p>Banner4Prog</p></td></tr><tr><td class="confluenceTd"><p>StudentAutoState</p></td></tr></tbody></table></div><p> </p></div><p>We think that the current state of AccMan (09/07/15) is stable with these perl scripts running. The problem now is to ensure that the .NET versions of these scripts have the issue fixed and are deployed  to production.</p><p><span>We discussed what ideas people have about the problem and what our timeline is for fixing it. The main points of the discussion were -</span></p><p> </p><p><span>RG - get all .net scripts running in UAT so that we can reproduce the problem - from start to finish. After that we should run Julia's tests against all scripts. </span><span>This would mean handing over from JK today.</span></p><p><span>JK proposed we should run the 6.5k test cases she has created to test BannerForPerson against the .net scripts.</span></p><p><span>We will have to do both .net and perl scripts in UAT so that we can compare the results. There are several ways we can compare the results - the exact methods will be discussed tomorrow.</span></p><p>IN UAT we will have to test the buggy .net, the fixed .net and the perl and compare all three result sets</p><p><span>Going forward, JK suggests that we have a transaction embargo for an hour or two every night in production so that we can get a stable backup of the data each night before Banner Import. This would help getting AccMan back up quickly in an emergency.</span></p><p><span><br/></span></p><p><span>The cause of the we believe is now known and was outlined in an email from JK :</span></p><div class="panel" style="border-width: 1px;"><div class="panelContent">
+<p>As requested, the following email outlines the issues that have now been corrected in the Accman.Net StudentActions class. </p><p>The StudentActions class is used by three of the .Net processes:</p><ul><li>BannerForPerson</li><li>Assign</li><li>NoShow</li></ul><p>There were two remaining issues:</p><ul><li>The issue with lesser impact was in the GetLeaverFlag() method, which was causing the “Leaver Flag” to be set to “Y” by the .Net processes whereas it was being set to “N” by the Perl Scripts in some circumstances.</li></ul><p>The following shows the corrected code in which at line 978 a “Not” operator has been added.  The original logic was clearly wrong because the “switch” statement could never be reached as it was.  Also the comment (taken from Accman) states that if the UOMS is missing then it should be assumed that the student is a leaver.</p><p> </p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" src="attachments/22678072/22678074.png" data-image-src="attachments/22678072/22678074.png" data-unresolved-comment-count="0" data-linked-resource-id="22678074" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2015-7-9 14:58:37.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="22678072" data-linked-resource-container-version="3"></span></p><p>The second and far more serious issue concerned the <strong>EnrollmentPersonStatus</strong> lookup dictionary which is created at line 346:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">EnrollmentPersonStatus status = process.LookupValuesDAO.GetPersonState((BannerEnrollmentStatus</pre>
+</div></div><p>The problem was that in the original code the dictionary (i.e. lookup) value of PersonStatus was being set to “Left”, “Graduating”, “Absent” etc., when it should have been the student object value of <strong>PersonStatus</strong> that should have been set to these values.  Thus, the lookup dictionary became more and more corrupted with incorrect person status values as more students where processed.  For example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">else if (leftDate &gt;= startRolloverDate &amp;&amp; leftDate &lt;= endRolloverDate)
+{
+	:
+	:
+   status.PersonStatus = PersonStatus.Left;
+}</pre>
+</div></div><p>The attached log file shows how the lookup values became increasingly corrupted over time. </p><p>The code was amended so that the student’s registration details were updated instead . . . . </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">else if (leftDate &gt;= startRolloverDate &amp;&amp; leftDate &lt;= endRolloverDate)
+{
+	:	
+	:
+   validRegistration.PersonStatus = PersonStatus.Left;
+ }</pre>
+</div></div><p>I have spoken with Vipul and he fully understands the issues.</p><p> </p>
+</div></div><p><span><br/></span></p><p><span>NEXT STEPS - </span></p><p><span>JK to handover to VP</span></p><p><span>JB to set a meeting to go through the sequence of events required for testing</span></p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22678072/22678074.png">image2015-7-9 14:58:37.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 11:13</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

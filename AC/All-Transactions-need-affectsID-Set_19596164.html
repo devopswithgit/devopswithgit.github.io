@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : All Transactions need affectsID Set</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Review_19595581.html">Review</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : All Transactions need affectsID Set
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Paul Daniels</span>, last modified by <span class='editor'> Jon Besson</span> on May 19, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">All Transactions need affectsID Set</td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Bug</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">Low</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis876" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis876" data-linked-resource-id="824264" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Daniels</a></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd"><time datetime="2015-04-21" class="date-past">21 Apr 2015</time> </td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis876" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis876" data-linked-resource-id="824264" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Daniels</a></td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue" data-jira-key="ARF-212" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-212?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10311&amp;avatarType=issuetype"/>ARF-212</a>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-default
+     jira-macro-single-issue-export-pdf">Open</span>
+                </span>
+</td></tr></tbody></table></div><p> </p><h2 id="AllTransactionsneedaffectsIDSet-Details">Details</h2><p>A number of transactions do not have the affectsID set. Following SQL returns 9 transactions:</p><p> </p><pre>Select count(tr.tr_type_id),tr.tr_type_id,tt.tr_description</pre><pre>from transactions tr</pre><pre>join trtypes tt on tr.tr_type_id = tt.tr_type_id</pre><pre>where tr.affectsID = 0 or tr.affectsID is null</pre><pre>group by tr.tr_type_id;</pre><p> </p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><td colspan="1" class="confluenceTd">Count</td><td colspan="1" class="confluenceTd">tr_type_id</td><td colspan="1" class="confluenceTd">tr_description</td></tr><tr><td class="confluenceTd">108152</td><td class="confluenceTd">80</td><td class="confluenceTd">Send Email</td></tr><tr><td class="confluenceTd">36412</td><td class="confluenceTd">81</td><td class="confluenceTd">X Set User Password [Novell - Obsolete]</td></tr><tr><td class="confluenceTd">32862</td><td class="confluenceTd">91</td><td class="confluenceTd">Set User Active Directory Password</td></tr><tr><td class="confluenceTd">29721</td><td class="confluenceTd">97</td><td class="confluenceTd">Update Janus User Details</td></tr><tr><td class="confluenceTd">32175</td><td class="confluenceTd">103</td><td class="confluenceTd">Enable Active Directory User</td></tr><tr><td class="confluenceTd">122801</td><td class="confluenceTd">105</td><td class="confluenceTd">X Add User to Novell Group [Novell - obsolete]</td></tr><tr><td class="confluenceTd">32229</td><td class="confluenceTd">106</td><td class="confluenceTd">X Remove User from Novell Group [Novell - obsolete]</td></tr><tr><td class="confluenceTd">2</td><td class="confluenceTd">110</td><td class="confluenceTd">Update All AD Attributes [in ConsoleSchedulerServiceAD]</td></tr><tr><td class="confluenceTd">5</td><td class="confluenceTd">127</td><td class="confluenceTd">Alma Create or Update Patron</td></tr></tbody></table></div></div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:55</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

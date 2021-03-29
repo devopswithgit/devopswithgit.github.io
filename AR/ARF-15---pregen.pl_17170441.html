@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman Refresh : ARF-15 - pregen.pl</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman Refresh</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Refresh-Home_17170433.html">Accman Refresh Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Script-Implementation-Effort-Matrix_17170435.html">AccMan Script Implementation Effort Matrix</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman Refresh : ARF-15 - pregen.pl
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (ujs077)</span>, last modified on Dec 24, 2014
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="ARF-15-pregen.pl-Pregen">Pregen</h2><h4 id="ARF-15-pregen.pl-Requirement">Requirement</h4><ul><li>Generate a specified number of accounts in AccMan with a specified 3-letter username prefix. </li><li>Create these accounts in NetWare with appropriate initial filestore, quota and access rights.</li></ul><h4 id="ARF-15-pregen.pl-Prerequisites">Prerequisites</h4><ul><li>There must be sufficient available usernames with the 3-letter prefix.</li></ul><ul><li>The 3-letter prefix will be used as the department_status_code.</li></ul><ul><li>The 3-letter entry must be defined and contain the correct values in the department_status table.</li></ul><ul><li>The NetWare context must exist.</li></ul><p> </p><ul><li>The fileserver volume must exist and have enough space available to create the initial filestore.</li></ul><p> </p><h4 id="ARF-15-pregen.pl-Transactiondata">Transaction data</h4><ul><li> The process should be driven via a transaction (tr_type_id = 1, tr_description = 'Blank username stock creation').</li></ul><ul><li>The value of affectsID should be set to department_status_id.</li></ul><ul><li>There shall be two transaction parameters:</li></ul><ul><li>1. param_name: 'department_status_code'; param_value: ddx</li></ul><p> </p><ul><li> 2. param_name: 'number'; param_value: nnn</li></ul><h4 id="ARF-15-pregen.pl-Outlineprocess"> Outline process</h4><ul><li>Verify existence of ddx in the department_status table.</li></ul><ul><li>Check there are at least nnn available usernames starting ddx.</li></ul><ul><li>Determine the first nnn available usernames starting ddx.</li></ul><ul><li>Insert them into the account table with state = 'creating'.</li></ul><ul><li>For each account:</li></ul><ul><li style="list-style-type: none;background-image: none;"><ul><li>generate a random password;</li></ul></li></ul><ul><li style="list-style-type: none;background-image: none;"><ul><li>insert an account_details record of type 'NDS';</li></ul></li></ul><ul><li>Create the username in NetWare NDS;</li></ul><ul><li>insert initial attribute values in NDS;</li></ul><ul><li>make the Salford status and rollnumber writable by the user;</li></ul><ul><li>make the full_name property readable by [root];</li></ul><ul><li>create the filestore on the correct volume;</li></ul><ul><li>create any required subdirectories;</li></ul><ul><li>set filestore flags;</li></ul><ul><li>set default quota;</li></ul><ul><li>grant initial GPAS credit;</li></ul><ul><li>update crdate in account_details;</li></ul><ul><li>update account state to 'new'.</li></ul><ul><li>Note: the majority of the NetWare actions will be implemented using JRButils, and several of these actions might be incorporated into a single JRButils call.</li></ul><p> </p><ul><li>Although shown as a loop, it would probably be preferable to batch the account processes, generating a driver file for JRButils in the loop.</li></ul><p> </p><p> </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 11:13</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

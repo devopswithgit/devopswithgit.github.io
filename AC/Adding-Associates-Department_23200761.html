@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Adding Associates Department</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Support-Notes_16384017.html">Support Notes</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Adding-a-New-Department-to-Accman_23200267.html">Adding a New Department to Accman</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Adding Associates Department
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Muhammad Javed</span> on Oct 05, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><strong><br/></strong></p><p><strong>Associate Type, Associate Class and Department Code Mapping</strong></p><p> </p><p>I have investigated and found there is a manual process at the moment to populate department tables and association.</p><p>Request to add new department and association is sent to ITS/Development team or when accman incident is raised and after investigation it appears that department and association is missing. Then one of developer from development team runs sql scripts and adds department and association in below tables.</p><p>-- DEPT</p><p>-- This is where the two-letter department code comes from</p><p>insert into dept (dept_code, aisDept_code, dept_name, full_name, depttype, active, site_code, defaultCredit, defaultQuota)</p><p>values ('QE', 'QE', 'Quality &amp; Enhance', 'Quality &amp; Enhancement Office', 'service', 'Y', 'CW', 0, 0);</p><p> </p><p> </p><p>-- SAP_DEPT</p><p>-- This is a mapping table used by the SAP_Import process to map the 4-letter SAP code to the 2-letter Accman code</p><p>select * from sap_dept;</p><p>insert into sap_dept (dept, dept_code, DEPT_desc)</p><p>values ('CAQE', 'QE', 'Quality &amp; Enhance');</p><p> </p><p> </p><p>-- DEPARTMENT_STATUS</p><p>select * from department_status where dept_code = 'UI';</p><p>insert into department_status (department_status_code, dept_code, status_code, active, defaultContext, defaultServer, defaultVolume, defaultCredit, defaultQuota, viewlevel)</p><p>values ('QES', 'QE', 'S', 'Y', 'qes.qe.services.salford', 'ISD-STAFFFILE-A', 'STAA1', 0, 50, 2);</p><p> </p><p> </p><p>-- HR_DEPARTMENTS</p><p>-- This is another SAP/Accman mapping table. It's used by Equitrac to work out which cost code a department belongs to, so that it can charge printing costs</p><p>insert into hr_departments (sap_dept_code, description, cost_code_area, cost_code)</p><p>values ('CAQE', 'Quality &amp; Enhance', 'Quality &amp; Enhance', 'USGA99');</p><p> </p><p> </p><p>-- DEPARTMENT_COST_CENTRE (CA00 is 'Professional Services')</p><p>-- This is needed to map the new department code to an existing personnel area. Many departments share the same personnel area. Shamshudin was able to tell me that department CAQE maps to personnel area CA00 which already exists in Accman and stands for 'Professional Services' (you can see it in the PERSONNEL_AREA table, but I didn't need to modify that table)</p><p>insert into department_cost_centre (dept_code, personnel_area_code)</p><p>values ('QE', 'CA00');</p><p> </p><p>-- DEPT_PERSON_ACCOUNT</p><p>insert into dept_person_account (person_dept_code, account_dept_code) values ('QE', 'QE');</p><p> </p><p>There is no data maintenance or cleansing at the moment so there could be duplications or obsolete departments and associations.</p><p>Once department code is created then code is mapped with scheduled imports from SAP or Banner for the staff or students.</p><p> </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

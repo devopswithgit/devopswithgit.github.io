@@ -1,0 +1,189 @@
+#----------------------------------------------------------------
+# Run a SQL Select query and return a datatable object
+#----------------------------------------------------------------
+#Function [system.Data.datatable] getSelectResultSet([string]$sql) {	
+Function getSelectResultSet([string]$sql) {	
+
+	#			Pre-requisites:
+	#			Assumes we already have an open db connection $global:conn
+	
+	#			NEXT
+	#			- use generic "DbCommand", "DbDataAdapter", etc
+	#             instead of Odbc versions
+
+	$cmd = New-Object system.Data.Odbc.OdbcCommand($sql,$global:conn)
+	$da = New-Object system.Data.Odbc.OdbcDataAdapter($cmd)
+	$dt = New-Object system.Data.datatable
+	$null = $da.fill($dt)
+	return ,$dt;
+	
+	# note
+	# 	return ,$dt;	 - with leading ","
+	# instead of just 
+	# 	return $dt;
+	# - see http://stackoverflow.com/questions/1918190/strange-behavior-in-powershell-function-returning-dataset-datatable
+	# Leading comma stops the return 'unrolling' the list-like object $dt into some other kind of object
+		
+}
+
+
+#----------------------------------------------------------------
+# Run a SQL Update, Insert, or Delete 
+#----------------------------------------------------------------
+Function executeNonQuery([string]$sql) {	
+
+	#			Pre-requisites:
+	#			Assumes we already have an open db connection $global:conn
+	
+	#			NEXT
+	#			- use generic "DbCommand", "DbDataAdapter", etc
+	#             instead of Odbc versions
+
+	$cmd = New-Object system.Data.Odbc.OdbcCommand($sql,$global:conn)
+	$cmd.ExecuteNonQuery()
+
+}
+
+
+#----------------------------------------------------------------
+# Get SQL query string to get 0 or more cards given a user id
+#----------------------------------------------------------------
+Function q_get_Type_96_transactions_and_parameters_given_EmpNumber($EmpNumber) {
+
+#				Delivers text of a sql query that gets all Type 96 (UpdateBannerBarcode) 
+#				transactions, plus parameters,
+#				belonging to a given user.
+
+$sql = @"
+select 
+p.realname, a.username, t.trID, t.tr_state, tp.param_name, tp.param_value
+from 
+person p,
+account a,
+transactions t,
+transaction_params tp
+where 
+p.rollnumber = $EmpNumber
+and
+p.personID = a.personID
+and
+a.accID = t.affectsID
+and
+t.trID = tp.trID
+and
+t.tr_type_id = 96
+and
+t.tr_state <> 'creating'
+and
+t.tr_state <> 'processed'
+and
+tp.param_name = 'BARCODE'
+order by 
+t.trID
+"@
+
+return $sql
+}
+
+
+#----------------------------------------------------------------
+# Get SQL Update statement to set a new value for a given transaction parameter 
+# belonging to a given transaction number.
+#----------------------------------------------------------------
+Function q_update_transaction_parameter_given_trid_param_name_param_value($trID, $param_name, $param_value) {
+
+$sql = @"
+update
+transaction_params tp
+set 
+tp.param_value = '$param_value'
+where
+tp.param_name = '$param_name'
+and 
+tp.param_value = ''
+and
+tp.trID = $trID
+"@
+
+return $sql
+}
+
+
+#----------------------------------------------------------------
+# Get SQL Update statement to set a 'pending' transaction to 'waiting'
+# for a given transaction number.
+#----------------------------------------------------------------
+Function q_update_transaction_state_given_trid_and_current_state($trID, $old_state, $new_state) {
+
+$sql = @"
+update
+transactions t
+set 
+t.tr_state = '$new_state'
+where
+t.tr_state = '$old_state'
+and 
+t.trID = $trID
+"@
+
+return $sql
+}
+
+
+#----------------------------------------------------------------
+$global:conn = new-object system.data.odbc.odbcconnection
+$global:conn.connectionstring = "dsn=Mail;uid=netware;pwd=********;"	# MySql ODBC Connector connection string
+
+$global:conn.open()
+[string]$sql
+
+#----------------------------------------------------------------
+#				Loop through csv file 
+#				BARCODE_list_of_janus_user_ids.csv
+#
+#				Columns of csv file are:
+#				"EmpNumber","UserId","_sequence","TokenData" ["TokenData" contains the Barcode]
+
+$path = ".\BARCODE_list_of_janus_card_records.csv"
+Import-csv -path $path | 
+foreach-object `
+{ 
+	write-host $( "-" * 60 )	
+	write-host $_.EmpNumber $_.TokenData
+
+	$dt = getSelectResultSet( q_get_Type_96_transactions_and_parameters_given_EmpNumber($_.EmpNumber) ) 
+
+	write-host $dt.Rows.Count
+	
+	foreach ($row in $dt.Rows)
+	{ 
+
+		write-host $row.realname $row.username $row.trID $row.tr_state $row.param_name $row.param_value
+
+		#					$row.param_name assumed to be 'BARCODE' based on SQL for 'get_Type_96...' - need to check!
+		$sql_update = q_update_transaction_parameter_given_trid_param_name_param_value  $row.trID  $row.param_name  $_.TokenData
+#		$sql_update
+		executeNonQuery $sql_update
+		
+#		#					If transaction is 'pending', change it to 'waiting' so that it will be re-run by the Accman back-end 
+#		$sql_update_state = q_update_transaction_state_given_trid_and_current_state  $row.trID  'pending'  'waiting'
+#		$sql_update_state
+#		executeNonQuery $sql_update_state
+		
+		#					If transaction is 'waiting', change it to 'pending' so that it will "queue-jump" other 'waiting'
+		#					transactions
+		$sql_update_state = q_update_transaction_state_given_trid_and_current_state  $row.trID  'waiting'  'pending'
+#		$sql_update_state
+		executeNonQuery $sql_update_state
+		
+	}
+
+	
+} 
+
+
+#----------------------------------------------------------------
+
+#----------------------------------------------------------------
+$global:conn.close()
+#----------------------------------------------------------------

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Compress Files</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Support-Notes_16384017.html">Support Notes</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="16384073.html">Accman Transactions &amp; ConsoleSchedulerService</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Compress Files
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (aaa45815)</span>, last modified on Jun 22, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="CompressFiles-/*&lt;![CDATA[*/div.rbtoc1617011815068{padding:0px;}div.rbtoc1617011815068ul{list-style:disc;margin-left:0px;}div.rbtoc1617011815068li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#CompressFiles-Summary#CompressFiles-SummaryRelatedIssues#CompressFi"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1617011815068 {padding: 0px;}
+div.rbtoc1617011815068 ul {list-style: disc;margin-left: 0px;}
+div.rbtoc1617011815068 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1617011815068'>
+<ul class='toc-indentation'>
+<li><a href='#CompressFiles-'></a></li>
+<li><a href='#CompressFiles-Summary'>Summary</a></li>
+<li><a href='#CompressFiles-RelatedIssues'>Related Issues</a></li>
+<li><a href='#CompressFiles-Parameters'>Parameters</a>
+<ul class='toc-indentation'>
+<li><a href='#CompressFiles-SourcePath(required)'>SourcePath (required)</a></li>
+<li><a href='#CompressFiles-ExcludedPaths(Default:NoExcludedPaths)'>ExcludedPaths (Default: No Excluded Paths)</a></li>
+<li><a href='#CompressFiles-MinimumSizeOfFileToCompress(Default:100KB)'>MinimumSizeOfFileToCompress (Default: 100KB)</a></li>
+<li><a href='#CompressFiles-MinimumAgeOfFileInDays(Default:7)'>MinimumAgeOfFileInDays (Default: 7)</a></li>
+<li><a href='#CompressFiles-MaximumAgeOfFileInDays(Default:29)'>MaximumAgeOfFileInDays (Default: 29)</a></li>
+<li><a href='#CompressFiles-MaxNumberOfFilesToProcess(Default:100)'>MaxNumberOfFilesToProcess (Default: 100)</a></li>
+</ul>
+</li>
+<li><a href='#CompressFiles-Sourcecode'>Source code</a></li>
+</ul>
+</div></h2><h2 id="CompressFiles-Summary">Summary</h2><p>Given a folder to scan, this task will periodically run and attempt to compress any file whose size is over a certain threshold.</p><p>A minimum and maximum age for a file provides a time frame for eligible files. This is there primarily to avoid trying to compress files that may be currently in use e.g. sitll being logged to or become eligible for archiving.</p><h2 id="CompressFiles-RelatedIssues">Related Issues</h2><p>
+<span class="jira-issue resolved" data-jira-key="ARF-240" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-240?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-240</a>
+                            -
+            <span class="summary">AccMan often runs out of disk space</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Resolved</span>
+                </span>
+</p><h2 id="CompressFiles-Parameters">Parameters</h2><h3 id="CompressFiles-SourcePath(required)">SourcePath (required)</h3><p>Specifies the path where we should be looking for potential compression targets. This is in a <a href="https://bitbucket.org/raboof/globdir" class="external-link" rel="nofollow">minimatch</a> format to allow richer selection of folders. This is a required field and the process will fail gracefully logging an appropriate error message if it is omitted.</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"><p>Example</p></th><th class="confluenceTh"><p>Description</p></th></tr><tr><td class="confluenceTd"><pre>C:\Logs\**\*.txt</pre></td><td class="confluenceTd"><p>This would scan the c:\Logs\ folder and all subfolders for any files with the .txt extension</p></td></tr><tr><td class="confluenceTd"><pre>C:\Logs\TransactionLogs\{1504,1505}\*.txt</pre></td><td class="confluenceTd"><p>This would scan only the 1504 and 1505 transaction folders for files ending with .txt (no sub folders are included)</p></td></tr><tr><td colspan="1" class="confluenceTd"><pre>C:\Logs\*.log</pre></td><td colspan="1" class="confluenceTd">This would scan for all files with the .log extension in the Logs folder</td></tr><tr><td colspan="1" class="confluenceTd"><pre>c:\Logs\*.*</pre></td><td colspan="1" class="confluenceTd">This would scan for all files in the Log folder with any extension</td></tr></tbody></table></div><h3 id="CompressFiles-ExcludedPaths(Default:NoExcludedPaths)">ExcludedPaths (Default: No Excluded Paths)</h3><p>Provides a list of paths to exclude in <a href="https://github.com/SLaks/Minimatch/" class="external-link" rel="nofollow">minimatch</a> format. In the configuration file they are represented by a semi-colon separated list. If this value is omitted no excluded paths are used.</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"><p>Example</p></th><th class="confluenceTh"><p>Description</p></th></tr><tr><td colspan="1" class="confluenceTd"><pre>**\*.log</pre></td><td colspan="1" class="confluenceTd">Will ignore any file in any folder or subfolder that ends with .log</td></tr><tr><td class="confluenceTd"><pre>**\{87,88}\*.*;**\*.exclude</pre></td><td class="confluenceTd"><p>Will exclude any files that reside under a folder named 87 or 88 and will also exlude any files in any folder or subfolder that end with .exclude</p></td></tr></tbody></table></div><h3 id="CompressFiles-MinimumSizeOfFileToCompress(Default:100KB)">MinimumSizeOfFileToCompress (Default: 100KB)</h3><p>The minimum size a file must be for it to be eligible for compression. The format used is based on the <a href="https://github.com/omar/ByteSize#parsing" class="external-link" rel="nofollow">ByteSize</a> library</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"><p>Example</p></th><th class="confluenceTh"><p>Description</p></th></tr><tr><td class="confluenceTd"><p>10MB</p></td><td class="confluenceTd"><p>Files must be at least 10MB (10485760 bytes) in size to be eligible for compression</p></td></tr><tr><td class="confluenceTd"><p>100KB</p></td><td class="confluenceTd"><p>Files must be at least 100KB (102400 bytes) in size to be eligible for compression</p></td></tr><tr><td class="confluenceTd"><p>1024B</p></td><td class="confluenceTd"><p>Files must be at least 1024B (1024 bytes) in size to be eligible for compression</p></td></tr></tbody></table></div><h3 id="CompressFiles-MinimumAgeOfFileInDays(Default:7)">MinimumAgeOfFileInDays (Default: 7)</h3><p>The minimum age of the file for it to be eligible for compression. This is based on the creation date of the file.</p><h3 id="CompressFiles-MaximumAgeOfFileInDays(Default:29)">MaximumAgeOfFileInDays (Default: 29)</h3><p>The maximum age of the file for it to be eligible for compression. This is based on the creation date of the file.</p><h3 id="CompressFiles-MaxNumberOfFilesToProcess(Default:100)">MaxNumberOfFilesToProcess (Default: 100)</h3><p>The maximum number of files to process in one batch.</p><h2 id="CompressFiles-Sourcecode">Source code</h2><p>The source for this class can be found <a href="https://stash.salford.ac.uk:8447/projects/AC/repos/accman.net/browse/AccManBackEndLibrary/Processes/HouseKeeping/CompressFiles.cs?at=refs%2Fheads%2Fbugfix%2FARF-240-accman-often-runs-out-of-disk-space" class="external-link" rel="nofollow">here</a>.</p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

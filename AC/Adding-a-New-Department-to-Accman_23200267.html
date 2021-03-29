@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Adding a New Department to Accman</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Support-Notes_16384017.html">Support Notes</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Adding a New Department to Accman
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (ujs077)</span>, last modified by <span class='editor'> Paul Daniels</span> on Sep 21, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span style="color: black;"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1617011815251 {padding: 0px;}
+div.rbtoc1617011815251 ul {list-style: disc;margin-left: 0px;}
+div.rbtoc1617011815251 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1617011815251'>
+<ul class='toc-indentation'>
+<li><a href='#AddingaNewDepartmenttoAccman-Introduction'>Introduction</a></li>
+<li><a href='#AddingaNewDepartmenttoAccman-Real-WorldExample'>Real-World Example</a></li>
+<li><a href='#AddingaNewDepartmenttoAccman-CreatingAdditionalAccountsforaDepartment'>Creating Additional Accounts for a Department</a></li>
+<li><a href='#AddingaNewDepartmenttoAccman-SupportingDocumentation'>Supporting Documentation</a></li>
+<li><a href='#AddingaNewDepartmenttoAccman-PregeneratingAccounts'>Pregenerating Accounts</a>
+<ul class='toc-indentation'>
+<li><a href='#AddingaNewDepartmenttoAccman-EmailfromAndyBourne'>Email from Andy Bourne</a></li>
+</ul>
+</li>
+</ul>
+</div><br/></span></p><h1 id="AddingaNewDepartmenttoAccman-Introduction"><span style="color: black;">Introduction</span></h1><p><span style="color: rgb(0,0,0);">Occasionally, the University will create a new department in SAP. Accman only usually gets to know about this when the SAP Import runs. It will pull in person records, including department details that it doesn't recognise. Unfortunately this can cause all kinds of problems because many of Accman's internal SQL queries rely on joins between the various department-related database tables it has. These tables need to be kept up to date otherwise many things in Accman will simply fail. </span></p><p><span style="color: rgb(0,0,0);">Adding a new department isn't too difficult but it involves:</span></p><ul><li><span style="color: rgb(0,0,0);">Getting some details of the department from SAP (such as the 4-letter department code)</span></li><li><span style="color: rgb(0,0,0);">Making up a new 2-letter department code and a few other values for the new department</span></li><li><span style="color: rgb(0,0,0);">Inserting some new records into the various department tables</span></li><li><span style="color: rgb(0,0,0);">Pre-generating some empty accounts that can be used for new members of staff</span></li></ul><div><span style="color: rgb(0,0,0);"><br/></span></div><div><span style="color: rgb(0,0,0);">The Real-World example below shows how a recently-created department 'Quality &amp; Enhancement Office' was added to Accman.</span></div><div><span style="color: rgb(0,0,0);"><br/></span></div><div><span style="color: rgb(0,0,0);">Additionally the University could create a new school code, such as VA for Arts and media. This will also affect students however the same table updates apply.</span></div><div><span style="color: rgb(0,0,0);"><br/></span></div><div><span style="color: rgb(0,0,0);">The other issue this covers is when a department code runs out of accounts. When this happens, consult the spreadsheet at &quot;Q:\Account Manager\support\useradmin\pregeneration of accounts\staff and student codes.xls&quot; on which department_status_code in the department_status table should be created. This is a virtual copy of an existing record for the same department.<br/></span></div><h1 id="AddingaNewDepartmenttoAccman-Real-WorldExample"><span style="color: black;">Real-World Example</span></h1><p><span style="color: rgb(0,0,0);">There was a recent support case (INC158226) whereby a new member of staff could not self-activate using the Staff Self Activation website. It turned out that this was because Accman was assigning them a department code of 'ZZ'. This is the value Accman assigns when it cannot determine which department they should really be in. </span></p><p><span style="color: rgb(0,0,0);">The SAP Import process was feeding accman with a SAP Department of 'CAQE'. This is the code for 'Quality and Enhancement Office' which is a completely new department. </span></p><p><span style="color: rgb(0,0,0);">To make Accman aware of the new department, I inserted the records shown below into the database. </span></p><p><span style="color: rgb(0,0,0);">Note, that in some case you need to 'make up' the values. I used 'QE' because it fit the name 'Quality &amp; Enhance', and also because it wasn't already in use. Likewise, I chose qes.qe.services.salford because it fit the pattern used by other departments and also hadn't already been used. Since this is a 'staff-only' department, I only added one entry to DEPARTMENT_STATUS because I didn't see the need to add any student-related records but it's conceivable that for other departments, you would add 'QEA' for undergraduates, or 'QEP' for postgraduates.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">-- DEPT
+-- This is where the two-letter department code comes from
+insert into dept (dept_code, aisDept_code, dept_name, full_name, depttype, active, site_code, defaultCredit, defaultQuota)
+values (&#39;QE&#39;, &#39;QE&#39;, &#39;Quality &amp; Enhance&#39;, &#39;Quality &amp; Enhancement Office&#39;, &#39;service&#39;, &#39;Y&#39;, &#39;CW&#39;, 0, 0);
+
+
+-- SAP_DEPT
+-- This is a mapping table used by the SAP_Import process to map the 4-letter SAP code to the 2-letter Accman code
+select * from sap_dept;
+insert into sap_dept (dept, dept_code, DEPT_desc) 
+values (&#39;CAQE&#39;, &#39;QE&#39;, &#39;Quality &amp; Enhance&#39;);
+
+
+-- DEPARTMENT_STATUS
+select * from department_status where dept_code = &#39;UI&#39;;
+insert into department_status (department_status_code, dept_code, status_code, active, defaultContext, defaultServer, defaultVolume, defaultCredit, defaultQuota, viewlevel)
+values (&#39;QES&#39;, &#39;QE&#39;, &#39;S&#39;, &#39;Y&#39;, &#39;qes.qe.services.salford&#39;, &#39;ISD-STAFFFILE-A&#39;, &#39;STAA1&#39;, 0, 50, 2);
+
+
+-- HR_DEPARTMENTS
+-- This is another SAP/Accman mapping table. It&#39;s used by Equitrac to work out which cost code a department belongs to, so that it can charge printing costs
+insert into hr_departments (sap_dept_code, description, cost_code_area, cost_code)
+values (&#39;CAQE&#39;, &#39;Quality &amp; Enhance&#39;, &#39;Quality &amp; Enhance&#39;, &#39;USGA99&#39;);
+
+
+-- DEPARTMENT_COST_CENTRE (CA00 is &#39;Professional Services&#39;)
+-- This is needed to map the new department code to an existing personnel area. Many departments share the same personnel area. Shamshudin was able to tell me that department CAQE maps to personnel area CA00 which already exists in Accman and stands for &#39;Professional Services&#39; (you can see it in the PERSONNEL_AREA table, but I didn&#39;t need to modify that table)
+insert into department_cost_centre (dept_code, personnel_area_code)
+values (&#39;QE&#39;, &#39;CA00&#39;);
+ 
+-- DEPT_PERSON_ACCOUNT
+insert into dept_person_account (person_dept_code, account_dept_code) values (&#39;QE&#39;, &#39;QE&#39;);</pre>
+</div></div><p><span><span style="color: rgb(0,0,0);">Finally, I waited for the SAP_Import process to run (which is at 18:10 in the evening). This time, it found the new mapping between CAQE and QE, and updated the Person record with 'QE' instead of 'ZZ'. </span></span></p><p><span><span style="color: rgb(0,0,0);">Because the codes are now correct, the member of staff is able to activate their account on the Staff Self Activation webpage.</span></span></p><p><span><span style="color: rgb(0,0,0);">Final note: if this is a brand new department, make sure there are some pregenerated accounts before doing anything like self-activating a user. The support team have a script that can pregenerate the accounts. We have generated a few accounts with usernames starting with QES for this purpose.</span></span></p><h1 id="AddingaNewDepartmenttoAccman-CreatingAdditionalAccountsforaDepartment"><span><span style="color: rgb(0,0,0);">Creating Additional Accounts for a Department</span></span></h1><p><span><span style="color: rgb(0,0,0);">When the system runs out of pregen accounts for a department, a new department_status record needs to be created, based on an existing one for the same department code.<br/></span></span></p><h1 id="AddingaNewDepartmenttoAccman-SupportingDocumentation"><span><span style="color: rgb(0,0,0);">Supporting Documentation</span></span></h1><p><span><span style="color: rgb(0,0,0);">The information below provides some additional information. This example for the the Music and Media department, MM. The old status_code is H and the new status_code is N.<br/></span></span></p><div class="line number15 index14 alt2"><code class="java plain">select * from department_status where department_status_code = </code><code class="java string">'MMH'</code><code class="java plain">;</code></div><div class="line number16 index15 alt1"><code class="java plain">insert
+ into department_status (department_status_code, dept_code, status_code,
+ active, defaultContext, defaultServer, defaultVolume, defaultCredit, 
+defaultQuota, viewlevel)</code></div><div class="line number17 index16 alt2"><code class="java plain">values (</code><code class="java string">'MMN'</code><code class="java plain">, </code><code class="java string">'MM'</code><code class="java plain">, </code><code class="java string">'N'</code><code class="java plain">, </code><code class="java string">'Y'</code><code class="java plain">, </code><code class="java string">'mmn.mm.services.salford'</code><code class="java plain">, </code><code class="java string">'ISD-STAFFFILE-A'</code><code class="java plain">, </code><code class="java string">'STAA1'</code><code class="java plain">, </code><code class="java value">0</code><code class="java plain">, 5</code><code class="java value">0</code><code class="java plain">, 6</code><code class="java plain">);</code></div><h1 class="line number17 index16 alt2" id="AddingaNewDepartmenttoAccman-PregeneratingAccounts">Pregenerating Accounts</h1><p>The scripts to manage pregeneration of accounts are located in Q:\Account Manager\support\useradmin\pregeneration of accounts. A number of helper scripts can give details of available accounts for a department.</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Script Name</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">available.pl &lt;dept status code&gt;</td><td class="confluenceTd">Show available accounts for &lt;dept status code&gt;</td></tr><tr><td colspan="1" class="confluenceTd">available_all.pl</td><td colspan="1" class="confluenceTd">Show available accounts for all departments</td></tr><tr><td colspan="1" class="confluenceTd">available_dept &lt;dept code&gt;</td><td colspan="1" class="confluenceTd">Show available accounts for &lt;dept code&gt;</td></tr><tr><td colspan="1" class="confluenceTd">available_pg.pl &lt;dept code&gt;</td><td colspan="1" class="confluenceTd">Show available PG accounts for &lt;dept code&gt;</td></tr><tr><td colspan="1" class="confluenceTd">available_staff.pl &lt;dept code&gt;</td><td colspan="1" class="confluenceTd">Show available Staff accounts for &lt;dept code&gt;</td></tr></tbody></table></div><p>These scripts will show the following data for each department status code.</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Status</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">new</td><td class="confluenceTd">Accounts that pregen transaction has sent to Banner.</td></tr><tr><td colspan="1" class="confluenceTd">printed</td><td colspan="1" class="confluenceTd">Accounts that Banner can use.</td></tr><tr><td colspan="1" class="confluenceTd">available</td><td colspan="1" class="confluenceTd"><p>Count of accounts that have not been pregen'd. Excludes Valid,Disabled,Deleted.</p></td></tr></tbody></table></div><p>To create a pregen transaction, run the script:</p><p>pregen.pl &lt;department status code&gt; &lt;count&gt;</p><h2 id="AddingaNewDepartmenttoAccman-EmailfromAndyBourne"><span style="color: black;">Email from Andy</span><span style="color: black;"> Bo</span><span style="color: black;">urne</span></h2><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">The original accman structure had DEPT, SAP_DEPT, and DEPARTMENT_STATUS.</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">The other tables PERSONNEL_AREA, DEPT_PERSON_ACCOUNT, DEPARTMENT_COST_CENTRE, HR_DEPARTMENTS, were added on by various projects over the years, replicating some of the data in the original tables but also adding some new fields. </span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">For example, I'm pretty sure that DEPARTMENT_COST_CENTRE and HR_DEPARTMENTS were added when Equitrac printing was implemented.</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">I also think that DEPT_PERSON_ACCOUNT is a mapping table that allows for the possibility that the 2-letter department code used in a PERSON table record might be different from the 2-letter code used for an ACCOUNT, but I don't think that's relevant any longer. As of approx 5 years ago we ceased trying to keep usernames matched to departments when staff or students moved around the university; since that point, only the dept code (2-letter) associated with the PERSON table has had any significance; the one related to ACCOUNT no longer matters.  However, you may still find references to DEPT_PERSON_ACCOUNT in source code.</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">If you've got a completely new SAP dept code (4-letter code) [say ABCD] corresponding to a completely new accman dept code (2-letter code) [say PQ], then as far as the core tables DEPT, SAP_DEPT, and DEPARTMENT_STATUS are concerned, you need:</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">DEPT - an entry for PQ</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">SAP_DEPT - an entry for ABCD, mapping to PQ</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">DEPARTMENT_STATUS - a staff entry, a postgrad entry, and an undergrad entry (if relevant) - e.g. PQS, PQP, PQA.  Each entry maps to dept code PQ, and there is also a 'context' field that indirectly maps to an AD group name (Richard and Tom know about this).</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">Once the above data has been set up you need to run the account pregen script to create a batch of ACCOUNT table records corresponding to each 3-letter code (e.g. <a href="http://pregen.pl/" class="external-link" rel="nofollow">pregen.pl</a> PQS 50)</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">For the other tables:</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">HR_DEPARTMENTS more-or-less replicates SAP_DEPT -  has something to do with Equitrac printing, as mentioned above - as has DEPARTMENT_COST_CENTRE.</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">If DEPT_PERSON_ACCOUNT is still referred to in source code then I think it just needs a record for your new department &quot;PQ&quot; (in both PERSON_DEPT_CODE and ACCOUNT_DEPT_CODE fields).</span></p><p><span><span style="color: rgb(0,0,0);"> </span></span></p><p><span style="color: black;">I'm not exactly sure what  PERSONNEL_AREA is used for.</span></p><p><span><span style="color: rgb(0,0,0);"><br/></span></span></p><p> </p>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-23202056"></a>
+                                    <font class="smallfont"><p>We could also do with making reference to the behaviour of the other source of departmental information (i.e. Banner) and any impacts this has on the above.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis833 at Oct 14, 2015 10:40
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

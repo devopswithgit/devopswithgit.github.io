@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Extension Cancellation failed due to invalid ExtensionDate parameter</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Completed_19595586.html">Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Extension Cancellation failed due to invalid ExtensionDate parameter
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Paul Daniels</span>, last modified by <span class='editor'> Jon Besson</span> on Dec 04, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Extension cancellation failed due to invalid ExtensionDate parameter<br/> </td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Bug</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">Medium</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis876" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis876" data-linked-resource-id="824264" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Daniels</a></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd"><time datetime="2015-10-28" class="date-past">28 Oct 2015</time> </td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis876" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis876" data-linked-resource-id="824264" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Daniels</a> </td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-298" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-298?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-298</a>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+</td></tr></tbody></table></div><p> </p><h2 id="ExtensionCancellationfailedduetoinvalidExtensionDateparameter-Details">Details</h2><p>Had a case where an account extension cancellation was left in pending as the ExtensionDate parameter was set to 0000-00-00. The log is as follows:</p><p> </p><p>23/10/2015 16:01:00 - Transaction 10226904 started</p><p>23/10/2015 16:01:00 - Unable to parse parameter extensionDate.</p><p>23/10/2015 16:01:00 - Response was false from ProcessTransaction for Transaction 10226904</p><p>23/10/2015 16:01:00 - Transaction 10226904 completed</p><p>A successful extension cancellation that happened 2 days later on the 25/10/2015 had a ExtensionDate parameter of 2015-10-24. Its possible this transactions was automatically generated while the failed one was manually generated.</p><p> </p><p>See transaction 10226904.</p></div>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-25100967"></a>
+                                    <font class="smallfont"><p>This has just come up again. There is a difference in how the Perl code used to handle dates, and how .NET now does it.</p><p>.NET Doesn't like 0000-00-00 which is used as the extensionDate transaction parameter. For a cancellation, the code needs a valid date that is in the past (a date in the future would indicate an extension rather than a cancellation). The code should insert DateTime.MinValue instead of 0000-00-00 to make this work.</p><p>A workaround is to find the failed 'cancel extension' (type 40) transaction, and modify the extensionDate transaction parameter value to be DateTime.MinValue (or any other valid (but in the past) date) and re-run the transaction i.e. set it back to 'waiting'. </p><p>Better still, the extend account and cancel extension transactions should be properly split into two totally different transactions. They are currently shared, and whether the user means 'please extend' or 'please cancel extension' is implied by whether the extensionDate is in the future or the past respectively. Implying what the user meant just from looking at a date field is prone to errors anyway. There should be two separate transaction processors for these two actions. Or at least an extra transaction parameter that explicitly states what the action should be e.g. action=extend/cancelExtension (and then the extensionDate param wouldn't be needed at all (for the cancellation at least)).</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis894 at Feb 22, 2016 13:23
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-30803586"></a>
+                                    <font class="smallfont"><p>I have implemented a fix for this on branch ARF-411 
+<span class="jira-issue resolved" data-jira-key="ARF-411" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-411?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-411</a>
+                            -
+            <span class="summary">All Extension Operations are listed as &#39;Cancel Extensions&#39;</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Resolved</span>
+                </span>
+. Let's UAT it?</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by aaa45816 at Oct 19, 2016 14:41
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:55</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

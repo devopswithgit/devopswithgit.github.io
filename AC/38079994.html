@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : AD &amp; Exchange Testing</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Testing_23200775.html">Testing</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : AD &amp; Exchange Testing
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Jun 21, 2017
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="AD&amp;ExchangeTesting-Introduction">Introduction</h1><p>Here are some tips when testing Accman's AD and Exchange integration. These were written while testing 
+<span class="jira-issue resolved" data-jira-key="ARF-484" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-484?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-484</a>
+                            -
+            <span class="summary">Detach Exchange Mailbox when Disabling AD Account</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+.</p><p>You need to be able to RDP to the Accman Back End Server (UOS-T-ACBE-01) and also the Exchange Server (UOS-T-EXCH-01) in order to carry out these tests. You cannot directly RDP to the Exchange server, but if you first RDP onto the UOS-T-ACBE-01, you can then initiate a new RDP session to the Exchange server from there. </p><p>The test domain is called TAD1.TEST, as opposed to ISDADS.SALFORD.AC.UK. The above servers all belong to the TAD1.TEST domain. </p><p>When logging onto the servers, you can use this special account: auis894. This is a domain admin account.</p><p>You will also need access the the Accman TEST database (UOS-T-RHEL-03). We will be specifically using the MAIL and ASSOCIATES schemas.</p><p>This test is specific to an Associate account. This process will be slightly different for Staff or Students.</p><p>This test scenario requires Accman's ConsoleSchedulerService to be configured with the following transaction processors. They all need to be running. </p><ul><li>93 (Create AD Account)</li><li>115 (Create Exchange Mailbox)</li><li>92 (Deactivate Associate)</li><li>12 (Disable Account)</li><li>104 (Disable AD Account)</li></ul><h1 id="AD&amp;ExchangeTesting-WhatthisTestDoes">What this Test Does</h1><p>This test performs the following <strong>preparation</strong> tasks</p><ol><li>Identifies an existing account in Accman that can be used for testing purposes</li><li>Deletes their corresponding AD account and Exchange mailbox</li><li>Updates some of the account's details in the Accman database to suit our test case</li><li>Prepares a 'Create AD' transaction for execution</li></ol><p>It then performs these tasks</p><ol><li>Create an AD account</li><li>Create an Exchange Mailbox</li><li>Modify the account's end date, to simulate the user leaving the university</li><li>Watching in awe as the DeactivateAssociate detects that the account should be disabled</li><li>Disabling the AD Account</li><li>Detaching the Exchange Mailbox</li></ol><h1 id="AD&amp;ExchangeTesting-TheProcess">The Process</h1><h2 id="AD&amp;ExchangeTesting-Setup">Setup</h2><p>Find a suitable associate account to test with. We could create a new one from scratch but that would be a lot more work and for this purpose, making use of an existing account is satisfactory. We can find an associate by looking in the associates database</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Find the most recently-created Associate account</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">select * from associates.associate order by trid desc limit 1:</pre>
+</div></div><p>From this we will get the username field (in the UID column). Let's assume it is <strong>AAA99906</strong>. We should be able to find a corresponding Account in the mail database:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Find the corresponding account in the MAIL database</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">select * from mail.account where username = &#39;AAA99906&#39;;</pre>
+</div></div><p>Make a note of the ACCID and PERSONID values. These are the primary key fields for the ACCOUNT and PERSON tables respectively.</p><p>We can get the corresponding PERSON record with this query</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Find the matching PERSON record</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">select * from person where personid = &lt;PERSONID&gt;;</pre>
+</div></div><p><br/></p><p><span>We need the account and person we find to be in a fit state for the test. So we can update a few fields if necessary. The main requirements are the account is present and valid (not disabled, left etc), and it has an end date in the future.</span></p><div class="confluence-information-macro confluence-information-macro-warning"><p class="title">Important</p><span class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>We are also going to give this user a completely different username, to avoid conflicts with existing mailboxes this user may already have. This is because it's difficult to completely delete a mailbox in Exchange. So in the example below, I'm going to stop using the username AAA99906 and change their username to one I know does not already exist i.e. AAA99910. I've checked the database, AD and Exchange to confirm this username is not already in use, so it's safe to go ahead</p></div></div><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Set some initial values on Account and Person records</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">update associates.associate set uid = &#39;AAA99910&#39; where id = 44053 limit 1;
+update mail.account set disabledreason = null, username = &#39;AAA99910&#39;, state = &#39;valid&#39;, primary_mailname = &#39;s.sinclair10&#39;, where accid = 328838 limit 1;
+update mail.person set person_state = &#39;present&#39;, end_date = &#39;2018-06-19&#39; where personid = 3259178 limit 1;</pre>
+</div></div><p>This record should now be good to test with. </p><h2 id="AD&amp;ExchangeTesting-BegintheTest">Begin the Test</h2><h3 id="AD&amp;ExchangeTesting-CreatetheAD&amp;ExchangeAccounts">Create the AD &amp; Exchange Accounts</h3><p>Since we picked an account that already existed, we should be able to find their original <strong>Create AD Account</strong> transaction (type 93), and reset its status to 'waiting'</p><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Reset the AD transaction back to 'waiting'</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">select max(TRID) from transactions where tr_type_id = 93 and affectsid = &lt;ACCID&gt;;
+update transactions set tr_state = &#39;waiting&#39; where trid = &lt;TRID&gt; limit 1;</pre>
+</div></div><p>The transaction should be processed and you'll be able to see the AD account appear in the AD client (ignore the username in the screenshot) . </p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" confluence-query-params="effects=drop-shadow" src="attachments/38079994/38080013.png?effects=drop-shadow" data-image-src="attachments/38079994/38080013.png" data-unresolved-comment-count="0" data-linked-resource-id="38080013" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2017-6-21_15-37-30.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="38079994" data-linked-resource-container-version="5"></span></p><p>This will also have created an Exchange Mailbox transaction (type 115) which will be processed a few seconds later. You'll be able to see it in the Exchange Management Console on UOS-T-EXCH-01</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" confluence-query-params="effects=drop-shadow" src="attachments/38079994/38080014.png?effects=drop-shadow" data-image-src="attachments/38079994/38080014.png" data-unresolved-comment-count="0" data-linked-resource-id="38080014" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2017-6-21_15-46-6.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="38079994" data-linked-resource-container-version="5"></span></p><h3 id="AD&amp;ExchangeTesting-SimulatetheUserLeavingtheUniversity">Simulate the User Leaving the University</h3><p>For Associates, the Deactivate Associate transaction processor looks for any accounts where the <strong>End Date</strong> is set to the past. Note, there is also a grace period of 28 days, so we need to set their end date to something that is at least one month ago, otherwise it won't pick the account up for processing. Just to be sure, the example below sets the date to 2016-06-19:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Update Person Record with End Date in the Past</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">update mail.person set person_state = &#39;present&#39;, end_date = &#39;2016-06-19&#39; where personid = 3259178 limit 1;</pre>
+</div></div><p>If Deactivate Associate is running in the background, it will quickly pick up the account and generate a Disable transaction (type 12) which will in turn generate a Disable AD Account transaction (type 104). You should be able to see these transactions process fairly quickly.</p><p>Note, Deactivate Associate should also set the <strong>PERSON</strong> status to LEFT<strong> </strong>and the disable transaction should set the account state to <strong>disabled</strong>.</p><p>The Disable AD Account transaction sets some properties on the mailbox which 'detaches' it from the AD account. The mailbox becomes 'orphaned'. It also disables the mailbox if configured to do so. Finally, it disables the AD account that it was attached to. </p><h1 id="AD&amp;ExchangeTesting-CheckingMailboxProperties">Checking Mailbox Properties</h1><p>To confirm the changes have been effective you can obtain all attributes for a mailbox by entering this PowerShell command into a Powershell prompt on UOS-T-EXCH-01:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Retrieve All Attributes</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false; theme: Confluence" data-theme="Confluence">Get-Mailbox -identity s.sinclair10@salford.ac.uk  | format-list *</pre>
+</div></div><p>If you do this before and after detaching the mailbox, then comparing the results, you will see differences such as these</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" confluence-query-params="effects=drop-shadow" src="attachments/38079994/38080022.png?effects=drop-shadow" data-image-src="attachments/38079994/38080022.png" data-unresolved-comment-count="0" data-linked-resource-id="38080022" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2017-6-21_16-38-52.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="38079994" data-linked-resource-container-version="5"></span></p><p>This gives some confidence that the attributes are being correctly set.</p><p><br/></p><p><br/></p><p><br/></p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/38079994/38080013.png">image2017-6-21_15-37-30.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/38079994/38080014.png">image2017-6-21_15-46-6.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/38079994/38080022.png">image2017-6-21_16-38-52.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Daily Checks Fail - Common Causes</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Support-Notes_16384017.html">Support Notes</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Daily Checks Fail - Common Causes
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Feb 08, 2018
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1617011815850 {padding: 0px;}
+div.rbtoc1617011815850 ul {list-style: disc;margin-left: 0px;}
+div.rbtoc1617011815850 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1617011815850'>
+<ul class='toc-indentation'>
+<li><a href='#DailyChecksFail-CommonCauses-Introduction'>Introduction</a>
+<ul class='toc-indentation'>
+<li><a href='#DailyChecksFail-CommonCauses-TransactionProcessingattimeofChecking'>Transaction Processing at time of Checking</a></li>
+<li><a href='#DailyChecksFail-CommonCauses-BannerImportFails'>Banner Import Fails </a></li>
+<li><a href='#DailyChecksFail-CommonCauses-PregenerateAssociates-PendingType88Transactions'>Pregenerate Associates - Pending Type 88 Transactions</a></li>
+<li><a href='#DailyChecksFail-CommonCauses-CreateActiveDirectoryAccountFails'>Create Active Directory Account Fails</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="DailyChecksFail-CommonCauses-Introduction">Introduction</h1><p>The Support Team run a set of daily checks to make sure things are running smoothly. Sometimes the same issue(s) crops up time and time again, so this page is a good place to document common problems and their solutions/explanations. </p><h2 id="DailyChecksFail-CommonCauses-TransactionProcessingattimeofChecking">Transaction Processing at time of Checking</h2><p>Sometimes, the daily checks will report a transaction has failed (or at least is a concern) simply because it's being processed at the time of being checked. Transactions are in a pending state when they are processing. Usually when they fail, they are left in the pending state. But being in a pending state can mean that it's just doing its job. Sometimes transactions can take a while to process, and can therefore be in a pending state for a while. For pending transactions, its sometimes worth waiting a few minutes and then checking again. Everything might be fine and the next time it is checked, it will be in a processed state i.e. everything is fine.</p><h2 id="DailyChecksFail-CommonCauses-BannerImportFails">Banner Import Fails </h2><p>Sometimes the checks report that the Banner Import has failed. There are several reasons for this</p><ol><li>At the end of the import, Accman sets a flag to 'Y' to say that the import was completed successfully. There's a bug in Accman that doesn't mark this flag as 'Y' if there were no records to process in that particular import, so it remains 'N'. This makes it look like there was a problem, but really there just wasnt anything to do. You can see that there were no accounts to process because there's a 0 next to that particular import.</li><li>We sometimes get Banner Imports failing because of database connectivity errors. If this happens for several successive Banner Imports, it is a concern, and even a single failure should be investigated. However if there is at least one successful Banner Import <em>since</em> the last failed import, all records will have caught up and it's nothing to worry too much about. The failures should still be investigated of course. </li></ol><h2 id="DailyChecksFail-CommonCauses-PregenerateAssociates-PendingType88Transactions">Pregenerate Associates - Pending Type 88 Transactions</h2><p>When performing a bulk upload of new Associate accounts, the end user (usually someone on Service Desk) needs to specify which department/school they are for. A department has a two letter department code (e.g. ES) and there is a status code too (e.g. 'S'). Pregen Associate looks for a row in the database matching those values using the following queries:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Pregen Associate Queries</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">-- With a Status Code
+SELECT ds.*, dpa.*
+FROM department_status ds 
+LEFT OUTER JOIN dept_person_account dpa ON dpa.account_dept_code = ds.dept_code 
+WHERE ds.status_code = &#39;L&#39; AND (dpa.person_dept_code = &#39;ES&#39; OR ds.dept_code = &#39;ES&#39;) 
+ORDER BY department_status_id DESC
+LIMIT 1;
+                    
+-- Dept Code only                    
+SELECT ds.*, dpa.*
+FROM department_status ds 
+INNER JOIN dept_person_account dpa ON dpa.account_dept_code = ds.dept_code 
+WHERE dpa.person_dept_code = &#39;ES&#39;
+ORDER BY department_status_id DESC
+LIMIT 1;  </pre>
+</div></div><p>If no match is found, the process will fail and the account will not be created. Sometimes new department/status combinations are added e.g. in SAP and nobody tells use, so we only usually find out about this when something fails in this way. When this happens, we can follow the instructions here <a href="Adding-a-New-Department-to-Accman_23200267.html">Adding a New Department to Accman</a> to add the department retrospectively to Accman.</p><p>The solution is to mark these failed transactions as <strong>failed</strong> and then upload them again against the correct department (after checking that the above queries return data for the department chosen). A whole new set of accounts will be generated, the sponsor will be notified by email and when the users arrive at the university, they will be able to activate their accounts successfully. </p><h2 id="DailyChecksFail-CommonCauses-CreateActiveDirectoryAccountFails">Create Active Directory Account Fails</h2><p>When Type 93's fail and the transaction log file mentions that the password did not meet the complexity requirements, it's usually for a user who has returned, and their password in Accman was initially generated before the AD password complexity policy was tightened up, AD will reject that password. In this situation, the transaction can be marked as <strong>processed</strong> because a returning student already has an AD account and when it gets to the part where it sets the password, it has already done the tasks it needs to do for an existing account. So it's correct that it has logged an error, but it isn't really of any consequence because the student will set the password via OLR anyway on their return. </p><p>If this happens to a brand new student who has never had an AD account before, I would recommend deleting the partially-created account in AD, updating the account_details record with a temporary, complext password, and setting the transaction back to waiting. This will create the AD account correctly, and perform the additional tasks that a new account needs performing on it. </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

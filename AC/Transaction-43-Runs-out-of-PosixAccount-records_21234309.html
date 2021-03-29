@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Transaction 43 Runs out of PosixAccount records</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Completed_19595586.html">Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Transaction 43 Runs out of PosixAccount records
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Paul Daniels</span>, last modified by <span class='editor'> Unknown User (uis894)</span> on Sep 25, 2017
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Transaction 43 Runs out of PosixAccount records</td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Bug</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">Medium</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><div class="content-wrapper"><a class="confluence-userlink user-mention" data-username="uis876" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis876" data-linked-resource-id="824264" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Daniels</a></div></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd"><div class="content-wrapper"><time datetime="2015-05-18" class="date-past">18 May 2015</time> </div></td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd"><div class="content-wrapper"><a class="confluence-userlink user-mention" data-username="uis876" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis876" data-linked-resource-id="824264" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Daniels</a></div></td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd"><div class="content-wrapper">
+<span class="jira-issue" data-jira-key="ARF-190" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-190?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10311&amp;avatarType=issuetype"/>ARF-190</a>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-default
+     jira-macro-single-issue-export-pdf">Open</span>
+                </span>
+</div></td></tr><tr><th colspan="1" class="confluenceTh">Size</th><td colspan="1" class="confluenceTd"></td></tr></tbody></table></div><p><br/></p><h2 id="Transaction43RunsoutofPosixAccountrecords-Details">Details</h2><p>There is a reliance on PosixAccount records by the Register transaction, 43. However there can only be 65535 of these records and there is is no process to make available records that are not used anymore. See V:\ITS\Programme Management\Applications\Support\Applications\Accman v2.0\Troubleshooting\Accman V2.0 - TRB - Fixing Unavailable uidNumber on Tr 43s.docx for the current manual process for making PosixAccount records available for new accounts. It is entirely possible that these records are no longer required.</p><p><strong>Update</strong>: the posix account number is needed. It's copied into AD as an attribute on an individual's account. The attribute is called UIDNumber, and it's required for anyone logging into the university network on an Ubuntu machine, which is what the staff &amp; students in the Computer Science department use. Without this AD attribute, they will be unable to log in.</p><p>CHG<span style="color: rgb(33,48,74);">3568 adds another 100,000 available posix accounts to the <strong>posixaccount</strong> table. This is a simple matter of executing the following SQL:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Add more posix accounts</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">INSERT INTO posixaccount (uidnumber, accid, username, completed) VALUES (65536, 0, &#39;&#39;, &#39;N&#39;);
+INSERT INTO posixaccount (uidnumber, accid, username, completed) VALUES (65537, 0, &#39;&#39;, &#39;N&#39;);
+INSERT INTO posixaccount (uidnumber, accid, username, completed) VALUES (65538, 0, &#39;&#39;, &#39;N&#39;);
+INSERT INTO posixaccount (uidnumber, accid, username, completed) VALUES (65539, 0, &#39;&#39;, &#39;N&#39;);
+INSERT INTO posixaccount (uidnumber, accid, username, completed) VALUES (65540, 0, &#39;&#39;, &#39;N&#39;);
+...
+...</pre>
+</div></div><p><span style="color: rgb(33,48,74);">The first column is the posix account number / uidnumber which is linked to an Accman account when the <strong>accid </strong>is set during the registration transaction. That's the value that eventually gets copied into AD when an AD account is created.</span></p><p><span style="color: rgb(33,48,74);">For additional help regarding how this field is used by Ubunti, contact Rick Ogden in Computer Science.</span></p><p><span style="color: rgb(33,48,74);"><br/></span></p></div>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-34177493"></a>
+                                    <font class="smallfont"><p><a class="confluence-userlink user-mention" data-username="uis876" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis876" data-linked-resource-id="824264" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Paul Daniels</a> do you think this is still happening? </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ujs077 at Feb 23, 2017 15:00
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-34177495"></a>
+                                    <font class="smallfont"><p><a class="confluence-userlink user-mention" data-username="ujs077" href="https://confluence.salford.ac.uk:8444/confluence/display/~ujs077" data-linked-resource-id="832098" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (ujs077)</a> Yes it is. In fact there is another problem that might superceed this in that we shouldn't be re using posix uids. Tom Greenwood and Steve Harrison have been involved in changes to this.</p><p><br/></p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis876 at Feb 23, 2017 15:03
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

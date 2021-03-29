@@ -1,0 +1,58 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1106" measuredH="629" mockupW="1067" mockupH="609">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="39" y="20" w="1067" h="609" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Accman%20Front%20End%0Ahttp%3A//accmanweb.salford.ac.uk/AccManFE</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::TabBar" x="93" y="156" w="941" h="400" measuredW="447" measuredH="100" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <selectedIndex>1</selectedIndex>
+        <text>SAP%20/%20Banner%20Imports%2C%20Transactions%2C%20External%20Systems%2C%20etc%2C%20etc</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Title" x="93" y="116" w="-1" h="-1" measuredW="290" measuredH="31" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>28</size>
+        <text>System%20Health%20Checks</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::SubTitle" x="122" y="211" w="-1" h="-1" measuredW="197" measuredH="23" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>20</size>
+        <text>Transactions%20by%20state</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::HRule" x="121" y="234" w="197" h="-1" measuredW="100" measuredH="10" zOrder="4" locked="false" isInGroup="-1"/>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::ComboBox" x="241" y="249" w="-1" h="-1" measuredW="78" measuredH="24" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Pending</text>
+      </controlProperties>
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::StickyNote" x="485" y="196" w="175" h="123" measuredW="109" measuredH="123" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%27Pending%27%20is%20selected%20by%20default%2C%20as%20this%20is%20the%20most%20useful%20for%20spotting%20potential%20problems</text>
+      </controlProperties>
+    </control>
+    <control controlID="12" controlTypeID="com.balsamiq.mockups::Label" x="122" y="251" w="-1" h="-1" measuredW="76" measuredH="21" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Select%20state%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="13" controlTypeID="com.balsamiq.mockups::Tree" x="122" y="288" w="352" h="250" measuredW="300" measuredH="225" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>f%20Create%20Active%20Directory%20Account%20-%20450%0AF%20Reset%20AD%20Password%20-%20398%0A%20-%201234569%20%28transaction%20details%29%0A%20-%209876543%0A%20-%203658298%0A%20-%206725482%0A%20-%201237644%0Af%20Generate%20Password.txt%20file%20-%2012%0Af%20Enable%20Account%20-%204%0Af%20Update%20Office365%20-%201</text>
+      </controlProperties>
+    </control>
+    <control controlID="14" controlTypeID="com.balsamiq.mockups::StickyNote" x="365" y="388" w="253" h="150" measuredW="109" measuredH="123" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>More%20transaction%20details%20would%20be%20shown%20%28like%20in%20the%20transaction%20history%20tab%29%0A%20%0AClicking%20on%20a%20transaction%20should%20load%20it%27s%20associated%20log%20file%20%28if%20it%20is%20still%20available%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="15" controlTypeID="com.balsamiq.mockups::StickyNote" x="790" y="319" w="175" h="123" measuredW="109" measuredH="123" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Display%20using%20some%20kind%20of%20hierarchy/drill-down%20mechanism%2C%20not%20necessarily%20displayed%20as%20folders%20as%20shown%20here</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

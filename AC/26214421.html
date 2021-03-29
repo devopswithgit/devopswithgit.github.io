@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Students with 2017 records marked as &#39;Expected&#39;</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Support-Notes_16384017.html">Support Notes</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Students with 2017 records marked as &#39;Expected&#39;
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Apr 29, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Studentswith2017recordsmarkedas&#39;Expected&#39;-Introduction">Introduction</h1><p>We've had a few students who were physically here at the university but their Accman accounts are marked as 'Expected' and they could also not see their timetables. </p><p>After inspecting their records, they appear to have 2017 and 201710 in their PERSON.ACAD_SESS and PERSON.STU_TERM columns. This seems to be caused by SA adding a 2017 record. </p><p>SA first tried removing the 2017 record in Banner, and then we ran the Banner Import again. Nothing changed. </p><p>You will see the following in the BannerForPerson log file in D:\AccmanLogs\TransactionLogs\1504 (note, line 15 is the most important but the full log entry is shown for completeness)</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: true; theme: Confluence" data-theme="Confluence">29/04/2016 10:04:03 - ParsePerson received: 479664,@00447026,,Awais,Ali,Mr,,30/09/1993 00:00:00,M,,07438894521
+29/04/2016 10:04:03 - ParsePerson returning: 479664,@00447026,,Awais,Ali,Mr,,30/09/1993 00:00:00,M,,07438894521
+29/04/2016 10:04:03 - ParseCourse received Student: [479664,201610,Active,Undergraduate,NewFirstTimeStudent,BSC,NN34,S/AF/S2,S/AF/S,BN,,07438894521]
+29/04/2016 10:04:03 - ParseCourse returning Student: [479664,201610,Active,Undergraduate,NewFirstTimeStudent,BSC,NN34,S/AF/S2,S/AF/S,BN,,07438894521], StudentValidated: [2016,U,S,21,2,1,], , Validations: [True,True,True,True,True,True,True,True,True]
+29/04/2016 10:04:03 - ParseRegistration received: StudentRegistration: [479664,201610,Registered,Y,14/09/2015 00:00:00,,null] and skbhinsEndDate null
+29/04/2016 10:04:03 - PIDM 479664: new person state: &#39;Present&#39; based on Banner ESTS code: &#39;RE&#39;
+29/04/2016 10:04:03 - Start date: 14/Sep/2015
+29/04/2016 10:04:03 - Checking end date: 
+29/04/2016 10:04:03 - SKBHINS_ENDDATE is not set for student PIDM 479664, not calculating if student has left.
+29/04/2016 10:04:03 - ParseRegistration returning: StudentRegistration: [479664,201610,Registered,Y,14/09/2015 00:00:00,,null], StudentRegistrationValidated: [Present,14/09/2015 00:00:00,null], Validations: [True,True,True,True]
+29/04/2016 10:04:03 - Calling UpdateStudentPerson()
+29/04/2016 10:04:03 - DegreeStatusCode: SO, Graduation Date: null, LastRecordForStudent: Y
+29/04/2016 10:04:03 - Null existing person: False
+29/04/2016 10:04:03 - Person already exists
+29/04/2016 10:04:03 - Not updating because existing academic year 2017 is greater than the session year 2016 and the registration person status is NOT &#39;left&#39; (it&#39;s Present). Accman contains future data and new data would be &#39;worse&#39;
+29/04/2016 10:04:03 - Success: True
+
+</pre>
+</div></div><p>As you can see, even changing the data in Banner is not enough. Because Accman now has 2017 as its most 'current' term, it simply rejects the 2016 information it receives from the Banner Import because that's 'older'.</p><p>Note: LanDesk case INC190103 reported this issue. One common theme is that they were all students who had changed course. This could be part of the cause, or it could be a red herring.</p><h1 id="Studentswith2017recordsmarkedas&#39;Expected&#39;-Solution">Solution</h1><p>You still need to remove the 2017 record from Banner (Paul Farrell did this for me), and <strong>also</strong> remove change the PERSON.ACAD_SESS and PERSON.STU_TERM columns so that they are back to 2016 and 201610 respectively. </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">update person set acad_sess = 2016, stu_term = &#39;201610&#39; where rollnumber = 387374 limit 1;</pre>
+</div></div><p>Then, when the Banner Import runs next time, it will set the student back to 'Present' instead of 'Expected'. Also, once the ETL runs overnight, the student will be able to see their timetable again.</p><p>If SA still need to put the 2017 record back, they can now do this without having to worry about the Person record reverting back to 'Expected'.</p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

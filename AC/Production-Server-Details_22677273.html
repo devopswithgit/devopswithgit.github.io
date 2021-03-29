@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Production Server Details</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Production Server Details
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified by <span class='editor'> Unknown User (ujs077)</span> on Jun 27, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="ProductionServerDetails-/*&lt;![CDATA[*/div.rbtoc1617011818409{padding:0px;}div.rbtoc1617011818409ul{list-style:disc;margin-left:0px;}div.rbtoc1617011818409li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#ProductionServerDetails-Introduction#ProductionServerDeta"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1617011818409 {padding: 0px;}
+div.rbtoc1617011818409 ul {list-style: disc;margin-left: 0px;}
+div.rbtoc1617011818409 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1617011818409'>
+<ul class='toc-indentation'>
+<li><a href='#ProductionServerDetails-'></a></li>
+<li><a href='#ProductionServerDetails-Introduction'>Introduction</a></li>
+<li><a href='#ProductionServerDetails-Serverdetails'>Server details</a></li>
+<li><a href='#ProductionServerDetails-ConnectingtotheserverviaRemoteDesktop'>Connecting to the server via Remote Desktop</a></li>
+<li><a href='#ProductionServerDetails-TheDesktop'>The Desktop</a></li>
+<li><a href='#ProductionServerDetails-AccmanProcesses'>Accman Processes</a></li>
+<li><a href='#ProductionServerDetails-LogFiles'>Log Files</a></li>
+<li><a href='#ProductionServerDetails-Troubleshooting'>Troubleshooting</a>
+<ul class='toc-indentation'>
+<li><a href='#ProductionServerDetails-Lowdiskspace'>Low disk space</a></li>
+</ul>
+</li>
+</ul>
+</div></h1><h1 id="ProductionServerDetails-Introduction">Introduction</h1><p>This page is a crib sheet for anyone who needs to support the Accman server, particularly in the event of a problem.</p><h1 id="ProductionServerDetails-Serverdetails">Server details</h1><p><strong>Server name</strong>: uos-p-acbe-01.isdads.salford.ac.uk</p><p><strong>Database name</strong>: <em>mail</em>, on accman.salford.ac.uk. This is a MySQL database listeing on port 3306.</p><h1 id="ProductionServerDetails-ConnectingtotheserverviaRemoteDesktop">Connecting to the server via Remote Desktop</h1><p>You need to log in to the server using the service account <strong>svc-prd-accman</strong>. You can get the password from the development team.</p><p>You cannot log in directly to the server. You must first remote desktop to the <strong>Management</strong> server, and from there remote desktop to the <strong>Accman </strong>server. </p><div class="confluence-information-macro confluence-information-macro-warning"><span class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>You <strong>must</strong> use the <strong>/admin</strong> switch when connecting via remote desktop. Otherwise when you log out, the scripts will all stop running!</p></div></div><ol><li>Remote desktop to the management server by entering <strong>mstsc /admin </strong>from the Start menu, and entering <strong>uos-p-adma-01</strong> for the Computer name.</li><li>Enter your own network username and password.</li><li>When on the management server, remote desktop again (run <strong>mstsc /admin </strong>from the management server, not from your own PC) to <strong>uos-p-acbe-01.mgt.isdads.salford.ac.uk</strong>.</li><li>You may need to accept a few warning messages about certificates. </li></ol><h1 id="ProductionServerDetails-TheDesktop">The Desktop</h1><div class="confluence-information-macro confluence-information-macro-warning"><span class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>You will <strong>only</strong> be able to see the running scripts if you log in using the svc-prd-accman service account. You must always use this account when logging in.</p><p>Click the screenshot below to see it full-size</p></div></div><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" confluence-query-params="effects=border-simple,shadow-kn" src="attachments/22677273/22677274.png?effects=border-simple,shadow-kn" data-image-src="attachments/22677273/22677274.png" data-unresolved-comment-count="0" data-linked-resource-id="22677274" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2015-6-26 16:15:45.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="22677273" data-linked-resource-container-version="3"></span></p><h1 id="ProductionServerDetails-AccmanProcesses">Accman Processes</h1><div class="confluence-information-macro confluence-information-macro-information"><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>The Accman system is comprised of several different components. Accman can be considered to be 'up and running' if the following are all running</p></div></div><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Component</th><th class="confluenceTh">Purpose</th><th class="confluenceTh">Notes</th></tr><tr><td colspan="1" class="confluenceTd">ConsoleSchedulerService (Main)</td><td colspan="1" class="confluenceTd"><p>This is what runs the various Quartz jobs which are responsible for processing Accman transactions.</p><p>You can start it using the desktop shortcut called: <strong>ConsoleSchedulerService</strong></p><p>To stop it, open the command prompt, and type <strong>exit.</strong></p></td><td colspan="1" class="confluenceTd">This is the main component of Accman. it's what creates AD accounts, processes password changes, updates Janus security details etc.</td></tr><tr><td colspan="1" class="confluenceTd">ConsoleSchedulerService for Scripts</td><td colspan="1" class="confluenceTd"><p>This is another Command Prompt based application responsible for running Quartz jobs related to the SalSync process.</p><p>You can start it using the desktop shortcut called: <strong>ConsoleSchedulerService for Scripts</strong></p><p>To stop it, open the command prompt, and type <strong>exit.</strong></p></td><td colspan="1" class="confluenceTd">The SalSync is affectionately knows as the 'Mike Hall' script. It does some Exchange-related things when a new account is set up.</td></tr><tr><td colspan="1" class="confluenceTd"><span>ConsoleSchedulerService for SAP</span></td><td colspan="1" class="confluenceTd"><p>This is another Command Prompt based application responsible for SAP running Quartz jobs related to the SAP process.</p><p>You can start it using the desktop shortcut called: <strong>ConsoleSchedulerService for SAP</strong></p><p>To stop it, open the command prompt, and type <strong>exit.</strong></p></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><span>ConsoleSchedulerService for ALMA</span></td><td colspan="1" class="confluenceTd"><p>This is another Command Prompt based application responsible for running Quartz jobs related to the ALMA process.</p><p>You can start it using the desktop shortcut called: <strong>ConsoleSchedulerService for ALMA</strong></p><p>To stop it, open the command prompt, and type <strong>exit.</strong></p></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">PowerShell Scripts</td><td colspan="1" class="confluenceTd"><p>There are four PowerShell scripts, responsible for creating Office365 accounts</p><p>To start: click on the <strong>Start PowerShell Scripts</strong> desktop shortcut</p><p>To stop: <span>click on the </span><strong>Stop PowerShell Scripts</strong><span> desktop shortcut</span></p></td><td colspan="1" class="confluenceTd"><p>There is one PS script each for the following tasks:</p><ul><li>Create Office365 account</li><li>Change Office365 password</li><li>Enable Office365 account</li><li>Disable Office365 account</li></ul><p> </p></td></tr></tbody></table></div><h1 id="ProductionServerDetails-LogFiles">Log Files</h1><p>All Accman Logs are now written to D:\AccmanLogs, with the exception of the CMISLecturerImport process, which still logs to C:\Logs.</p><p>The SchedulerService.log is rotated so should never fill up the disk. </p><p>D:\AccmanLogs\TransactionLogs contains one log file per transaction processed and can therefore this folder can become very large in size.</p><h1 id="ProductionServerDetails-Troubleshooting">Troubleshooting</h1><h2 id="ProductionServerDetails-Lowdiskspace">Low disk space</h2><p>If the server is running low on disk space, any log files can be moved off the server to free up space. </p><p>Please zip up log files before deleting them, in case the information they contain are needed later. The files compress well (several GB of log files will compress to just a few hundred MB when zipped up)</p><p> </p><p> </p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/22677274.png">image2015-6-26 16:15:45.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067117.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067118.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067119.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067120.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067121.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067122.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067123.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067124.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067125.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067126.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067127.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067128.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067129.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067130.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067132.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067133.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067134.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067135.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067138.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067139.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067140.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067141.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067114.xml">Alma Leaver Flag.xml</a> (application/drawio)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22677273/29067115.png">Alma Leaver Flag.xml.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

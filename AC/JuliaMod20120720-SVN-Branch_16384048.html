@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : JuliaMod20120720 SVN Branch</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RFC-and-Project-Work_16384025.html">RFC and Project Work</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : JuliaMod20120720 SVN Branch
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Julia Kelbrick</span>, last modified on Aug 02, 2012
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>Contains the following modifications completed on 31/07/2012:</p><ul><li>Modifications for AccMan to use new AD binding accounts.  The Web.Config files for the &quot;AccMan&quot; and &quot;SynchroniseStudentPasswords&quot; projects were modified as follows:</li></ul><pre>        &lt;add name=&quot;ADConnectionString&quot; connectionString=&quot;LDAP://<a href="http://ldap-fe.salford.ac.uk/OU=Non" class="external-link" rel="nofollow">ldap-fe.salford.ac.uk/OU=Non</a> Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; /&gt;<br/><br/>        &lt;add name=&quot;AspNetActiveDirectoryMembershipProvider&quot; type=&quot;System.Web.Security.ActiveDirectoryMembershipProvider&quot; <br/>        attributeMapUsername=&quot;sAMAccountName&quot; connectionStringName=&quot;ADConnectionString&quot; connectionUsername=&quot;LDAP-P-AccMan&quot; <br/>        connectionPassword=&quot;############&quot; /&gt;</pre><p style="margin-left: 30.0px;">  The quartz_jobs.xml file was not modified because it was already configured to connect to the above AD server using the 'svc-prd-accman' binding account.</p><p style="margin-left: 30.0px;"> </p><ul><li>Modifications for AccMan to use new SMTP binding accounts.  The Web.Config files for various AccMan projects were modified as follows:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: html/xml; gutter: false; theme: Confluence" data-theme="Confluence">        
+&lt;system.net&gt;
+    &lt;mailSettings&gt;
+        &lt;smtp deliveryMethod=&quot;Network&quot; from=&quot;donotreply@salford.ac.uk&quot;&gt;
+             &lt;network defaultCredentials=&quot;false&quot; host=&quot;smtp-dc.isdads.salford.ac.uk&quot; port=&quot;25&quot;  userName=&quot;MAIL-P-AccMan&quot; password=&quot;##########&quot;/&gt;
+         &lt;/smtp&gt;
+     &lt;/mailSettings&gt;
+&lt;/system.net&gt;
+
+</pre>
+</div></div><p style="margin-left: 30.0px;">  Web.Config and App.Config files for the following projects were modified:</p><p style="margin-left: 90.0px;">AccMan</p><p style="margin-left: 90.0px;">AccManStaffSelfActivation  (and test project)</p><p style="margin-left: 90.0px;">AccmanSelfActFE</p><p style="margin-left: 90.0px;">AccmanSelfActWebService</p><p style="margin-left: 90.0px;">AssociateRequest</p><p style="margin-left: 90.0px;">SchedulerService (application not in use)</p><p style="margin-left: 90.0px;">ConsoleSchedulerService</p><p style="margin-left: 90.0px;">AccManWebService</p><p> </p><ul><li>Fix to delay execution of transactions for initial £2 equitrac printer credits.  Added the following to AccManBackEndLibrary\Processes\ActiveDirectoryBaseProcessor (line 190):</li></ul><pre>            <span style="color: rgb(0,128,0);">// New parameter for Equitrac</span>
+            loadParameter(parameters, <span style="color: rgb(163,21,21);">&quot;equitracPause&quot;</span>, <span style="color: rgb(163,21,21);">&quot;EquitracPause&quot;</span>, <span style="color: rgb(0,0,255);">false</span>);</pre><p> </p><ul><li>Removed population of 'date_employed' column in Cohort database.  The following SQL statement in AccmanLibrary\Models\MSSQL\TempusCohortDAO (lines 304 &amp; 306) was modified:</li></ul><pre>                <span style="color: rgb(0,128,0);">//---- Do the &quot;Employees&quot; table insert</span>
+                sql = <span style="color: rgb(163,21,21);">&quot;INSERT INTO Employees (employee_id, ohn, patient_id, employer_id, status_id, date_employed, created_by, created_on, &quot;</span> +
+                    <span style="color: rgb(163,21,21);">&quot;oh_commencement, post_title_id, employment_type_id, department_id, directorate_id, site_id) &quot;</span> +
+                    <span style="color: rgb(163,21,21);">&quot;VALUES (@EmployeeID, @Ohn, @PatientID_1, @EmployerID, @StatusID, @DateEmployed, @CreatedBy_1, @CreatedOn_1, &quot;</span> +
+                    <span style="color: rgb(163,21,21);">&quot;@OhCommencement, @PostTitleId, @EmploymentTypeID, @DepartmentID, @DirectorateID, @SiteID) &quot;</span>;</pre><p> </p><ul><li>Also the following Code was removed to stop updates to the 'date_employed' column (AccmanLibrary\Models\MSSQL\TempusCohortDAO (lines 368 - 386)) :</li></ul><pre><span style="color: rgb(0,128,0);"> </span>               <span style="color: rgb(0,128,0);">//---- Get the patient_id for the record just updated</span>
+                <span style="color: rgb(0,0,255);">string</span> patientID = GetPatientID(person);
+ 
+                <span style="color: rgb(0,128,0);">//---- Update the &quot;Employees&quot; table</span>
+                <span style="color: rgb(0,0,255);">if</span> (person.RegistrationDate.HasValue)
+                {
+                    sql = GetEmployeesUpdateStatement(person, patientID);
+                    <span style="color: rgb(0,0,255);">if</span> (log.IsDebugEnabled) log.Debug(<span style="color: rgb(163,21,21);">&quot;About to excute SQL: &quot;</span> + sql);
+                    <span style="color: rgb(0,0,255);">if</span> (TempusCohortDatabase.Execute(sql, _getSqlParametersForEmployeesTableUserDetails(person, patientID, <span style="color: rgb(0,0,255);">null</span>, <span style="color: rgb(0,0,255);">null</span>)))
+                    {
+                        <span style="color: rgb(0,0,255);">if</span> (log.IsDebugEnabled) log.Debug(<span style="color: rgb(163,21,21);">&quot;Update to Tempus Cohort Employees Table completed successfully.&quot;</span>);
+                        status = Enumerations.<span style="color: rgb(43,145,175);">Status</span>.Success;
+                    }
+                    <span style="color: rgb(0,0,255);">else</span>
+                    {
+                        log.Error(<span style="color: rgb(163,21,21);">&quot;An error occurred whilst executing the following SQL: &quot;</span> + sql);
+                        status = Enumerations.<span style="color: rgb(43,145,175);">Status</span>.Failure;
+                    }
+                }</pre><pre><span style="color: rgb(0,128,0);"><br/></span></pre>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

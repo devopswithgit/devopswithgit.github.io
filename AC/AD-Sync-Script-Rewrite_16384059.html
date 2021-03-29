@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : AD Sync Script Rewrite</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Rewrite-Documentation-2013_16384056.html">Accman Rewrite Documentation 2013</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="External-Systems_16384049.html">External Systems</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Active-Directory_16384050.html">Active Directory</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : AD Sync Script Rewrite
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (ujs079)</span>, last modified on Jun 25, 2014
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="ADSyncScriptRewrite-Introduction">Introduction</h2><p>The purpose of the AD Sync Script Rewrite is to migrate the code base from the current <a href="AD-Sync-Script_16384002.html">AD Sync VB Script</a> into the .Net AccMan solution. The Quarts.Net library is used to schedule and run custom tasks on various internal data stores including AD (See<a href="Overview_16384010.html"> AccMan Documentation Overview</a>). The code migration will wrap the functionality of the Sync Script into a <a href="Transaction-Processes_16384008.html">Transaction Process</a> to make use of the Interface abstraction provided by Quartz and the AccManBackEndLibrary module. </p><div class="confluence-information-macro confluence-information-macro-information"><p class="title">Reference Paramaters in Code Blocks</p><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p>@some.field: denotes a value resulting from a <span>field of a </span>database query.<br/>{some value}: denotes a value from a variable where some programmatic action has been performed.</p></div></div><p> </p><p>The table below lists the Scripts in using batch processing Staff and Student AD objects:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Script</th><th class="confluenceTh">Language</th><th colspan="1" class="confluenceTh">Usage</th></tr><tr><td class="confluenceTd"><a href="attachments/16384059/16581113.vbs" data-linked-resource-id="16581113" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="SalSync11112013.vbs" data-linked-resource-content-type="application/octet-stream" data-linked-resource-container-id="16384059" data-linked-resource-container-version="106">SalSync.vbs</a></td><td class="confluenceTd"><p>Visual Basic</p></td><td colspan="1" class="confluenceTd"><p><strong>Issue:</strong> 
+<span class="jira-issue" data-jira-key="ARF-5" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-5?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-5</a>
+                            -
+            <span class="summary">SalSync.vbs - version 11/11/2013</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-default
+     jira-macro-single-issue-export-pdf">Open</span>
+                </span>
+</p><ul><li>Delete old student Contacts.</li><li>Create or add additional attributes to existing student Contacts</li></ul><p><strong>Process:</strong></p><ol><li>Deletes Contacts in the Active Directory 'University - Students' Organisational Unit.<ol><li><p>Search the AD for Contacts to delete using the following LDAP filter:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">&lt;LDAP://uos-p-domc-05.isdads.salford.ac.uk:389/
+OU=University - Students,DC=ISDADS,DC=Salford,DC=ac,DC=uk&gt;
+;(objectClass=Contact);mail,DistinguishedName</pre>
+</div></div></li><li><p>Compare each LDAP Contact to that stored in the Accman.Mail database for validity. </p><ol><li><p>Split the username and domain information from the email address retrieved from the LDAP query above.</p></li><li><p>Use the split email information as parameters in the query below.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: true; first-line: 1; theme: Confluence" data-theme="Confluence">SELECT 
+	account.state
+FROM 
+	Mail.account, 
+	Mail.person, 
+	Mail.emailDomain
+WHERE 
+	account.primary_mailname = {email username} 
+AND emailDomain.domainName = {email domain}
+AND account.state = &quot;valid&quot; 
+AND person.person_state in (&quot;present&quot;,&quot;extended&quot;,&quot;graduating&quot;,&quot;expected&quot;) 
+AND person.source_code = &#39;S&#39; 
+AND account.accountType = &#39;personal&#39;
+AND account.personID = person.personID 
+AND account.primary_domainID = emailDomain.domainID</pre>
+</div></div></li></ol></li><li><p>If the Contact exist in the Accman.Mail database get the Contact object from AD.</p><ol><li><p>Get the 'DistinguishedName' attribute value.</p></li><li><p>Use attribute as a parameter to get the Contact object from LDAP:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">LDAP://uos-p-domc-05.isdads.salford.ac.uk:389/{DistinguishedName value}
+CN={ADUsername}, cn=Users, DC=ISDADS,DC=Salford,DC=ac,DC=uk</pre>
+</div></div></li><li><p>Initiate a call to delete on the Contact object.</p></li></ol></li><li><p>Perform steps 1b and 1c for each Contact obtained in LDAP query 1a.<br/> </p></li></ol></li><li><p><span style="line-height: 1.4285715;">Updates or creates AD Contact objects and appends additional attributes.</span></p></li></ol><ol><li style="list-style-type: none;background-image: none;"><ol><li><p>Execute a query in the AccMan.Mail database to get the student contacts:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: true; first-line: 1; theme: Confluence" data-theme="Confluence">SELECT 
+	person.Initials, 
+	person.RealName, 
+	person.forenames, 
+	dept.full_name as dept_name, 
+	if(person.stu_levl = &#39;PG&#39;, if(person.qual_aim_code = 02, &#39;PGR&#39;, &#39;PGT&#39;), &#39;UG&#39;) as stu_type, 
+	person.yr_course, 
+	person.title, 
+	person.program, 
+	person.stu_degc, 
+	person.preferredName, 
+	person.start_date, 
+	account.primary_mailname, 
+	concat(account.primary_mailname, &quot;@&quot;, pri_domains.domainName) as address 
+FROM 
+	Mail.person, 
+	Mail.account, 
+	Mail.emailDomain as pri_domains, 
+	Mail.dept 
+WHERE 
+	account.state = &quot;valid&quot;
+AND person.person_state in (&quot;present&quot;,&quot;extended&quot;,&quot;graduating&quot;,&quot;expected&quot;)
+AND person.source_code = &quot;S&quot;
+AND account.accountType = &quot;personal&quot;
+AND account.personID = person.personID
+AND account.primary_domainID = pri_domains.domainID
+AND dept.dept_code = person.dept_code</pre>
+</div></div><p>The results are the students to create or update where an email (@address) is present.<br/> </p></li><li><p>Search the AD to find a Contact where the email address is equal to (@address):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">&lt;LDAP://uos-p-domc-05.isdads.salford.ac.uk:389/
+OU=University - Students
+DC=ISDADS,DC=Salford,DC=ac,DC=uk&gt;
+;(&amp;(objectClass=Contact)(mail=@address));DistinguishedName</pre>
+</div></div></li><li><p>If the Contact does not exist create it.<br/><br/>O<span style="line-height: 1.4285715;">btain a LDAP Connection to the Student Type OU where the value comes from the query parameter @stu_type: </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">LDAP://uos-p-domc-05.isdads.salford.ac.uk:389/
+OU=@person.stu_type, 
+OU=University - Students, 
+DC=ISDADS, DC=Salford, DC=ac, DC=uk
+CN={ADUsername},
+cn=Users,
+DC=ISDADS, DC=Salford, DC=ac, DC=uk</pre>
+</div></div><p><br/>Then create the Contact where the CN attribute value takes the form:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">cn=@person.RealName @person.preferredName (@address) @stu_type
+
+</pre>
+</div></div><p>Or, if the above CN value is greater than 64 characters in length:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">cn=@person.RealName @person.Initials @stu_type
+</pre>
+</div></div></li><li><p>Set the following attributes for the <span>Contact</span>:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Attribute</th><th class="confluenceTh">Value</th></tr><tr><td colspan="2" class="confluenceTd"><em><strong>Display Name Details</strong></em></td></tr><tr><td class="confluenceTd">displayName</td><td class="confluenceTd"><pre>@person.RealName @person.preferredName (@address) @stu_type</pre></td></tr><tr><td colspan="2" class="confluenceTd"><em><strong>Exchange Details</strong></em></td></tr><tr><td colspan="1" class="confluenceTd">msExchPoliciesExcluded</td><td colspan="1" class="confluenceTd">{26491CFC-9E50-4857-861B-0CB8DF22B5D7}</td></tr><tr><td colspan="1" class="confluenceTd">mAPIRecipient</td><td colspan="1" class="confluenceTd">TRUE</td></tr><tr><td colspan="1" class="confluenceTd">proxyAddresses</td><td colspan="1" class="confluenceTd">SMTP: @address</td></tr><tr><td colspan="1" class="confluenceTd">targetAddress</td><td colspan="1" class="confluenceTd">SMTP: <span>@address</span></td></tr><tr><td colspan="1" class="confluenceTd">mailNickname</td><td colspan="1" class="confluenceTd">@account.primary_mailname</td></tr><tr><td colspan="1" class="confluenceTd">internetEncoding</td><td colspan="1" class="confluenceTd">1310720</td></tr><tr><td colspan="1" class="confluenceTd">mail</td><td colspan="1" class="confluenceTd">@address</td></tr><tr><td colspan="2" class="confluenceTd"><em><strong>Personal Details</strong></em></td></tr><tr><td colspan="1" class="confluenceTd">sn</td><td colspan="1" class="confluenceTd"><span><span><span>@</span></span></span>person.RealName</td></tr><tr><td colspan="1" class="confluenceTd">initials</td><td colspan="1" class="confluenceTd"><span><span><span>@</span></span></span>person.Initials</td></tr><tr><td colspan="1" class="confluenceTd">givenName</td><td colspan="1" class="confluenceTd"><span><span><span>@</span></span></span>person.preferredName</td></tr><tr><td colspan="1" class="confluenceTd">department</td><td colspan="1" class="confluenceTd">@<span>person.</span>program</td></tr><tr><td colspan="1" class="confluenceTd">company</td><td colspan="1" class="confluenceTd">@<span>person.</span>stu_degc</td></tr><tr><td colspan="1" class="confluenceTd">physicalDeliveryOfficeName</td><td colspan="1" class="confluenceTd">@dept_name</td></tr><tr><td colspan="1" class="confluenceTd">title</td><td colspan="1" class="confluenceTd">@stu_type</td></tr><tr><td colspan="1" class="confluenceTd">postalCode </td><td colspan="1" class="confluenceTd">&lt;EMPTY&gt;</td></tr></tbody></table></div></li><li><p>Perform steps 2b, 2c and 2d for each person record obtained by the database query in 2a.</p></li></ol></li></ol></td></tr><tr><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd">Step 1</td><td colspan="1" class="confluenceTd"><p><strong>.Net Exclusions</strong></p><ul><li>The whole of Step 1 can be excluded as there is no requirement to remove old AD Contacts. Currently older Contact objects are preserved in order to conform to the 'email for life' policy.</li></ul></td></tr><tr><td colspan="1" style="margin-left: 60.0px;" class="confluenceTd"><a href="attachments/16384059/16581111.ps1" data-linked-resource-id="16581111" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="update-student-contacts.ps1" data-linked-resource-content-type="application/octet-stream" data-linked-resource-container-id="16384059" data-linked-resource-container-version="106">update-student-contacts.ps1</a></td><td colspan="1" class="confluenceTd">PowerShell</td><td colspan="1" class="confluenceTd"><p><strong>Issue: </strong>
+<span class="jira-issue" data-jira-key="ARF-7" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-7?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-7</a>
+                            -
+            <span class="summary">update-student-contacts.ps1</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-default
+     jira-macro-single-issue-export-pdf">Open</span>
+                </span>
+</p><ul><li>Appends Exchange 2010 attributes to AD Contact objects.</li></ul><p><strong>Process:</strong></p><ol><li><p>The 'add-pssnapin' command adds <span style="color: rgb(42,42,42);">Windows PowerShell snapins to the current session. After the snapins are added, you can use the cmdlets and providers that the snapins support. In this instance the Microsoft Exchange 2010 snapin is used:<br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">add-pssnapin microsoft.exchange.management.powershell.E2010</pre>
+</div></div></li><li>Get the AD Contacts and serialize them to a file as a backup.<ol><li><span>The 'get-mailcontact' command is used to retrieve AD Contact information.</span></li><li>The switch '-OrganizationalUnit' is applied followed by the value to set the OU.</li><li>The switch '-filter' is applied to search only where the '<span>LegacyExchangeDN' <span>attribute is null.</span></span></li><li><span><span>The result from the <span> 'get-mailcontact' is piped using '|' to the Format-Table command which takes the attributes of the Contact and arranges them in table form. </span></span></span></li><li><p>The tabulated Contact information is then piped using '&gt;&gt;' to a file. </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">get-mailcontact 
+	-OrganizationalUnit &#39;University - Students&#39; 
+	-filter {LegacyExchangeDN -eq $Null} 
+| Format-Table 
+&gt;&gt; c:\sharedscripts\logfiles\student-contact-records.log</pre>
+</div></div></li></ol></li><li><span><span><span><span>Get the AD Contacts and <span>append the Exchange 2010 attributes.</span></span></span></span></span><ol><li>Get the filtered AD Contacts using steps 2a-c.</li><li><p><span>Piped the result of the command <span> 'get-mailcontact' </span>using '|' to the 'update-recipient' command with no additional switches or parameters. It adds AD attributes required by Exchange 2010 and lower to each Contact object. <br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">get-mailcontact 
+	-OrganizationalUnit &#39;University - Students&#39; 
+	-filter {LegacyExchangeDN -eq $Null} 
+| update-recipient</pre>
+</div></div></li></ol></li></ol></td></tr><tr><td colspan="1" class="confluenceTd"><a href="attachments/16384059/16581110.ps1" data-linked-resource-id="16581110" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="fixgroups.ps1" data-linked-resource-content-type="application/octet-stream" data-linked-resource-container-id="16384059" data-linked-resource-container-version="106">fixgroups.ps1</a></td><td colspan="1" class="confluenceTd">PowerShell</td><td colspan="1" class="confluenceTd"><p><strong>Issue: </strong>
+<span class="jira-issue" data-jira-key="ARF-8" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-8?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-8</a>
+                            -
+            <span class="summary">fixgroups.ps1</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-default
+     jira-macro-single-issue-export-pdf">Open</span>
+                </span>
+</p><ul><li>Move Student and Staff functional users into the 'Functional' OU.</li><li>Move Staff out of Student OU</li><li>Add Staff and Students to associated security groups.</li><li>Remove old Students from the security group.</li></ul><p><strong>Process:</strong></p><ol><li><p>Import the AD module for use in the script and set the tracing so the effects of command execution is output to the console:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import-module ActiveDirectory
+$DebugPreference = &quot;Continue&quot;</pre>
+</div></div></li><li><p>Move the functional student user accounts out of the 'Students' OU into the 'Functional' OU:</p><ol><li>Get the functional uses by calling the 'Get-ADUser' command. </li><li>Use the '-LdapFilter' switch to s<span style="color: rgb(42,42,42);">pecifies an LDAP query string used to filter AD objects. </span></li><li>Specify the OU to search in using the '-SearchBase' switch.</li><li>The '-ResultSetSize' is used to limit the number of objects returned. Setting this to null returns everything.</li><li>The returned user objects are piped using '|' to the command Move-ADObject which moves each user to an alternate location in the AD tree using the switch '-TargetPath'.</li><li><p>The -PassThru switch r<span style="color: rgb(42,42,42);">eturns the new or modified objects.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">Get-ADUser 
+	-LdapFilter &quot;(title=Functional)&quot; 
+	-SearchBase &quot;OU=Students,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+	-ResultSetSize $null 
+| Move-ADObject 
+	-TargetPath &quot;OU=Functional,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+	-PassThru</pre>
+</div></div><p><span style="color: rgb(42,42,42);"><br/></span></p></li></ol></li><li><p><span>Move the functional Staff user accounts out of the 'Staff' OU into the 'Functional' OU:</span></p><ol><li><p>Use the command in step 2 with a modification to the <span>'-SearchBase' switch to get Staff users. </span></p></li><li><p><span>Note: the target location for Staff Functional users is the same.<br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">Get-ADUser 
+	-LdapFilter &quot;(title=Functional)&quot; 
+	-SearchBase &quot;OU=Staff,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+	-ResultSetSize $null  
+| Move-ADObject 
+	-TargetPath &quot;OU=Functional,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+	-PassThru</pre>
+</div></div></li></ol></li><li>Move the Staff out of the Students OU into the Staff OU:<ol><li>The command used to do this is that same as in steps 2 and 3 with modification to three switches:<ol><li>Set the '<span>-LdapFilter' to search for the attribute '<span>uosaffiliation</span>', with the value '<span>Staff'</span></span></li><li>Set the '-<span>SearchBase</span>' to the Students OU path.</li><li>Set the 'TargetPath' to the Staff OU path.<br/><br/></li></ol><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">Get-ADUser 
+	-LdapFilter &quot;(uosaffiliation=Staff)&quot; 
+	-SearchBase &quot;OU=Students,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+	-ResultSetSize $null  
+| Move-ADObject 
+	-TargetPath &quot;OU=Staff,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+	-PassThru</pre>
+</div></div></li></ol></li><li>Add new staff to the Staff user group:</li><ol><li>To get the users call the command 'Get-ADUser'.</li><li>Set the -SearchBase switch to the path of the Students OU and the -ResultSetSize to null as with convention used in steps 2-4.</li><li>Use the -Filter switch to exclude users who are already members of the 'All Staff Security Group' </li><li>Pipe the users returned to the command 'Add-ADPrincipalGroupMembership' using '|', so that each user is added<span style="color: rgb(42,42,42);"> to the AD group specified by the parameter passed to the switch '-MemberOf'. </span></li><li><span style="color: rgb(42,42,42);">Set the -Confirm switch to false to eliminate confirmation prompts.</span></li><li><p><span style="color: rgb(42,42,42);">To allow updated users to be returned (i.e. users with additional group membership) append the switch '-PassThru' (the PassThru switch does not require parameters).</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">Get-ADUser 
+	-SearchBase &quot;OU=Staff,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+	-ResultSetSize $null  
+	-Filter &#39;MemberOf -ne &quot;CN=All Staff Security Group,OU=Non-Provisioned,OU=Groups,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot;&#39; 
+| Add-ADPrincipalGroupMembership 
+	-MemberOf &quot;All Staff Security Group&quot; 
+	-Confirm:$false 
+	-PassThru</pre>
+</div></div></li></ol><li><span style="color: rgb(42,42,42);">Add new students to the Students user group:</span><ol><li><span style="color: rgb(42,42,42);">The command for this step is the same as that used in step 5 apart from a some minor changes:</span><ol><li><span style="color: rgb(42,42,42);"><span>The -SearchBase switch should point to the Students OU path.</span><br/></span></li><li><span style="color: rgb(42,42,42);"><span><span>The -Filter switch is used to exclude users who are already members of the 'All Students Security Group' </span></span></span></li><li><p><span><span><span style="color: rgb(42,42,42);">The parameter passed to the -</span><span style="color: rgb(42,42,42);">MemberOf</span><span style="color: rgb(42,42,42);"> switch is the 'All Students Security Group', not <span style="color: rgb(42,42,42);">'All Staff Security Group' as with step 5.</span><br/></span></span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">Get-ADUser 
+	-SearchBase &quot;OU=Students,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+	-ResultSetSize $null 
+	-Filter &#39;MemberOf -ne &quot;CN=All Students Security Group,OU=Non-Provisioned,OU=Groups,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot;&#39; 
+| Add-ADPrincipalGroupMembership 
+	-MemberOf &quot;All Students Security Group&quot; 
+	-Confirm:$false 
+	-PassThru</pre>
+</div></div></li></ol></li></ol></li><li><p><span><span><span style="color: rgb(42,42,42);"><span style="color: rgb(42,42,42);">Remove old students from the 'All Students Security Group'</span></span></span></span></p><ol><li><p><span><span><span><span><span style="color: rgb(42,42,42);">Get all the users that are members of the AD group '</span></span></span></span></span>All Students Security Group<span style="color: rgb(42,42,42);">' in the None-Provisioned Groups OU.</span></p></li><li><p><span style="color: rgb(42,42,42);">Pipe the u<span style="color: rgb(42,42,42);">ser objects</span> to the WHERE command with a clause to exclude users in the Users Student OU.</span></p></li><li><p><span style="color: rgb(42,42,42);">Pipe the user objects to the 'Remove-ADPrincipalGroupMembership'. Using the switch -MemberOf revoke the permission to group '</span>All Students Security Group<span style="line-height: 1.4285715;color: rgb(42,42,42);">'.<br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">Get-ADUser 
+	-ResultSetSize $null 
+	-Filter &#39;MemberOf -eq &quot;CN=All Students Security Group,OU=Non-Provisioned,OU=Groups,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot;&#39; 
+| where {
+	$_.DistinguishedName -notlike &quot;CN=*,OU=Students,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+} | Remove-ADPrincipalGroupMembership 
+	-MemberOf &quot;All Students Security Group&quot; -Confirm:$false -PassThru</pre>
+</div></div></li></ol></li></ol></td></tr><tr><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"><span>Steps 2 - 4</span></td><td colspan="1" class="confluenceTd"><p><strong>.Net Exclusions:</strong></p><ul><li><p>Actions in steps 2,3 and 4 should be omitted from development as the commands used move users to 'new' AD structures.<br/><br/>The BNF below is taken from the production configuration .XML of a Quartz job used to create a new AD user. It shows that newly created users are put into the correct OU's defined by the -TargerPath switch parameter in the Move-ADObject PowerShell command.<br/><br/><em>Transaction 93</em> - Create User in AD:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>BNF: AD User Creation Paths</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: xml; gutter: false; theme: Confluence" data-theme="Confluence">&lt;ADRoot&gt; ::= DC=isdads,DC=salford,DC=ac,DC=uk
+&lt;ADUserBase&gt; ::= OU=Students,OU=Users,OU=Non Datacentre, &lt;ADRoot&gt;
+&lt;ADStaffPath&gt; ::= OU=Staff,OU=Users,OU=Non Datacentre, &lt;ADRoot&gt;
+&lt;ADFunctionalPath&gt; ::= OU=Functional,OU=Users,OU=Non Datacentre, &lt;ADRoot&gt;</pre>
+</div></div></li></ul><ul><li>Steps 5,6 and 7 are used to assign group membership permissions to Non-Provisioned Staff and Students. Where the term '<span>Non-Provisioned' is used to denote a manual user creation. As a result these steps should not be excluded.</span></li></ul></td></tr><tr><td colspan="1" class="confluenceTd"><a href="attachments/16384059/16581109.ps1" data-linked-resource-id="16581109" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="fixuid.ps1" data-linked-resource-content-type="application/octet-stream" data-linked-resource-container-id="16384059" data-linked-resource-container-version="106">fixuid.ps1</a></td><td colspan="1" class="confluenceTd">PowerShell</td><td colspan="1" class="confluenceTd"><p><strong><strong>Issue: </strong>
+<span class="jira-issue" data-jira-key="ARF-9" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-9?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ARF-9</a>
+                            -
+            <span class="summary">fixuid.ps1</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-default
+     jira-macro-single-issue-export-pdf">Open</span>
+                </span>
+</strong></p><p>Adds the User ID and Unix attributes to the Student and Staff AD Accounts where they don't have them already.</p><p><strong>Process:</strong></p><ol><li>Initial setup of script:<ol><li><span>Import the AD module for use in the script.</span></li><li><span>Set constant values for SQL command and the Domain Controller path.</span></li><li><span><span>Create variables 'studentstofix' and 'stafftofix' </span></span><span>to store AD users.</span></li><li><span>Set the tracing so the effect of command execution is output to the console.</span></li><li><p><span>Instantiate the ODBC connection and prepare the command. </span></p><ol><li><p><span>The ODBC connection uses a DSN which points to the Accman.Mail database.<br/></span></p></li><li><p><span>The SQL command requires the parameter 'username' which is added without any initial value.</span></p></li></ol></li></ol><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">import-module ActiveDirectory
+
+$dc = &quot;uos-p-domc-01.isdads.salford.ac.uk&quot;
+$sqluidnumber = &quot;SELECT uidNumber FROM posixAccount WHERE username = ?&quot;
+$studentstofix = $null
+$stafftofix = $null
+
+$DebugPreference = &quot;Continue&quot;
+
+$dbconn = new-object system.data.odbc.odbcconnection
+$dbconn.ConnectionString = &quot;DSN=Accman;Driver=MySQL ODBC 3.51 Driver&quot;
+$dbconn.Open()
+
+$dbcomm = $dbconn.CreateCommand()
+$dbcomm.CommandText = $sqluidnumber
+$dbcomm.Parameters.Add(&quot;username&quot;,&quot;&quot;)
+$dbcomm.Prepare()</pre>
+</div></div></li><li><p><span>Get the Student Users and assign them to the '<span>studentstofix' variable</span>. </span></p><ol><li><p><span>Use the -LDAPFilter switch to get users where either gidNumber, unixHomeDirectory or uidNumber attributes do not exist.</span></p></li><li><p><span>Using the -Properties switch to specify additional attributes <span style="color: rgb(42,42,42);">that are not included in the default set.</span></span></p></li></ol><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">$studentstofix = get-aduser 
+	-LDAPFilter &quot;(|(!(gidNumber=*))(!(unixHomeDirectory=*))(!(uidNumber=*)))&quot; 
+	-ResultSetSize $null 
+	-SearchBase &quot;OU=Students,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+	-Server $dc 
+	-Properties uidNumber,gidNumber,unixHomeDirectory</pre>
+</div></div></li><li><p>Get the Student Users and assign them to the 'stafftofix' variable.</p><ol><li><p>Use the -LDAPFilter switch to get users where either gidNumber, unixHomeDirectory or uidNumber attributes do not exist.</p></li><li><p>Using the -Properties switch to specify additional attributes <span style="color: rgb(42,42,42);">that are not included in the default set.</span></p></li></ol><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">$stafftofix = get-aduser 
+	-LDAPFilter &quot;(|(!(gidNumber=*))(!(unixHomeDirectory=*))(!(uidNumber=*)))&quot; 
+	-ResultSetSize $null 
+	-SearchBase &quot;OU=Staff,OU=Users,OU=Non Datacentre,DC=isdads,DC=salford,DC=ac,DC=uk&quot; 
+	-Server $dc 
+	-Properties uidNumber,gidNumber,unixHomeDirectory</pre>
+</div></div></li><li>For each staff and student AD user:<ol><li>Get <span>the AD user's </span><span>SamAccountNumber attribute value and change the case to lower.</span></li><li>Get the uidNumber by <span>passing the <span>SamAccountNumber value</span> to the database query as a parameter and </span>execute the command.</li><li><p>Set the User's AD attributes:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">AD User Attribute</th><th class="confluenceTh">Value</th></tr><tr><td class="confluenceTd">uidNumber</td><td class="confluenceTd">@<span style="line-height: 1.4285715;">uidNumber</span></td></tr><tr><td colspan="1" class="confluenceTd">gidNumber</td><td colspan="1" class="confluenceTd">1001</td></tr><tr><td colspan="1" class="confluenceTd">unixHomeDirectory</td><td colspan="1" class="confluenceTd">/home/{samAccountName}</td></tr></tbody></table></div></li><li><p>Save the modified attributes by calling the 'set-aduser' command.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">{list of AD users} | foreach {
+    $thisuid = $null
+    $samAccountName = $_.SamAccountName      
+    $dbcomm.Parameters[0].Value = $samAccountName    
+    $samAccountName = $samAccountName.ToLower().Trim()    
+    $thisuid = $dbcomm.ExecuteScalar()
+
+    if ($thisuid)
+    {
+      $_.uidNumber = $thisuid
+      $_.gidNumber = &quot;1001&quot;
+      $_.unixHomeDirectory = &quot;/home/$samAccountName&quot;
+      Write-Debug &quot;Set-aduser $samAccountName with uid $thisuid and unixhomedirectory $($_.unixHomeDirectory)&quot;
+      set-aduser -instance $_ -Server $dc
+    }
+    else
+    {
+      write-debug &quot;Couldn&#39;t get uid for $samAccountName from AccMan&quot;
+    }
+}</pre>
+</div></div></li></ol></li><li>Get the Functional Multimedia Students from the AD:<ol><li>Use <span>the -LDAPFilter switch to get users where the SamAccountName attribute value starts with 'mms' and either <span>gidNumber, unixHomeDirectory or uidNumber attributes do not exist.</span></span></li><li><span style="line-height: 1.4285715;">Using the -Properties switch to specify additional attributes </span><span style="color: rgb(42,42,42);">that are not included in the default set.</span></li><li><span style="color: rgb(42,42,42);">Repeat step (4.a,b,c) to set each multimedia students AD attributes.</span></li></ol></li><li><span style="color: rgb(42,42,42);">Close the ODBC Connection created in step 1e.</span></li></ol></td></tr></tbody></table></div><p> </p><p> </p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384059/16581113.vbs">SalSync11112013.vbs</a> (application/octet-stream)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384059/16581111.ps1">update-student-contacts.ps1</a> (application/octet-stream)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384059/16581110.ps1">fixgroups.ps1</a> (application/octet-stream)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384059/16581109.ps1">fixuid.ps1</a> (application/octet-stream)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-23200579"></a>
+                                    <font class="smallfont"><p>NB this was modified slightly today to be able to cope with names containing forward slashes. The script will now rename a slash to an underscore. See SVN revision 7871 for the commit. -Richard Gundersen</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by crowd-admin at Sep 17, 2015 15:57
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

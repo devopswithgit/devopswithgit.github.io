@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Janus</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Rewrite-Documentation-2013_16384056.html">Accman Rewrite Documentation 2013</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="External-Systems_16384049.html">External Systems</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Janus
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Administrator</span>, last modified by <span class='editor'> Unknown User (uis894)</span> on Dec 02, 2013
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Janus-/*&lt;![CDATA[*/div.rbtoc1617011789714{padding:0px;}div.rbtoc1617011789714ul{list-style:disc;margin-left:0px;}div.rbtoc1617011789714li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#Janus-Introduction#Janus-IntroductionAccmanProcesses#Janus-AccmanProcessesA"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1617011789714 {padding: 0px;}
+div.rbtoc1617011789714 ul {list-style: disc;margin-left: 0px;}
+div.rbtoc1617011789714 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1617011789714'>
+<ul class='toc-indentation'>
+<li><a href='#Janus-'></a></li>
+<li><a href='#Janus-Introduction'>Introduction</a></li>
+<li><a href='#Janus-AccmanProcesses'>Accman Processes</a>
+<ul class='toc-indentation'>
+<li><a href='#Janus-AccmantoJanus:theUpdateJanusUserDetailsProcess'>Accman to Janus: the UpdateJanusUserDetails Process</a></li>
+<li><a href='#Janus-JanustoAccman:theUpdateSecurityCredentialsProcess'>Janus to Accman: the UpdateSecurityCredentials Process</a></li>
+</ul>
+</li>
+</ul>
+</div></h1><h1 id="Janus-Introduction">Introduction</h1><p>The Janus system manages the university ID cards. When a new student or member of staff arrives at the university, Accman populates Janus with the new person's details. Accman updates Janus for various other reasons (such as when a new ID card is issued because the user's existing card was lost). </p><p>Janus also has the ability to trigger activity in Accman when something changes. For example, via the Janus front-end, a user (e.g. someone in Estates) may manually disable somebody's card. This change will be pushed into Accman (via a staging table in Janus) and Accman will then push the changes out to other systems such as Active Directory.</p><p>The most interesting fields that originate from Janus are as follows</p><p> </p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Field name</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">Barcode</td><td class="confluenceTd">This is the barcode number printed at the bottom of the ID card</td></tr><tr><td class="confluenceTd">DESFire Number</td><td class="confluenceTd">This is an alias for the Barcode. The terms <em>Barcode</em> and <em>DESFire </em>are used interchangeably.</td></tr><tr><td class="confluenceTd">32-bit Number</td><td class="confluenceTd">A 32-bit representation of the barcode</td></tr><tr><td class="confluenceTd">56-bit Number</td><td class="confluenceTd"><span>A 56-bit representation of the barcode</span></td></tr></tbody></table></div><p>See also <a href="16384031.html">Fixing Type 96 (UpdateBannerBarcode) transactions with a blank BARCODE parameter</a>.</p><h1 id="Janus-AccmanProcesses">Accman Processes</h1><p>The piece of Accman code which pushes information into Janus is a transaction processor called <em>UpdateJanusUserDetails</em>. This processes Type-97 transactions. Its main job is to take user details from the Accman database and push them into Janus. It has the ability to create new Janus users, or update existing Janus users. </p><p>The UpdateJanusUserDetails transaction can be triggered by any of the following lifecycle events</p><ul><li>Existing students via the Banner import (studentPerson.pl)</li><li>When a new account is created. See <a href="Register-Account-To-Person_16384030.html">Register Account To Person</a> process (Type-43 transaction, register.pl) </li><li>The Associate Import process</li><li>When an Active Directory account is disabled (when a Type-104 transaction is processed)</li><li>When an Active Directory account is enabled (when a Type-103 transaction is processed)</li></ul><p>The UpdateJanusUserDetails transaction can take a ROLLNUMBER or USERNAME transaction parameter. UpdatejanusUserDetails will find the account details based on either of these two values, and which one is provided depends on whether the username or rollnumber is known at the time the transaction is entered into the Accman database. </p><h2 id="Janus-AccmantoJanus:theUpdateJanusUserDetailsProcess">Accman to Janus: the UpdateJanusUserDetails Process</h2><div class="confluence-information-macro confluence-information-macro-information"><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span><div class="confluence-information-macro-body"><p><strong><em>UoS_DataImport</em> </strong>(mentioned below) is a <strong>view</strong> in the Janus database, whereas <strong><em>UoS_UpdateUser</em> </strong>is a <strong>table</strong>.</p></div></div><p> </p><ol><li>Finds the user details in the Accman database based on rollnumber or username</li><li><p>Find out if the user already exists in Janus:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">SELECT EmpNumber FROM oldcards WHERE EmpNumber = @EmpNumber
+</pre>
+</div></div><p> </p><ol><li><p>New users: insert new details into the UoS_DataImport:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Janus Field</th><th class="confluenceTh">Source</th><th class="confluenceTh">Example</th><th class="confluenceTh">Notes</th></tr><tr><td class="confluenceTd">Title</td><td class="confluenceTd">Mail.Person.Title</td><td class="confluenceTd">&quot;Mr&quot;, &quot;Miss&quot;, &quot;Prof&quot;</td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd">Surname</td><td class="confluenceTd">Mail.Person.RealName</td><td class="confluenceTd">&quot;Smith&quot;</td><td class="confluenceTd">This is the users surname</td></tr><tr><td class="confluenceTd">FirstName</td><td class="confluenceTd">Mail.Person.Forenames</td><td class="confluenceTd">&quot;Bob&quot;</td><td class="confluenceTd">First name(s)</td></tr><tr><td class="confluenceTd">Middle Name</td><td class="confluenceTd"><em>Calculated</em></td><td class="confluenceTd"> </td><td class="confluenceTd">If the <span>Mail.Person.Forenames field contains a space separating two names e.g. &quot;<em>Mary Jane</em>&quot; or &quot;<em>Billy Bob Joe</em>&quot;, everything after the first name (minus the space) is used e.g. &quot;<em>Jane</em>&quot; or &quot;<em>Bob Joe</em>&quot;.</span></td></tr><tr><td class="confluenceTd">EmpNumber</td><td class="confluenceTd">Mail.Person.Rollnumber</td><td class="confluenceTd"> </td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd">Department</td><td class="confluenceTd">Mail.Person.Source_Code</td><td class="confluenceTd">Associate (<em>default</em>), Staff or Student</td><td class="confluenceTd">Defaults to <em>&quot;Associate</em>&quot; but if the source code equals &quot;P&quot;, this field is set to &quot;<em>Staff</em>&quot; and if it is &quot;S&quot; this field is set to &quot;<em>Student</em>&quot;</td></tr><tr><td class="confluenceTd">UserComment</td><td class="confluenceTd"><em>Hard coded</em></td><td class="confluenceTd">&quot;Inserted by AccMan&quot;</td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd">Email Address</td><td class="confluenceTd"><em>Calculated</em></td><td class="confluenceTd"><a href="mailto:a.smith@salford.ac.uk" class="external-link" rel="nofollow">a.smith@salford.ac.uk</a> b.jones@edu.salford.ac.uk</td><td class="confluenceTd">Mail.Account.Primary_Mailname + '@' + Mail.EmailDomain.DomainName The account table is joined on the EmailDomain table via Mail.Account.Primary_DomainID = <span>Mail.EmailDomain.DomainID</span></td></tr><tr><td class="confluenceTd">Username</td><td class="confluenceTd">Mail.Account.Username</td><td class="confluenceTd">&quot;ABC123&quot;</td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd">Programme</td><td class="confluenceTd">Mail.Person.Program</td><td class="confluenceTd"> </td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd">Date of Birth</td><td class="confluenceTd">Mail.Person.B_Date</td><td class="confluenceTd"> </td><td class="confluenceTd">Can be null</td></tr><tr><td class="confluenceTd">Preferred Name</td><td class="confluenceTd">Mail.Person.PreferredName</td><td class="confluenceTd"> </td><td class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">Leave Date</td><td colspan="1" class="confluenceTd">Mail.Person.End_Date</td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd">Can be null</td></tr><tr><td colspan="1" class="confluenceTd">Level Code</td><td colspan="1" class="confluenceTd">Mail.Person.Stu_Levl</td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">Phone Number</td><td colspan="1" class="confluenceTd">Mail.Person.Telephone_Number</td><td colspan="1" class="confluenceTd"> </td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">TemplateName</td><td colspan="1" class="confluenceTd">Mail.Person.Source_Code</td><td colspan="1" class="confluenceTd"><span>Associate (</span><em>default</em><span>), Staff or Student</span></td><td colspan="1" class="confluenceTd">This same value used for <em>Department</em> is reused for this field.</td></tr><tr><td colspan="1" class="confluenceTd">Department Code</td><td colspan="1" class="confluenceTd">Mail.Person.Dept_Code</td><td colspan="1" class="confluenceTd">AD, SG</td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">CardID</td><td colspan="1" class="confluenceTd">Mail.RollMap.ID + Mail.Person.Spriden_ID</td><td colspan="1" class="confluenceTd">&quot;00001140&quot; or &quot;@00370425&quot;</td><td colspan="1" class="confluenceTd">The RollMap value will only ever be present for Staff, and the SpridenID only for Students, so even though the value is a concatenation of the two fields, it will only ever contain one or the other.</td></tr><tr><td colspan="1" class="confluenceTd">CardStatus</td><td colspan="1" class="confluenceTd"><em>Calculated</em></td><td colspan="1" class="confluenceTd">&quot;Valid&quot;, &quot;Suspended&quot;</td><td colspan="1" class="confluenceTd">If Mail.Person.End_Date has a value and is before the current system date/time <strong>or </strong>if Mail.Account.State is not 'valid': &quot;Suspended&quot; Otherwise: &quot;Valid&quot;</td></tr><tr><td colspan="1" class="confluenceTd">User Area</td><td colspan="1" class="confluenceTd">Mail.Personnel_Area.Description</td><td colspan="1" class="confluenceTd">&quot;College of Arts &amp; Social Sciences&quot;, &quot;Vice-Chancellor's Office&quot;</td><td colspan="1" class="confluenceTd">Joined using: <strong>Person</strong>.Dept_Code = <strong>Department_Cost_Centre</strong>.Dept_Code <strong>Personnel_Area</strong>.Personnel_Area_Code = <strong>Department_Cost_Centre</strong>.Personnel_Area_Code</td></tr></tbody></table></div><div class="code panel pdl" style="border-width: 1px;">
+ <div class="codeHeader panelHeader pdl hide-border-bottom">
+  <b class="code-title"></b>
+  <span class="collapse-source expand-control" style="display:none;"><span class="expand-control-icon icon">&nbsp;</span><span class="expand-control-text">Expand source</span></span>
+  <span class="collapse-spinner-wrapper"></span>
+ </div>
+ <div class="codeContent panelContent pdl hide-toolbar"> 
+  <pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence; collapse: true" data-theme="Confluence">INSERT INTO UoS_DataImport (
+	Title, Surname, FirstName, [Middle Name], EmpNumber,&nbsp;
+	Department, UserComment, [Email Address], Username, Programme, 
+	[Date of Birth], [Preferred Name], [Leave Date], [Level Code],&nbsp;
+	[Phone Number], TemplateName, [Department Code], CardID, CardStatus, [User Area]
+)&nbsp;
+VALUES (
+	@Title, @Surname, @FirstName, @MiddleName, @EmpNumber, 
+    @Department, @Comment, @EmailAddress, @Username, @Program,&nbsp;
+    @DateOfBirth, @PreferredName, @LeaveDate, @LevelCode,&nbsp;
+    @PhoneNumber, @TemplateName, @DepartmentCode, @CardID, @CardStatus, @UserArea
+);</pre> 
+ </div>
+</div><p> </p><p> </p></li></ol></li><li><p>Existing users: update the user's details using the following insert statement (yes, it's an insert statement, but into a special <em>update</em> table):</p><div class="code panel pdl" style="border-width: 1px;">
+ <div class="codeHeader panelHeader pdl hide-border-bottom">
+  <b class="code-title"></b>
+  <span class="collapse-source expand-control" style="display:none;"><span class="expand-control-icon icon">&nbsp;</span><span class="expand-control-text">Expand source</span></span>
+  <span class="collapse-spinner-wrapper"></span>
+ </div>
+ <div class="codeContent panelContent pdl hide-toolbar"> 
+  <pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence; collapse: true" data-theme="Confluence">INSERT INTO UoS_UserUpdate (
+	Title, Surname, FirstName, [Middle Name], OldEmpNumber,&nbsp;
+	Department, UserComment, [Email Address], Username, Programme, 
+	[Date of Birth], [Preferred Name], [Leave Date], [Level Code],&nbsp;
+	[Phone Number], [DepartmentCode], CardID, CardStatus, [User Area]
+)&nbsp;
+VALUES (
+	@Title, @Surname, @FirstName, @MiddleName, @EmpNumber, 
+	@Department, @Comment, @EmailAddress, @Username, @Program,&nbsp;
+	@DateOfBirth, @PreferredName, @LeaveDate, @LevelCode,&nbsp;
+	@PhoneNumber, @DepartmentCode, @CardID, @CardStatus, @UserArea
+);</pre> 
+ </div>
+</div></li></ol><h2 id="Janus-JanustoAccman:theUpdateSecurityCredentialsProcess">Janus to Accman: the UpdateSecurityCredentials Process</h2><p>Janus has a special table called UoS_Cards. Janus updates this table with user details whenever a card is issued or deleted for a particular user. The details are actually put into another table called UoS_CardsStg first which are then processed allowing some other values to later be resolved and then the completed record is moved into the UoS_Cards table every minute. The UoS_Cards table is also updated if the card details are then ever changed such as status or number. Again this goes through the UoS_CardsStg table first.</p><p>The UoS_Cards table is Janus' way of telling Accman that something has happened that Accman should know about. </p><p>This table is read by an Accman processor called UpdateSecurityCredentials. This has a transaction type <em>Type-98</em>, but is special in that it doesn't actually process real transactions in the Accman database. There are no Type-98 transactions in the database. In fact the only reason it has a transaction type is to fit in with the standard transaction-processing framework within the Accman codebase. </p><p>Instead, the UpdateSecurityCredentials simply polls the UoS_Cards table on a regular basis to see if there is anything to process. This is the query it executes</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">SELECT 
+	distinct janus_users.EmpNumber, usr.fielddata as [Username], UoS_Cards.SecurityTokenId,
+	dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, &#39;32-bit Number&#39;) AS [32-bit Number],
+	dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, &#39;56-bit Number&#39;) AS [56-bit Number],
+	dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, &#39;DESFire Number&#39;) AS [DESFire Number]
+FROM 
+	[Enterprise].[dbo].[UoS_Cards]
+	INNER JOIN janus_user_SecurityToken
+		ON UoS_Cards.SecurityTokenID = janus_user_SecurityToken.SecurityTokenId 
+	INNER JOIN janus_users 
+		ON janus_users.UserId = janus_user_SecurityToken.UserId
+	left outer join janus_customFieldData usr on usr.objectid = janus_users.UserId and usr.customfieldid = &#39;F0C3C798-8199-47A0-B744-DF04C1FF8BC7&#39;
+WHERE (
+	UoS_Cards.Status IS NULL) OR (UoS_Cards.Status = 0
+);</pre>
+</div></div><p>As you can see, it retrieves the Username and the current card numbers (in various formats). Armed with the user's details, this process then performs the following tasks.</p><ol><li>Updates the following Active Directory custom attributes (see also <a href="Active-Directory_16384050.html">Active Directory</a>)<ol><li>ThirtyTwoBitNumber</li><li>FiftySixBitNumber</li></ol></li><li>Creates a Type-127 transaction to update ALMA with the new details. See <a href="ALMA_16384037.html">ALMA</a> for what then happens.</li><li><strong>Students only</strong> (Mail.Person.Source_Code = 'S'):<strong> </strong><ol><li>Create a Type-96 transaction (Update Banner Barcode), with two transaction parameters; ROLLNUMBER and BARCODE. </li><li>Create a Type-107 transaction (Update LOXS Student Barcode), with two transaction parameters; ROLLNUMBER and CARDNUMBER. </li><li><p>Directly update the Career Hub database record for the affected student. It does this by deleting any existing records (identified by rollnumber) and then inserting a fresh record using this query</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">INSERT INTO dump_studentCards (
+	StudentID, UserName, 
+	Barcode, [56bitRFIDToken], 
+	[32bitRFIDToken]
+) 
+VALUES (
+	@StudentID, @UserName, 
+	@Barcode, @FiftySixBitRFIDToken, 
+	@ThirtyTwoBitRFIDToken
+);
+</pre>
+</div></div></li></ol></li><li><p>Delete the record from Janus' UoS_Cards table so that this update is only processed once</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">DELETE FROM UoS_Cards WHERE SecurityTokenId = @SecurityTokenId</pre>
+</div></div></li></ol><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

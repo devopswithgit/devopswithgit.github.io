@@ -1,0 +1,50 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1226" measuredH="727" mockupW="1180" mockupH="700">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="46" y="27" w="1180" h="700" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>A%20Web%20Page%0Ahttp%3A//</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="83" y="134" w="-1" h="-1" measuredW="160" measuredH="32" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>24</size>
+        <text>System%20Health</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::TabBar" x="68" y="176" w="1095" h="489" measuredW="627" measuredH="100" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <selectedIndex>5</selectedIndex>
+        <text>Active%20Directory%2C%20ALMA%2C%20Janus%2C%20Queuing%20Transactions%2C%20Hanging%20Jobs%2C%20Banner%20Import%2C%20SAP%20Import</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::Title" x="111" y="244" w="-1" h="-1" measuredW="173" measuredH="27" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>24</size>
+        <text>Last%2010%20Imports</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::HRule" x="104" y="276" w="955" h="-1" measuredW="100" measuredH="10" zOrder="4" locked="false" isInGroup="-1"/>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::CheckBoxGroup" x="120" y="306" w="466" h="265" measuredW="203" measuredH="169" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>20</size>
+        <text>%5B-%5D%2009%20June%202016%2009%3A30%0A%5Bx%5D%2008%20June%202016%2019%3A30%0A%5Bx%5D%2008%20June%202016%2017%3A30%0A%5Bx%5D%2008%20June%202016%2015%3A30%0A%5B%5D%2008%20June%202016%2013%3A30%0A%5Bx%5D%2008%20June%202016%2011%3A30</text>
+      </controlProperties>
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::Tooltip" x="322" y="436" w="-1" h="-1" measuredW="85" measuredH="33" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Failed</text>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Tooltip" x="322" y="286" w="-1" h="-1" measuredW="99" measuredH="33" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Running</text>
+        <tooltipDirection>SW</tooltipDirection>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::StickyNote" x="598" y="308" w="214" h="208" measuredW="109" measuredH="123" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>This%20is%20an%20example%20of%20what%20could%20be%20displayed%20and%20would%20make%20e.g.%20daily%20checks%20easier</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

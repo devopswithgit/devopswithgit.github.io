@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Transaction 97s fail: Subquery returned more than 1 value</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Completed_19595586.html">Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Transaction 97s fail: Subquery returned more than 1 value
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Martin Evans</span>, last modified by <span class='editor'> Unknown User (ujs077)</span> on Feb 24, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="confluence-embedded-file-wrapper"><a class="confluence-embedded-file" href="/confluence/download/attachments/23856534/Janus%20Database%20record%20cleanup.msg?version=1&amp;modificationDate=1454341022000&amp;api=v2" data-nice-type="null" data-file-src="/confluence/download/attachments/23856534/Janus%20Database%20record%20cleanup.msg?version=1&amp;modificationDate=1454341022000&amp;api=v2" data-linked-resource-id="23857926" data-linked-resource-type="attachment" data-linked-resource-container-id="23856534" data-linked-resource-default-alias="Janus Database record cleanup.msg" data-mime-type="application/x-upload-data" data-has-thumbnail="false" data-linked-resource-version="1"><img src="download/resources/com.atlassian.confluence.plugins.confluence-view-file-macro:view-file-macro-resources/images/placeholder-medium-file.png" height="250"/><span class="title">Janus Database record cleanup.msg</span></a></span><span class="confluence-embedded-file-wrapper"><a class="confluence-embedded-file" href="/confluence/download/attachments/23856534/RE%20DONGLE%20983681146%20-%20janus%20enterprise%20-%20GMTBST.msg?version=1&amp;modificationDate=1456311816000&amp;api=v2" data-nice-type="null" data-file-src="/confluence/download/attachments/23856534/RE%20DONGLE%20983681146%20-%20janus%20enterprise%20-%20GMTBST.msg?version=1&amp;modificationDate=1456311816000&amp;api=v2" data-linked-resource-id="25101118" data-linked-resource-type="attachment" data-linked-resource-container-id="23856534" data-linked-resource-default-alias="RE DONGLE 983681146 - janus enterprise - GMTBST.msg" data-mime-type="application/x-upload-data" data-has-thumbnail="false" data-linked-resource-version="1"><img src="download/resources/com.atlassian.confluence.plugins.confluence-view-file-macro:view-file-macro-resources/images/placeholder-medium-file.png" height="250"/><span class="title">RE DONGLE 983681146 - janus enterprise - GMTBST.msg</span></a></span></p><div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Transaction 97 add to Janus fails because the query fails</td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Bug</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">High</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis485" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis485" data-linked-resource-id="829846" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Martin Evans</a></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd"><time datetime="2016-01-14" class="date-past">14 Jan 2016</time> </td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis485" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis485" data-linked-resource-id="829846" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Martin Evans</a></td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-329" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-329?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-329</a>
+                            -
+            <span class="summary">Transaction 97 add to Janus fails because the query fails</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+</td></tr></tbody></table></div><p> </p><h2 id="Transaction97sfail:Subqueryreturnedmorethan1value-Details">Details</h2><p>Transaction 97 fails to add to Janus therefore cards are not enabled or more worryingly disabled when they should be, causing potential security issues.</p><p>There are over 500 pending 97s today alone.</p><p>Example as follows:</p><h3 id="Transaction97sfail:Subqueryreturnedmorethan1value-Logfilefortransaction:11023761">Log file for transaction: 11023761</h3><p>14/01/2016 16:11:43 - Transaction 11023761 started <br/>14/01/2016 16:11:43 - Attempting to retrieve account details for username: NTE782 <br/>14/01/2016 16:11:44 - Transaction 11023761 failed at: 14/01/2016 16:11:44, with exception: Subquery returned more than 1 value. This is not permitted when the subquery follows =, !=, &lt;, &lt;= , &gt;, &gt;= or when the subquery is used as an expression. <br/>The statement has been terminated.: at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection) <br/> at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection) <br/> at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning() <br/> at System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj) <br/> at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString) <br/> at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async) <br/> at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, DbAsyncResult result) <br/> at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(DbAsyncResult result, String methodName, Boolean sendToPipe) <br/> at System.Data.SqlClient.SqlCommand.ExecuteNonQuery() <br/> at <a href="http://uk.ac" class="external-link" rel="nofollow">uk.ac</a>.salford.library.database.sql.SqlDAO._ExecuteNonQuery(String sql, SqlParameter[] parameters, SqlConnection databaseConnection, CommandType commandType, SqlTransaction transaction) in C:\VS2010\.NET Code Library\Utilities\database\sql\SqlDAO.cs:line 505 <br/> at <a href="http://uk.ac" class="external-link" rel="nofollow">uk.ac</a>.salford.library.database.sql.SqlDAO.Execute(String sql, SqlParameter[] parameters, SqlConnection databaseConnection, CommandType commandType) in C:\VS2010\.NET Code Library\Utilities\database\sql\SqlDAO.cs:line 164 <br/> at <a href="http://uk.ac" class="external-link" rel="nofollow">uk.ac</a>.salford.library.database.sql.SqlDAO.Execute(String sql, SqlParameter[] parameters, CommandType commandType) in C:\VS2010\.NET Code Library\Utilities\database\sql\SqlDAO.cs:line 180 <br/> at <a href="http://uk.ac" class="external-link" rel="nofollow">uk.ac</a>.salford.accman.Models.MSSQL.JanusDAO.UpdateUserDetails(Operator user, Account account) in C:\VS2010\Accman.NET\AccManLibrary\Models\MSSQL\JanusDAO.cs:line 366 <br/> at Salford.AccMan.BackEnd.Processes.Janus.UpdateJanusUserDetails.ProcessTransaction(Transaction&amp; transaction) in C:\VS2010\Accman.NET\AccManBackEndLibrary\Processes\Janus\UpdateJanusUserDetails.cs:line 107 <br/> at Salford.AccMan.BackEnd.Processes.TransactionServiceProcess.Process() in C:\VS2010\Accman.NET\AccManBackEndLibrary\TransactionServiceProcess.cs:line 147</p><h3 id="Transaction97sfail:Subqueryreturnedmorethan1value-MoreAboutTransaction#97">More About Transaction#97</h3><p>Transaction#97 Update user details in Janus (SQL Server Database). This transaction created by following transactions in AccMan:</p><div class="table-wrap"><table class="confluenceTable"><colgroup><col/> <col/> <col/> <col/> </colgroup><tbody><tr><td class="confluenceTd"><strong>Transaction#</strong></td><td class="confluenceTd"><strong>Name</strong></td><td class="confluenceTd"><strong>Affects ID</strong></td><td class="confluenceTd"><strong>Parameters</strong></td></tr><tr><td class="confluenceTd">103</td><td class="confluenceTd">Enable AD</td><td class="confluenceTd">AccountId</td><td class="confluenceTd">Username</td></tr><tr><td class="confluenceTd">104</td><td class="confluenceTd">Disable AD</td><td class="confluenceTd">AccountId</td><td class="confluenceTd">Username</td></tr><tr><td class="confluenceTd">83</td><td class="confluenceTd">Import Associates</td><td class="confluenceTd">associateId</td><td class="confluenceTd">RollNumber</td></tr><tr><td class="confluenceTd">43</td><td class="confluenceTd">Register</td><td class="confluenceTd">??</td><td class="confluenceTd">Username</td></tr><tr><td class="confluenceTd">1113</td><td class="confluenceTd">Sap Person Import</td><td class="confluenceTd">PersonId</td><td class="confluenceTd">RollNumber</td></tr><tr><td class="confluenceTd">47</td><td class="confluenceTd">Assign</td><td class="confluenceTd">PersonId</td><td class="confluenceTd">RollNumber</td></tr><tr><td class="confluenceTd">1507</td><td class="confluenceTd">NoShow</td><td class="confluenceTd">PersonId</td><td class="confluenceTd">RollNumber</td></tr><tr><td class="confluenceTd">1504</td><td class="confluenceTd">Banner4Person</td><td class="confluenceTd">PersonId</td><td class="confluenceTd">RollNumber</td></tr></tbody></table></div><p> </p><h3 id="Transaction97sfail:Subqueryreturnedmorethan1value-Issue">Issue</h3><p>The actual issue is outside the AccMan. Estates have asked Grosvenor (The Vendor) to fix one of their issue in October 2015. The issue was in library where student scan their card (term style) have limitation of 64000 card number. So if card number exceed 64000 data, they will be overwritten. So Grosvenor has written script which clear some old data from Janus Database. Here is their solution for this issue:</p><h4 id="Transaction97sfail:Subqueryreturnedmorethan1value-SolutionfromGrosvenor">Solution from Grosvenor</h4><p>As discussed please see below the methods and costs involved to clean up the database to reduce the amount of cards going to the boxes and subsequent measures, to ensure it doesn't get out of hand again. Will you please run it past the team for their thoughts and any additions they may feel required. </p><p><u>Stage 1</u></p><p>Firstly a query will be wrote to remove the card number from card records other than &quot;Valid or Suspended&quot; and store it in a custom field. This process ensures that data is retained should a user needs to be reinstated. It also serves to remove the card data from the door controllers.</p><p>Once run this will remove 34,203 records that would instantly be removed from the door controllers.</p><p> </p><p><u>Stage 2</u></p><p>After the card numbers have been removed and sufficient time has been passed to ensure that no users need to be reinstated (perhaps 1-3 months but at the discretion of the end user), any card records that have no number we will permanently deleted.</p><p>This number currently stands at 51,420 and including the addition cards to be affected in stage 1, would result in us removing ~85,623 card records from the system.<br/> </p><p>Once this is complete we would look to permanently delete any unnecessary user records. That is any user records who do not have any tokens. At this moment in time there are 3,372 user records with no card records. Once the estimated 85,623 cards are removed it is estimated that ~77,090 user records will be able to be deleted. This will leave ~39,731 users on the system. <br/> </p><p><u style="line-height: 1.42857;">Stage 3</u></p><p>This is where preventative maintenance is implemented to ensure that the database does not grow again too much year on year.</p><p>We can approach this either by automating a task but more preferable is to manually prune the database in an ad-hoc fashion. This means it can be scheduled at convenient times for the end user and also, the criteria under which we cleanse the database can be more dynamic and if necessary, can change year on year. At the very least I would suggest adopting the approach in stages 1 and 2.</p><p>However this solutions broke the existing functionality which AccMan uses to update user data in Janus Database. Specially when interrupted student returns to the University their card can't be reactivated, as card number was moved to different field as per the above solution.</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" src="attachments/23856534/23857742.png" data-image-src="attachments/23856534/23857742.png" data-unresolved-comment-count="0" data-linked-resource-id="23857742" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="janus_token.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="23856534" data-linked-resource-container-version="8"></span></p><h3 id="Transaction97sfail:Subqueryreturnedmorethan1value-Howtofixthisproblem"><span style="color: rgb(0,0,0);">How to fix this problem</span></h3><p>Estates confirms that the system which has 64000 card number limitation is physical system and can't be alter. So they will have to carry on using cleansing script to keep the number lower. So only way we can fix this issue is to fix it in AccMan. There are two ways we can fix this issue:</p><h4 id="Transaction97sfail:Subqueryreturnedmorethan1value-Solution1">Solution 1</h4><p>As Grosvenor broke it they should fix this issue. They can fix the bug in Trigger &quot;[dbo].[UoS_UserUpdateTrigger]&quot; which causes this issue. Solutions may be simple to check the blank card number and look for same in old Card number field to locate deactivated user data. If found update the data else ignore it.</p><h4 id="Transaction97sfail:Subqueryreturnedmorethan1value-Solution2">Solution 2</h4><p>Another way we can apply same check from AccMan transaction#97. Where we will try and look for card details using Card Number field value. If not found try same using Deactivated Card Number Field value. Still not found, we can ignore the update.</p><p> </p><p>Time wise solution 1 will be quicker and easy to test compare to solution 2 in AccMan.</p><p> </p><p> </p><p> </p><p> </p></div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/23856534/23857742.png">janus_token.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/23856534/23857926.msg">Janus Database record cleanup.msg</a> (application/x-upload-data)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/23856534/25101118.msg">RE DONGLE 983681146 - janus enterprise - GMTBST.msg</a> (application/x-upload-data)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-23857619"></a>
+                                    <font class="smallfont"><p><a class="confluence-userlink user-mention" data-username="ujs038" href="https://confluence.salford.ac.uk:8444/confluence/display/~ujs038" data-linked-resource-id="819232" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Jon Besson</a> after initial investigation I found following:</p><p>Transaction#97 Updates Janus User details which is in SQL server database <strong>Enterprise</strong>. If user exists it adds data into <strong>UoS_UserUpdate</strong> table, if not add into <strong>UoS_DataImport </strong>table. Now the error actually occurred in trigger (<strong>UoS_UserUpdateTrigger</strong>) which is trigger when transaction tries to add data in above tables. So good news is there is nothing wrong in AccMan.</p><p>Now the Questions are:</p><ul><li>Who owns/maintain this database?</li><li>Who wrote Trigger [dbo].[UoS_UserUpdateTrigger]?</li><li>Who got the knowledge about this trigger?</li></ul><p>Work wise either we or someone has to fix the bug in the trigger. </p><p>My estimates will be <strong>1 Day </strong>to fix this issue<strong>.</strong></p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ujs077 at Jan 29, 2016 09:26
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23857743"></a>
+                                    <font class="smallfont"><p> </p><p>Now after further investigation I found that @OldCardNumber parameter which was passed in trigger was empty and hence returns multiple security Tocken Data. Martin showed me that when user cared deactivated, Card number field value moved to Deactivate Card Number field. However AccMan Transaction#97 read cardnumber/oldcardnumber from same field. So when card is deactivated card number return as empty. See the screen below:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="150" src="attachments/23856534/23857742.png" data-image-src="attachments/23856534/23857742.png" data-unresolved-comment-count="0" data-linked-resource-id="23857742" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="janus_token.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="23856534" data-linked-resource-container-version="8"></span></p><p>The problem is Deactivated Card Number field value is stored in <a class="createlink" href="/confluence/pages/createpage.action?spaceKey=AC&amp;title=Janus_CustomFieldData">Janus_CustomFieldData</a> table. And I have asked Vendor to explain how we get this field value for user using EMPNumber/RollNumber.</p><p> </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ujs077 at Jan 29, 2016 15:38
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-25101116"></a>
+                                    <font class="smallfont"><p>Finally we got reply back from Grosvenor. Here is the email:</p><p>-----------------------------------------------------------------------------------</p><p>Apologies – I have been out of the country for the past 10 days.</p><p>Are you able to provide some example of the values that you’re inserting into one of our tables?</p><p>I can then simulate entering this data and find out where we’re resolving more than one result. We know that we are on the ‘Card Number’ field but I need to confirm that we are not having problems elsewhere.</p><p>I will aim to get this fixed for you today.</p><p>Thanks<br/> </p><p>Please take some time to complete our customer feedback survey by clicking <a href="https://www.surveymonkey.com/s/6ZCXQZ6" style="line-height: 1.42857;" class="external-link" rel="nofollow">here</a></p><p><strong>Harry Blethyn </strong><br/> Head of Professional Services – Access Control</p><p> </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ujs077 at Feb 24, 2016 11:02
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-25101117"></a>
+                                    <font class="smallfont"><p>I have then replied with the sample data which help them recreate this error.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ujs077 at Feb 24, 2016 11:02
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Accman Diagnostics</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Support-Notes_16384017.html">Support Notes</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Accman Diagnostics
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Aug 04, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="AccmanDiagnostics-/*&lt;![CDATA[*/div.rbtoc1617011813401{padding:0px;}div.rbtoc1617011813401ul{list-style:disc;margin-left:0px;}div.rbtoc1617011813401li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#AccmanDiagnostics-Introduction#AccmanDiagnostics-IntroductionSy"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1617011813401 {padding: 0px;}
+div.rbtoc1617011813401 ul {list-style: disc;margin-left: 0px;}
+div.rbtoc1617011813401 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1617011813401'>
+<ul class='toc-indentation'>
+<li><a href='#AccmanDiagnostics-'></a></li>
+<li><a href='#AccmanDiagnostics-Introduction'>Introduction</a></li>
+<li><a href='#AccmanDiagnostics-SystemStatusTab'>System Status Tab</a></li>
+<li><a href='#AccmanDiagnostics-SAP/BannerImportsTab'>SAP/Banner Imports Tab</a></li>
+<li><a href='#AccmanDiagnostics-TransactionStatusTab'>Transaction Status Tab</a></li>
+</ul>
+</div></h1><h1 id="AccmanDiagnostics-Introduction">Introduction</h1><p>Accman has a number of diagnostic features to try and make it easier to fix problems with accounts.</p><p>Account-specific diagnostic information can be found on the <em>Diagnostic Information</em> tab when viewing account details for an individual account. This shows statistics like when the person last used their ID card. It will also show what data Accman would send to ALMA if an Update ALMA transaction were to be executed (which can now be done via Page 2 on the Account Actions page). Additional features will be added to this tab as new uses for it are identified.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" confluence-query-params="effects=drop-shadow" src="attachments/30245040/30245027.png?effects=drop-shadow" data-image-src="attachments/30245040/30245027.png" data-unresolved-comment-count="0" data-linked-resource-id="30245027" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2016-8-4 12:56:33.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="30245040" data-linked-resource-container-version="2"></span></p><p>System-wide diagnostics can be accessed through the <em>System Status </em>icon on the home page</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" confluence-query-params="effects=drop-shadow" src="attachments/30245040/30245028.png?effects=drop-shadow" data-image-src="attachments/30245040/30245028.png" data-unresolved-comment-count="0" data-linked-resource-id="30245028" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2016-8-4 12:58:21.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="30245040" data-linked-resource-container-version="2"></span></p><p>You will be presented with (currently) three new tabs:</p><ol><li>System Status - checks if various databases and external systems are working</li><li>SAP/Banner Imports - displays a list of recent imports and whether they have been successful or not</li><li>Transaction Status - shows important information about the state of transactions within the Accman database</li></ol><h1 id="AccmanDiagnostics-SystemStatusTab">System Status Tab</h1><p>This performs a few different heath checks. It tests whether the following things are working</p><ol><li>Accman's Mail and Associate databases can be queried</li><li>Active Directory can be queried (it tries to retrieve the AD account for the current user)</li><li>Banner, SAP and Janus databases can be queried</li><li>The current user's account can be retrieved from ALMA (an external service)</li><li>Office365. Testing Office365 is a little harder so Accman check if there has been any successful communication with Office365 in the last 30 minutes. If not, this isn't necessarily a problem so a further check is performed to see if there have been any failures in the same timeframe. If there have been errors, an error is reported. </li></ol><p>The System Status tab re-runs each test at regular intervals. By default it will re-run them every 60 seconds. You can change the interval using the dropdown list near the top-right of the screen.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" confluence-query-params="effects=drop-shadow" src="attachments/30245040/30245029.png?effects=drop-shadow" data-image-src="attachments/30245040/30245029.png" data-unresolved-comment-count="0" data-linked-resource-id="30245029" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2016-8-4 13:3:9.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="30245040" data-linked-resource-container-version="2"></span></p><h1 id="AccmanDiagnostics-SAP/BannerImportsTab">SAP/Banner Imports Tab</h1><p>This screen displays a list of recent imports and if they were successful or not. This allows you to identify periods where there were problems with the data coming into Accman from it's two main feeds. </p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" confluence-query-params="effects=drop-shadow" src="attachments/30245040/30245034.png?effects=drop-shadow" data-image-src="attachments/30245040/30245034.png" data-unresolved-comment-count="0" data-linked-resource-id="30245034" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2016-8-4 13:53:50.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="30245040" data-linked-resource-container-version="2"></span></p><h1 id="AccmanDiagnostics-TransactionStatusTab">Transaction Status Tab</h1><p>At the top of this tab, the most-recently processed transaction is displayed. In the screenshot, you can see that a &quot;Generate Password.txt File&quot; transaction was processed at 12:20. This is updated every five seconds, so if you can see it changing, you can be confident that Accman transactions are currently being processed successfully. It's a quick way to see if the back end is up and running. Note however, just because this is changing doesn't mean everything is perfect. There could still be problems with individual transactions or external systems. </p><p>The main part of the screen shows a breakdown of how many transactions are currently in the state selected in the dropdown list near the top right of the screen. By default this is set to 'Pending'. This allows you to see very quickly if there is a build-up of a certain kind of transaction, indicating a problem that may need investigating. If you click on the <strong>Details</strong> button a list of those transactions will be shown. Only the first 100 are displayed initially, but at the bottom of the list is a link that will bring the next 100 results. </p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" confluence-query-params="effects=drop-shadow" src="attachments/30245040/30245039.png?effects=drop-shadow" data-image-src="attachments/30245040/30245039.png" data-unresolved-comment-count="0" data-linked-resource-id="30245039" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2016-8-4 14:26:9.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="30245040" data-linked-resource-container-version="2"></span></p><p> </p><p>Each row shows the main details pertaining to the transaction, including the user it was connected to (where applicable). You can click on the username to go to the user's main details page. From there, you can view the same transaction on the transaction history tab. If the transaction failed for some reason, you can access the log file from here to see what went wrong.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" height="250" confluence-query-params="effects=drop-shadow" src="attachments/30245040/30245036.png?effects=drop-shadow" data-image-src="attachments/30245040/30245036.png" data-unresolved-comment-count="0" data-linked-resource-id="30245036" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2016-8-4 13:57:22.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="30245040" data-linked-resource-container-version="2"></span></p><p> </p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/30245040/30245026.png">image2016-8-4 12:53:16.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/30245040/30245027.png">image2016-8-4 12:56:33.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/30245040/30245028.png">image2016-8-4 12:58:21.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/30245040/30245029.png">image2016-8-4 13:3:9.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/30245040/30245034.png">image2016-8-4 13:53:50.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/30245040/30245035.png">image2016-8-4 13:57:11.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/30245040/30245036.png">image2016-8-4 13:57:22.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/30245040/30245038.png">image2016-8-4 14:25:56.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/30245040/30245039.png">image2016-8-4 14:26:9.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

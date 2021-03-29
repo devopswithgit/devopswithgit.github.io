@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Account Deletion Perl</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Review_19595581.html">Review</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Account Deletion Perl
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Jon Besson</span>, last modified by <span class='editor'> Unknown User (ujs077)</span> on Feb 03, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Remaining <span>PowerShell </span>- Account Deletion<br/> </td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Enhancement</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">Low</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="ujs038" href="https://confluence.salford.ac.uk:8444/confluence/display/~ujs038" data-linked-resource-id="819232" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Jon Besson</a></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd">10/12/15</td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="ujs038" href="https://confluence.salford.ac.uk:8444/confluence/display/~ujs038" data-linked-resource-id="819232" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Jon Besson</a><br/> </td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue" data-jira-key="ARF-309" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-309?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10311&amp;avatarType=issuetype"/>ARF-309</a>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-default
+     jira-macro-single-issue-export-pdf">Open</span>
+                </span>
+</td></tr></tbody></table></div><p><span class="confluence-embedded-file-wrapper"><a class="confluence-embedded-file" href="/confluence/download/attachments/23855719/Accman%20v2%200%20-%20USG%20-%20Processing%20AD%20Account%20Deletions.docx?version=1&amp;modificationDate=1454498935000&amp;api=v2" data-nice-type="Word Document" data-file-src="/confluence/download/attachments/23855719/Accman%20v2%200%20-%20USG%20-%20Processing%20AD%20Account%20Deletions.docx?version=1&amp;modificationDate=1454498935000&amp;api=v2" data-linked-resource-id="23858099" data-linked-resource-type="attachment" data-linked-resource-container-id="23855719" data-linked-resource-default-alias="Accman v2 0 - USG - Processing AD Account Deletions.docx" data-mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.document" data-has-thumbnail="false" data-linked-resource-version="1"><img src="download/resources/com.atlassian.confluence.plugins.confluence-view-file-macro:view-file-macro-resources/images/placeholder-medium-doc.png" height="250"/><span class="title">Accman v2 0 - USG - Processing AD Account Deletions.docx</span></a></span></p><h2 id="AccountDeletionPerl-Details">Details</h2><p>Not sure if its relevant but there are some <span>PowerShell </span>scripts to generate lists for Ops for AD accounts to be deleted. These are hosted on uos-p-acme-01:</p><p>C:\accman\support\useradmin\Powershell\accman\AD_DELETIONS</p><p>We should find a way of replacing the <span>PowerShell </span>or automating the process.</p><h2 id="AccountDeletionPerl-Summary">Summary</h2><p>OPS and support team uses different <span>PowerShell </span>script to delete AD account. There are couple of manual steps which involves both teams.</p><ol><li>Generate CSV file<br/><p>There are three scripts which generates csv files which accounts needs deleting from AD. Three different scripts are for Student, Staff and Associates. Each script takes star date and end date as parameters and generate list of accounts needs deleting.</p><p>Here is what goes inside CSV file:</p><p>&quot;username&quot;,&quot;state&quot;,&quot;account_timestamp&quot;,&quot;rollnumber&quot;,&quot;source_code&quot;,&quot;forenames&quot;,&quot;RealName&quot;,&quot;person_timestamp&quot;,&quot;person_state&quot;,&quot;CountOftrID&quot;,&quot;tr_type_id&quot;,&quot;affectsID&quot;,&quot;tr_state&quot;</p></li><li>Email CSV file to OPS<br/><span>Once created, these files then email to OPS team who manually delete them.</span><br/><span><br/></span></li><li><span>OPS delete Ad account using CSV file</span></li><li><span><span>OPS email back new CSV file</span></span><br/><span><span><span>However OPS team also send back (email) new csv file which got all accounts they actually deleted from AD.</span></span></span><span><span><span><br/></span></span></span><span><span><span><br/></span></span></span></li><li><span><span><span>Support team generate transaction#1001</span></span></span><br/>Once received support team manually run another <span>PowerShell </span>script which generates 1001 transaction in AccMan.</li></ol><h2 id="AccountDeletionPerl-Problem"><a name="Problem" title="Follow link" rel="nofollow"></a>Problem</h2><p>There are too many manual steps which need user attention.</p><h2 id="AccountDeletionPerl-Solution"><a name="Solution" title="Follow link" rel="nofollow"></a>Solution</h2><p>We can first make these steps automated. For example setup these as QUARTZ job (.net) which periodically check the accounts need deletion and generate CSV file. .NET Script will generate csv file and may email it to OPS or copy it to shared folder. I would advise to copy it to shared folder. Once AD account deleted, ops team will then copy new csv file back to same folder. Another .NET script which will periodically check for the new csv file from OPS team will generate transaction#1001.</p><p>This way everything become clear and no user <span>intervention </span>required.</p><h2 id="AccountDeletionPerl-Estimates">Estimates</h2><p>This entire work may take upto 5-10 days.</p></div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/23855719/23858099.docx">Accman v2 0 - USG - Processing AD Account Deletions.docx</a> (application/vnd.openxmlformats-officedocument.wordprocessingml.document)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:55</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

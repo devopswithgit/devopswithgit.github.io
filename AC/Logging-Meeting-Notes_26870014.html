@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Logging Meeting Notes</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Rewrite-Documentation-2013_16384056.html">Accman Rewrite Documentation 2013</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Logging_25628446.html">Logging</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Logging Meeting Notes
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Jon Besson</span>, last modified on May 16, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p> </p><h2 id="LoggingMeetingNotes-MeetingDate11/05/16">Meeting Date 11/05/16</h2><p>JB, RG, MA, JK, JM, VP, <span>Alun Jones (AJ), Nomaan Jameel (NJ)</span></p><h3 id="LoggingMeetingNotes-Meetingnotes">Meeting notes</h3><p>General Issues with logging :</p><ul><li>Millions of records</li><li>tons of redundant information, data, config params, guff etc.</li><li>file based so space is an issue</li><li>There are different approaches to logging</li></ul><p> </p><p><span>Q) What are the different logging approaches currently? How hard will it be to unify them?</span></p><p>A) See <a href="Logging_25628446.html">Logging</a></p><p> </p><p>Discussed unification of output. AJ looking into logstash by Elastic</p><p><strong>Action on AJ</strong> to  create a short document in Confluence to describe these techs.</p><p>NJ - has been looking at quality of logging and updating docs on Conf. <strong>Action on NJ </strong>to document the different types of logging that AccMan produces so we can see what currently works and what doesn't </p><p>See <a href="Logging-Refactoring-Investigation_26607658.html">Logging Refactoring Investigation</a></p><p><strong>Action on VP </strong>- put pros and cons of a database</p><p><strong>Action on NJ</strong> to go through JIRA cases and see what are related to logging See <a href="Logging_25628446.html">Logging</a> (under related issues)</p><p> </p><p><span>Q) How would we like logging to look?</span></p><p><span>A) 2 approaches - </span></p><ul><li><span> </span>Logstash</li><li>DB - dump to database then dashboards to query logs</li></ul><p> </p><p>Other applications</p><p>We need to think about other applications we have which can utilise the same methods for their logging</p><p> </p><p><span>Discussed <strong><em>Improving output</em></strong> :</span></p><ul><li>Worst offenders for verbose or unclean logging</li><li>Find different broad approaches in logging</li><li>Finding which transactions log lots of useless info and those that don't log useful info (possible piece of work to fix worst offenders)</li><li>Find out which we can tackle first - service transaction log</li></ul><p> </p><p>Discussed <em><strong>Handling output</strong></em> :</p><p>Logstash, DB dump, BAU etc</p><p> </p><p><span>Discussed <em><strong>Delivering output</strong></em> :</span></p><ul><li>Currently - big log files, transaction history etc.</li><li>Unified view for all?</li><li>Link to LANDesk/JIRA?</li><li>Incorporate with testing/test views? e.g. incorporating results so that we can give confidence that specific actions/transactions are being carried out etc.</li></ul><p> </p><p>Discussed <strong>MI - reporting</strong> - visualisation strategy 'kibana'</p><h2 id="LoggingMeetingNotes-MeetingDate16/05/16">Meeting Date 16/05/16</h2><h3 id="LoggingMeetingNotes-Agenda">Agenda</h3><p>Discuss Action Points from <a href="26607662.html">E-Mail Logging of C# Exceptions</a></p><p>Discuss Action Points from <a href="Stack-Trace-logging_26607744.html">Stack Trace logging</a></p><p>Where are we with Logstash?</p><p>Discuss <a href="Logging-in-Database-using-Nlog-and-Elmah_26869862.html">Logging in Database using Nlog and Elmah</a></p><p>Discuss <a href="Centralised-logging-with-ELK_26870078.html">Centralised logging with ELK</a></p><p> </p><h3 id="LoggingMeetingNotes-MeetingNotes">Meeting Notes</h3><p>Discussed email logging. Agreed in group that this was worth reviewing. <strong>Action on JB</strong> to raise with Steve and Marks team.</p><p>Discussed Stack Trace logging - still required, possible to review in future</p><p>Discussed database logging.</p><p> </p><p>We need a higher level view of what we are doing and where we can go and where we need to be. Action - <strong>JB to intialise a document to show this</strong>.</p><p><strong>Action on Alun</strong> to work on a short demo of ELK (as described in <a href="Centralised-logging-with-ELK_26870078.html">Centralised logging with ELK</a></p><p><strong>Action on JB/AJ/NJ</strong> to look at RFC procedure</p><p>Carry on looking into AccMan logging cases</p><p>Richard is going to put in a minor change re. Banner Import logging</p><p> </p><p> </p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

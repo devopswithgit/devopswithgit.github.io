@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : ALMA</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Rewrite-Documentation-2013_16384056.html">Accman Rewrite Documentation 2013</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="External-Systems_16384049.html">External Systems</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : ALMA
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on May 23, 2017
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1617011777400 {padding: 0px;}
+div.rbtoc1617011777400 ul {list-style: disc;margin-left: 0px;}
+div.rbtoc1617011777400 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1617011777400'>
+<ul class='toc-indentation'>
+<li><a href='#ALMA-Introduction'>Introduction</a>
+<ul class='toc-indentation'>
+<li><a href='#ALMA-Summary'>Summary</a></li>
+</ul>
+</li>
+<li><a href='#ALMA-Process'>Process</a></li>
+<li><a href='#ALMA-FieldsSenttoALMA'>Fields Sent to ALMA</a></li>
+<li><a href='#ALMA-ExampleXMLSenttoALMA'>Example XML Sent to ALMA</a></li>
+<li><a href='#ALMA-DailyBulkUpdate'>Daily Bulk Update</a></li>
+</ul>
+</div></p><h1 id="ALMA-Introduction">Introduction</h1><p>There is already some information about the ALMA interface here: <a href="https://confluence.salford.ac.uk:8444/confluence/display/ALMA/ALMA+Home">ALMA Home</a>.</p><p>Users are created in ALMA when their ID cards have been assigned (for new users) or whenever there is a change in ID card details which can happen when an existing user gets a replacement card, for example. Note, there are other lifecycle events where this <em>should </em>take place, but they are not yet implemented. </p><h2 id="ALMA-Summary">Summary</h2><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh"> </th><th class="confluenceTh">Process</th><th class="confluenceTh">Transaction Type ID</th><th colspan="1" class="confluenceTh">Params</th><th class="confluenceTh">Script / Class</th><th class="confluenceTh">.NET / Perl</th></tr><tr><th class="confluenceTh"><span>Triggered by</span></th><td class="confluenceTd">UpdateSecurityCredentials</td><td class="confluenceTd">98</td><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd"><span>Salford.AccMan.BackEnd.Processes.Janus.UpdateSecurityCredentials.cs</span></td><td class="confluenceTd">.NET</td></tr><tr><th class="confluenceTh"><span>Executed by</span></th><td class="confluenceTd"><span>UpdateALMAUser</span></td><td class="confluenceTd">127</td><td colspan="1" class="confluenceTd">ROLLNUMBER</td><td class="confluenceTd">Salford.AccMan.BackEnd.Processes.Janus.UpdateALMAUser.cs</td><td class="confluenceTd">.NET</td></tr></tbody></table></div><p> </p><h1 id="ALMA-Process">Process</h1><ol><li><span style="color: rgb(0,0,0);">A user is assigned a new ID card in Janus, or their existing details change in some way (still within Janus). </span></li><li><span style="color: rgb(0,0,0);">Janus updates its UOS_CARDS table with information about the change. This table can contain details of multiple users whose card details have changed and therefore need to be processed by Accman. </span></li><li><p><span style="color: rgb(0,0,0);">Accman's <em>UpdateSecurityCredentials </em>regularly polls the UOS_CARDS table to see if there are any details waiting to be processed. It uses the following query</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">SELECT distinct janus_users.EmpNumber, usr.fielddata as [Username], UoS_Cards.SecurityTokenId,
+dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, &#39;32-bit Number&#39;) AS [32-bit Number],
+dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, &#39;56-bit Number&#39;) AS [56-bit Number],
+dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, &#39;DESFire Number&#39;) AS [DESFire Number]
+FROM [Enterprise].[dbo].[UoS_Cards]
+INNER JOIN janus_user_SecurityToken
+ON UoS_Cards.SecurityTokenID = janus_user_SecurityToken.SecurityTokenId 
+INNER JOIN janus_users 
+ON janus_users.UserId = janus_user_SecurityToken.UserId
+left outer join janus_customFieldData usr on usr.objectid = janus_users.UserId and usr.customfieldid = &#39;F0C3C798-8199-47A0-B744-DF04C1FF8BC7&#39;
+WHERE (UoS_Cards.Status IS NULL) OR (UoS_Cards.Status = 0);</pre>
+</div></div><p><span style="color: rgb(0,0,0);"><br/></span></p></li><li><span style="color: rgb(0,0,0);">The new card details are then pushed into AD</span></li><li><span style="color: rgb(0,0,0);">Providing the details are successfully pushed into AD, Accman then writes a Type-127 (ALMA_UPDATE_USER) transaction into the Accman database, to signify that the users details need to be pushed into ALMA. </span></li><li><span style="color: rgb(0,0,0);">The UpdateALMAUser process detects the new Type-127 transaction and processes it by doing the following</span><ol><li><p><span style="color: rgb(0,0,0);">Using the ROLLNUMBER parameter, look up the user in the Accman database using the following query</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">select 
+	a.accid AS AccountID, a.Username, a.PersonID, a.state AS AccountState,
+	p.Forenames, p.RealName, p.RollNumber, p.person_state AS PersonStatus, p.stu_att AS Attendance,
+	p.person_status_code AS PersonStatusCode, p.source_code as PersonSourceCode,
+	p.start_date AS StartDate, p.end_date as EndDate, p.SPRIDEN_ID AS StudentNumber, 
+	d.dept_name AS DepartmentName, p.dept_code AS DepartmentCode, ds.DefaultContext, ds.DefaultServer, ds.DefaultVolume,
+	ad.FSQuota, a.primary_mailname AS PrimaryMailname, ed.DomainName, pa.personnel_area_code, pa.description AS personnel_area_description,
+	a.dispose_domainid AS DisposeDomainID, a.DisabledReason, a.DisabledCure, a.DatePrinted,
+	a.HowPrinted, e.ExtensionDate, e.ExtensionReason, tss.special_status AS ExtendedBorrower,
+	teo.optout_time AS EmailOptout, s.status_name AS AccountType, a.AccountType as AccountTypeField, a.Vith, a.GPASOverdraft, a.manually_disabled as ManuallyDisabled,
+	p.b_date AS BirthDate, p.program, p.Title, p.PreferredName, p.stu_levl AS StudentLevel, p.telephone_number AS TelephoneNumber, rm.ID AS EmployeeNumber, pos.uidNumber AS UIDNumber, 
+	pba.SPRADDR_STREET_LINE1 AS PersonalLine1, pba.SPRADDR_STREET_LINE2 AS PersonalLine2, pba.SPRADDR_STREET_LINE3 AS PersonalLine3, pba.SPRADDR_City AS PersonalCity, pba.SPRADDR_ZIP AS PersonalPostcode, 
+	tba.SPRADDR_STREET_LINE1 AS TermLine1, tba.SPRADDR_STREET_LINE2 AS TermLine2, tba.SPRADDR_STREET_LINE3 AS TermLine3, tba.SPRADDR_City AS TermCity, tba.SPRADDR_ZIP AS TermPostcode, p.is_alumnus AS ISAlumnus
+FROM account a
+	INNER JOIN statuses s ON s.status_code = a.status_code
+	LEFT OUTER JOIN person p ON p.personID = a.personID
+	LEFT OUTER JOIN extension e ON e.personID = p.personID
+	LEFT OUTER JOIN talis_special_status tss ON tss.personID = p.personID
+	LEFT OUTER JOIN talis_email_optout teo ON teo.personID = p.personID
+	LEFT OUTER JOIN dept d ON p.dept_code = d.dept_code
+	LEFT OUTER JOIN department_status ds ON ds.department_status_code = a.department_status_code
+	LEFT OUTER JOIN account_details ad ON ad.accID = a.accID
+	LEFT OUTER JOIN emailDomain ed ON ed.domainID = a.primary_domainID
+	LEFT OUTER JOIN rollmap rm ON rm.rollnumber = p.rollnumber
+	LEFT OUTER JOIN department_cost_centre dcc ON dcc.dept_code = p.dept_code
+	LEFT OUTER JOIN personnel_area pa ON dcc.personnel_area_code = pa.personnel_area_code
+	LEFT OUTER JOIN posixaccount pos ON pos.accid = a.accid 
+	LEFT OUTER JOIN banner_address pba ON pba.SPRIDEN_ID = p.SPRIDEN_ID AND pba.SPRADDR_ATYP_CODE = &#39;PR&#39;
+	LEFT OUTER JOIN banner_address tba ON tba.SPRIDEN_ID = p.SPRIDEN_ID AND tba.SPRADDR_ATYP_CODE = &#39;TT&#39; 
+WHERE p.rollNumber= @rollNumber ORDER BY a.state, ad.type LIMIT 1;</pre>
+</div></div><p><span style="color: rgb(0,0,0);"><br/></span></p></li><li><p><span style="color: rgb(0,0,0);">Look up the user's card details in the Janus database using the following query (this is to retrieve the 32-bit car number, 56-bit number etc)</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">SELECT distinct janus_users.EmpNumber, usr.fielddata as [Username], UoS_Cards.SecurityTokenId,
+	dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, &#39;32-bit Number&#39;) AS [32-bit Number],
+    dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, &#39;56-bit Number&#39;) AS [56-bit Number],
+    dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, &#39;DESFire Number&#39;) AS [DESFire Number]
+    FROM [Enterprise].[dbo].[UoS_Cards]
+    INNER JOIN janus_user_SecurityToken
+    ON UoS_Cards.SecurityTokenID = janus_user_SecurityToken.SecurityTokenId 
+    INNER JOIN janus_users 
+    ON janus_users.UserId = janus_user_SecurityToken.UserId
+    left outer join janus_customFieldData usr on usr.objectid = janus_users.UserId and usr.customfieldid = &#39;F0C3C798-8199-47A0-B744-DF04C1FF8BC7&#39;
+WHERE (UoS_Cards.Status IS NULL) OR (UoS_Cards.Status = 0);</pre>
+</div></div></li><li><span style="color: rgb(0,0,0);">Convert the details retrieved from Accman and Janus into an XML payload that can be sent to ALMA using its Web Service interface. The fields sent over are described in the table later in this document.</span></li><li><span style="color: rgb(0,0,0);">Accman first attempts to <em>create</em> the user, regardless of whether they exist or not</span></li><li><span style="color: rgb(0,0,0);">If the create fails (usually because the user already exists in ALMA) the exception is caught, and an <em>update</em> is attempted instead. </span></li></ol></li><li><span style="color: rgb(0,0,0);">The ALMA web service returns a status code to indicate success or failure, and the transaction is marked as processed if it was successful. </span></li></ol><h1 id="ALMA-FieldsSenttoALMA">Fields Sent to ALMA</h1><div class="table-wrap"><table class="confluenceTable"><colgroup><col/><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">ALMA Field name</th><th class="confluenceTh">Source</th><th colspan="1" class="confluenceTh">Sample Value</th><th class="confluenceTh">Notes</th></tr><tr><td class="confluenceTd"><span>owneredEntity.</span><span>creationDate</span></td><td class="confluenceTd"><span>Current date/time</span></td><td colspan="1" class="confluenceTd">20131122130641</td><td class="confluenceTd">Copies of this field are used in multiple places in the XML</td></tr><tr><td class="confluenceTd"><span>owneredEntity.</span><span>modificationDate</span></td><td class="confluenceTd">Current date/time</td><td colspan="1" class="confluenceTd">20131122130641</td><td class="confluenceTd"><span>Copies of this field are used in multiple places in the XML</span></td></tr><tr><td class="confluenceTd"><span>owneredEntity.</span><span>createdBy</span></td><td class="confluenceTd">Hard coded</td><td colspan="1" class="confluenceTd">User, Admin</td><td class="confluenceTd"><span>Copies of this field are used in multiple places in the XML</span></td></tr><tr><td class="confluenceTd"><span>owneredEntity.</span><span>modifiedBy</span></td><td class="confluenceTd">Hard coded</td><td colspan="1" class="confluenceTd">User, Admin</td><td class="confluenceTd"><span>Copies of this field are used in multiple places in the XML</span></td></tr><tr><td class="confluenceTd">userRecord.userDetails.status</td><td class="confluenceTd"><span>Hard coded</span></td><td colspan="1" class="confluenceTd">Active</td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd">userRecord.userDetails.externalId</td><td class="confluenceTd">Hard coded</td><td colspan="1" class="confluenceTd">SIS</td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd">userRecord.userDetails.defaultLanguage</td><td class="confluenceTd">Hard coded</td><td colspan="1" class="confluenceTd">en</td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd">userRecord.userDetails.userName</td><td class="confluenceTd">Mail.Account.Username</td><td colspan="1" class="confluenceTd">AIS159</td><td class="confluenceTd"> </td></tr><tr><td class="confluenceTd">userRecord.userDetails.firstName</td><td class="confluenceTd">Mail.Person.Forenames</td><td colspan="1" class="confluenceTd">Sally</td><td class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">userRecord.userDetails.lastName</td><td colspan="1" class="confluenceTd">Mail.Person.RealName</td><td colspan="1" class="confluenceTd">Smith</td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">userRecord.userDetails.recordType</td><td colspan="1" class="confluenceTd">Hard coded</td><td colspan="1" class="confluenceTd">Public</td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">userRecord.userDetails.userType</td><td colspan="1" class="confluenceTd">Hard coded</td><td colspan="1" class="confluenceTd">External</td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd">userRecord.userDetails.userGroup</td><td colspan="1" class="confluenceTd">Calculated, see <em>Notes</em></td><td colspan="1" class="confluenceTd"><p>STAF</p><p>PGEX</p></td><td colspan="1" class="confluenceTd"><p>The value for the userGroup property can be any of the following in <span style="color: rgb(0,0,255);">BLUE</span>. The first rule satisifed from the list below determines which value is used.</p><p><strong>Note</strong>: <em>FinalYear</em> is true if Mail.Person.Leaver_Flag = 'Y' and <span>Mail.Person.Stu_Levl = 'UG'.</span></p><p><strong>If <strong>User is NOT in the School of Nursing</strong> and Mail.Talis_Special_Status has a value</strong></p><p><em>(the Talis_Special_Status table is joined to the Person table)</em></p><p style="margin-left: 30.0px;">REF: <span style="color: rgb(0,0,255);">EXT</span></p><p style="margin-left: 30.0px;">ELB: <span style="color: rgb(0,0,255);">UGEX <span style="color: rgb(0,51,102);">(or</span> UGEXFY<span style="color: rgb(0,51,102);"> if <em>FinalYear)</em> </span></span></p><p style="margin-left: 30.0px;">ELPG:</p><p style="margin-left: 60.0px;">Attendance is ‘F’ or ‘S’</p><p style="margin-left: 90.0px;">If student status is PGR: <span style="color: rgb(0,0,255);">PGRFTEXT</span></p><p style="margin-left: 90.0px;">If student status is PGT: <span style="color: rgb(0,0,255);">PGTFTEXT</span></p><p style="margin-left: 60.0px;">Otherwise:</p><p style="margin-left: 90.0px;">If student level is PGR: <span style="color: rgb(0,0,255);">PGRPTEXT</span></p><p style="margin-left: 90.0px;">If student level is PGT: <span style="color: rgb(0,0,255);">PGTPTEXT </span></p><p style="margin-left: 30.0px;"><strong>Otherwise, return the borrower status as-is, which can be any of the following</strong></p><p style="margin-left: 60.0px;"><span style="color: rgb(0,0,255);">ELB</span></p><p style="margin-left: 60.0px;"><span style="color: rgb(0,0,255);"> </span><span style="color: rgb(0,0,255);">ELPG</span></p><p style="margin-left: 60.0px;"><span style="color: rgb(0,0,255);"> </span><span style="color: rgb(0,0,255);">EXT</span></p><p style="margin-left: 60.0px;"><span style="color: rgb(0,0,255);"> </span><span style="color: rgb(0,0,255);">REF</span></p><p style="margin-left: 60.0px;"><span style="color: rgb(0,0,255);"> </span><span style="color: rgb(0,0,255);">STAF</span></p><p><strong>User is Staff</strong></p><p><em>(Statuses.Name is one of: Staff, Admin Account, Temporary, Departmental Account)</em></p><p style="margin-left: 30.0px;"><span style="color: rgb(0,0,255);">STAF</span></p><p><strong>User is in the School of Nursing</strong></p><p><em>(Mail.Person.Dept_Code is 'NU')</em></p><p style="margin-left: 30.0px;">StudentLevel is PG:</p><p style="margin-left: 60.0px;">Mail.Account.Person.BorrowerStatus = ‘ELPG’:</p><p style="margin-left: 90.0px;">Attendance is ‘F’ or ‘S’</p><p style="margin-left: 120.0px;">If student level is PGR: <span style="color: rgb(0,0,255);">PGRFTNSEXT</span></p><p style="margin-left: 120.0px;">If student level is PGT: <span style="color: rgb(0,0,255);">PGTFTNSEXT</span></p><p style="margin-left: 90.0px;">Otherwise</p><p style="margin-left: 120.0px;">If student level is PGR: <span style="color: rgb(0,0,255);">PGRPTNSEXT</span></p><p style="margin-left: 120.0px;">If student level is PGT: <span style="color: rgb(0,0,255);">PGTPTNSEXT</span></p><p style="margin-left: 60.0px;">Mail.Account.Person.BorrowerStatus != ‘ELPG:</p><p style="margin-left: 90.0px;">Attendance is ‘F’ or ‘S’</p><p style="margin-left: 120.0px;">If student level is PGR: <span style="color: rgb(0,0,255);">PGRFTNS</span></p><p style="margin-left: 120.0px;">If student level is PGT: <span style="color: rgb(0,0,255);">PGTFTNS</span></p><p style="margin-left: 90.0px;">Otherwise</p><p style="margin-left: 120.0px;">If student level is PGR: <span style="color: rgb(0,0,255);">PGRPTNS</span></p><p style="margin-left: 120.0px;">If student level is PGT: <span style="color: rgb(0,0,255);">PGTPTNS</span></p><p style="margin-left: 30.0px;"><span>StudentLevel is not PG:</span></p><p style="margin-left: 60.0px;"><span><span style="color: rgb(0,0,255);"><span style="color: rgb(0,0,0);">Mail.Account.Person.BorrowerStatus = 'ELB': </span>UGNE<span style="color: rgb(0,51,102);"> (or <span style="color: rgb(0,0,255);">UGNEFY</span> if <em>FinalYear</em>)</span></span></span></p><p style="margin-left: 60.0px;"><span><span style="color: rgb(0,0,255);"><span style="color: rgb(0,51,102);"><span style="color: rgb(0,0,0);">Mail.Account.Person.BorrowerStatus != 'ELB':</span><span style="color: rgb(0,0,255);"> </span><span style="color: rgb(0,0,255);">UGNS</span><span style="color: rgb(0,51,102);"> (or <span style="color: rgb(0,0,255);">UGNSFY </span>if <em>FinalYear</em>)</span></span></span></span></p><p><strong>Student Level is PG</strong></p><p><em>(Mail.Person.Stu_Levl is 'PG')</em></p><p style="margin-left: 30.0px;">Attendence is 'F' or 'S':</p><p style="margin-left: 60.0px;">If student level is PGR: <span style="color: rgb(0,0,255);">PGRFT</span></p><p style="margin-left: 60.0px;">If student level is PGT: <span style="color: rgb(0,0,255);">PGTFT</span></p><p style="margin-left: 30.0px;">Otherwise:</p><p style="margin-left: 60.0px;">If student level is PGR: <span style="color: rgb(0,0,255);">PGRPT</span></p><p style="margin-left: 60.0px;">If student level is PGT: <span style="color: rgb(0,0,255);">PGTPT</span></p><p><strong>Student Level is UG</strong></p><p><em>(Mail.Person.Stu_Levl is 'UG')</em></p><p style="margin-left: 30.0px;"><span><span>Attendence is 'F' or 'S': <span style="color: rgb(0,0,255);">UGFT<span style="color: rgb(0,0,0);"> (or <span style="color: rgb(0,0,255);">UGFTFY</span> if FinalYear)</span></span></span></span></p><p style="margin-left: 30.0px;"><span>Otherwise: <span style="color: rgb(0,0,255);">UGPT<span style="color: rgb(0,0,0);"> (or </span><span style="color: rgb(0,0,255);">UGPTFY</span><span style="color: rgb(0,0,0);"> if FinalYear)</span></span></span></p><p>If none of the above rules are matched: <span style="color: rgb(0,0,255);">UGFT</span></p><p style="margin-left: 60.0px;"> </p></td></tr><tr><td colspan="1" class="confluenceTd">userRecord.userDetails.purgeDate</td><td colspan="1" class="confluenceTd">Calculated, see <em>Notes</em></td><td colspan="1" class="confluenceTd"><p>20141122130641</p><p>(format is yyyyMMddHHmmss)</p></td><td colspan="1" class="confluenceTd"><p><strong>For students</strong></p><ul class="alternate"><li>If Accman has an end date (Mail.Person.End_Date) then use it, but subtract 4 weeks (28 days to be precise)<ul class="alternate"><li><span class="error">Note: this is intended to handle the situation where SID set a mid-June end date for a graduating student; subtracting 4 weeks brings the date to mid-May and gets the students to return books by that date</span></li></ul></li><li>If Accman does not have an end date, use the value set via <span style="color: rgb(0,51,102);"><em>DefaultAlmaEndDate, </em><span style="color: rgb(51,51,0);">configured in quartz_jobs.xml.</span></span></li></ul><p><strong>For staff</strong></p><ul class="alternate"><li>If Accman has an end date <span>(Mail.Person.End_Date)</span> then use it</li><li>If Accman does not have an end date then use “today's date, plus 1 year”</li></ul><p><strong>For associates</strong></p><ul class="alternate"><li>Use the end date from Accman (all associates have one)</li></ul></td></tr><tr><td colspan="1" class="confluenceTd">userRecord.userDetails.expiryDate</td><td colspan="1" class="confluenceTd">Calculated, see <em>Notes</em></td><td colspan="1" class="confluenceTd"><p>20141122130641</p><p><span>(format is </span><span>yyyyMMddHHmmss)</span></p></td><td colspan="1" class="confluenceTd">The value calculated for the purge date (see above) is used for the expiry date.</td></tr><tr><td colspan="1" class="confluenceTd">userRecord.userStatisticalCategoriesList</td><td colspan="1" class="confluenceTd"><p>Mail.Person.DepartmentName</p><p>(plus other values)</p></td><td colspan="1" class="confluenceTd"><p><strong>statisticalCategory</strong>: Information &amp;amp; Learning Services</p><p><strong>owneredEntity</strong>: a copy of the owneredEntity fields (see top of table)</p><p><strong>note</strong>: The hardcoded value &quot;-&quot;</p></td><td colspan="1" class="confluenceTd"><p>See the sample XML for an real example</p><p> </p></td></tr><tr><td colspan="1" class="confluenceTd"><p><strong>Personal Address</strong></p><p>userRecord.userAddressList.userAddress.line1</p><p><span>userRecord.userAddressList.userAddress.line2</span></p><p><span><span>userRecord.userAddressList.userAddress.line3</span></span></p><p><span><span>userRecord.userAddressList.userAddress.city</span></span></p><p><span><span><span>userRecord.userAddressList.userAddress.postalCode</span></span></span></p><p><span><span><span><span>userRecord.userAddressList.userAddress.types.userAddressTypes</span></span></span></span></p></td><td colspan="1" class="confluenceTd"><p><strong>Personal Address</strong></p><p>Mail.BannerAddress.SPRADDR_STREET_LINE1</p><p><span>Mail.BannerAddress.SPRADDR_STREET_LINE2</span></p><p><span><span>Mail.BannerAddress.SPRADDR_STREET_LINE3</span></span></p><p><span><span><span>Mail.BannerAddress.SPRADDR_City</span></span></span></p><p><span><span><span><span>Mail.BannerAddress.SPRADDR_ZIP</span></span></span></span></p><p><span><span><span><span>Hard coded to &quot;<em>home</em>&quot;</span></span></span></span></p></td><td colspan="1" class="confluenceTd"><p> </p><p>Flat 25</p><p>1 Pine Avenue (<em>or may be empty</em>)</p><p>(<em>may be empty</em>)</p><p>Preston</p><p>PR4 AB3</p><p>home</p></td><td colspan="1" class="confluenceTd"><p>Personal Address, marked as the preferred address if present.</p><p>The Personal Address is stored in the Mail.BannerAddress table where column SPRADDR_ATYP_CODE = 'PR'</p><p>Joined on the Mail.Person table using SPRIDEN_ID</p><p> </p></td></tr><tr><td colspan="1" class="confluenceTd"><p><strong>Term Address</strong></p><p>userRecord.userAddressList.userAddress.line1</p><p>userRecord.userAddressList.userAddress.line2</p><p>userRecord.userAddressList.userAddress.line3</p><p>userRecord.userAddressList.userAddress.city</p><p>userRecord.userAddressList.userAddress.postalCode</p><p>userRecord.userAddressList.userAddress.types.userAddressTypes</p></td><td colspan="1" class="confluenceTd"><p><strong>Term Address</strong></p><p>Mail.BannerAddress.SPRADDR_STREET_LINE1</p><p>Mail.BannerAddress.SPRADDR_STREET_LINE2</p><p>Mail.BannerAddress.SPRADDR_STREET_LINE3</p><p>Mail.BannerAddress.SPRADDR_City</p><p>Mail.BannerAddress.SPRADDR_ZIP</p><p>Hard coded to &quot;<em>personal</em>&quot;</p></td><td colspan="1" class="confluenceTd"><p> </p><p>University of Salford</p><p>The Crescent (<em>or may be empty</em>)</p><p>(<em>may be empty</em>)</p><p>Salford</p><p>M5 4WT</p><p>personal</p></td><td colspan="1" class="confluenceTd"><p><span><span>Marked as the preferred address if the personal address (see above) is not present.</span></span></p><p><span>The Term </span><span>Address is stored in the Mail.BannerAddress table where column SPRADDR_ATYP_CODE = 'TT'</span></p><p><span><span>Joined on the Mail.Person table using SPRIDEN_ID</span></span></p></td></tr><tr><td colspan="1" class="confluenceTd"><span>userRecord.userAddressList.userEmail.email</span></td><td colspan="1" class="confluenceTd"><p><strong>Concatenation of:</strong></p><p>Mail.Account.Primary_MailName</p><p>'@'</p><p>Mail.EmailDomain.DomainName</p></td><td colspan="1" class="confluenceTd"><a href="mailto:S.Chester@salford.ac.uk" class="external-link" rel="nofollow">M.Chester@salford.ac.uk</a></td><td colspan="1" class="confluenceTd">Joined on Mail.Account.Primary_DomainID</td></tr><tr><td colspan="1" class="confluenceTd"><span>userRecord.userAddressList.userEmail.email.types.userEmailTypes</span></td><td colspan="1" class="confluenceTd">Hard coded</td><td colspan="1" class="confluenceTd">personal</td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><p><strong>Barcode</strong></p><p>userRecord.userIdentifiers.userIdentifier.owneredEntity</p><p><span>userRecord.userIdentifiers.</span><span>userIdentifier.</span><span>type</span></p><p><span><span>userRecord.userIdentifiers.</span><span>userIdentifier.</span><span>status</span></span></p><p><span><span><span>userRecord.userIdentifiers.</span><span>userIdentifier.</span><span>value</span></span></span></p></td><td colspan="1" class="confluenceTd"><p> </p><p>Copy of the owneredEntity fields</p><p><span>Hard coded</span></p><p>Hard coded</p><p>Janus_SecurityTokens.TokenData</p></td><td colspan="1" class="confluenceTd"><p> </p><p> </p><p>BARCODE</p><p>Active</p><p>88516661</p></td><td colspan="1" class="confluenceTd"><p>This is the user's BARCODE</p><p>If the barcode begins with '08', e.g. '08123456' the leading '0' will be removed and an 'X' appended i.e. '8123456X'.</p><p> </p><p> </p></td></tr><tr><td colspan="1" class="confluenceTd"><p><strong>32-bit Number</strong></p><p>userRecord.userIdentifiers.userIdentifier.owneredEntity</p><p>userRecord.userIdentifiers.userIdentifier.type</p><p>userRecord.userIdentifiers.userIdentifier.status</p><p>userRecord.userIdentifiers.userIdentifier.value</p></td><td colspan="1" class="confluenceTd"><p> </p><p><span>Copy of the owneredEntity fields</span></p><p><span>Hard coded</span></p><p><span>Hard coded</span></p><p><span><strong>Function</strong>: dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, '32-bit Number')</span></p></td><td colspan="1" class="confluenceTd"><p> </p><p> </p><p>OTHER_ID_2</p><p>Active</p><p>712335264</p></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><p><strong>56-bit Number</strong></p><p>userRecord.userIdentifiers.userIdentifier.owneredEntity</p><p>userRecord.userIdentifiers.userIdentifier.type</p><p>userRecord.userIdentifiers.userIdentifier.status</p><p>userRecord.userIdentifiers.userIdentifier.value</p></td><td colspan="1" class="confluenceTd"><p> </p><p>Copy of the owneredEntity fields</p><p>Hard coded</p><p>Hard coded</p><p><strong>Function</strong>: dbo.UoS_GetCardValue(UoS_Cards.SecurityTokenID, '56-bit Number')</p></td><td colspan="1" class="confluenceTd"><p> </p><p> </p><p>OTHER_ID_3</p><p>Active</p><p><span style="color: rgb(0,0,0);">00031070107375962884</span></p></td><td colspan="1" class="confluenceTd"> </td></tr><tr><td colspan="1" class="confluenceTd"><p><strong>University ID (Rollnumber)</strong></p><p>userRecord.userIdentifiers.userIdentifier.owneredEntity</p><p>userRecord.userIdentifiers.userIdentifier.type</p><p>userRecord.userIdentifiers.userIdentifier.status</p><p>userRecord.userIdentifiers.userIdentifier.value</p></td><td colspan="1" class="confluenceTd"><p> </p><p>Copy of the owneredEntity fields</p><p>Hard coded</p><p>Hard coded</p><p>Mail.Person.Rollnumber</p></td><td colspan="1" class="confluenceTd"><p> </p><p> </p><p>UNIV_ID</p><p>Active</p><p>200083481</p></td><td colspan="1" class="confluenceTd"> </td></tr></tbody></table></div><p> </p><h1 id="ALMA-ExampleXMLSenttoALMA">Example XML Sent to ALMA</h1><p>Note, the leading question mark, this is required, and not a typo.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: xml; gutter: false; theme: Confluence" data-theme="Confluence">?&lt;xb:userRecord xmlns:xb=&quot;http://com/exlibris/urm/user_record/xmlbeans&quot;&gt;
+  &lt;xb:userDetails&gt;
+    &lt;xb:defaultLanguage&gt;en&lt;/xb:defaultLanguage&gt;
+    &lt;xb:externalId&gt;SIS&lt;/xb:externalId&gt;
+    &lt;xb:firstName&gt;Molly Anne&lt;/xb:firstName&gt;
+    &lt;xb:lastName&gt;Chester&lt;/xb:lastName&gt;
+    &lt;xb:purgeDate&gt;20141122130641&lt;/xb:purgeDate&gt;
+    &lt;xb:expiryDate&gt;20141122130641&lt;/xb:expiryDate&gt;
+    &lt;xb:recordType&gt;Public&lt;/xb:recordType&gt;
+    &lt;xb:status&gt;Active&lt;/xb:status&gt;
+    &lt;xb:userGroup&gt;STAF&lt;/xb:userGroup&gt;
+    &lt;xb:userName&gt;AIS159&lt;/xb:userName&gt;
+    &lt;xb:userType&gt;External&lt;/xb:userType&gt;
+  &lt;/xb:userDetails&gt;
+  &lt;xb:owneredEntity&gt;
+    &lt;xb:creationDate&gt;20131122130641&lt;/xb:creationDate&gt;
+    &lt;xb:modificationDate&gt;20131122130641&lt;/xb:modificationDate&gt;
+    &lt;xb:createdBy&gt;User, Admin&lt;/xb:createdBy&gt;
+    &lt;xb:modifiedBy&gt;User, Admin&lt;/xb:modifiedBy&gt;
+  &lt;/xb:owneredEntity&gt;
+  &lt;xb:userNoteList /&gt;
+  &lt;xb:userBlockList /&gt;
+  &lt;xb:userIdentifiers&gt;
+    &lt;xb:userIdentifier&gt;
+      &lt;xb:owneredEntity&gt;
+        &lt;xb:creationDate&gt;20131122130641&lt;/xb:creationDate&gt;
+        &lt;xb:modificationDate&gt;20131122130641&lt;/xb:modificationDate&gt;
+        &lt;xb:createdBy&gt;User, Admin&lt;/xb:createdBy&gt;
+        &lt;xb:modifiedBy&gt;User, Admin&lt;/xb:modifiedBy&gt;
+      &lt;/xb:owneredEntity&gt;
+      &lt;xb:type&gt;BARCODE&lt;/xb:type&gt;
+      &lt;xb:status&gt;Active&lt;/xb:status&gt;
+      &lt;xb:value&gt;88516661&lt;/xb:value&gt;
+    &lt;/xb:userIdentifier&gt;
+    &lt;xb:userIdentifier&gt;
+      &lt;xb:owneredEntity&gt;
+        &lt;xb:creationDate&gt;20131122130641&lt;/xb:creationDate&gt;
+        &lt;xb:modificationDate&gt;20131122130641&lt;/xb:modificationDate&gt;
+        &lt;xb:createdBy&gt;User, Admin&lt;/xb:createdBy&gt;
+        &lt;xb:modifiedBy&gt;User, Admin&lt;/xb:modifiedBy&gt;
+      &lt;/xb:owneredEntity&gt;
+      &lt;xb:type&gt;OTHER_ID_2&lt;/xb:type&gt;
+      &lt;xb:status&gt;Active&lt;/xb:status&gt;
+      &lt;xb:value&gt;712335268&lt;/xb:value&gt;
+    &lt;/xb:userIdentifier&gt;
+    &lt;xb:userIdentifier&gt;
+      &lt;xb:owneredEntity&gt;
+        &lt;xb:creationDate&gt;20131122130641&lt;/xb:creationDate&gt;
+        &lt;xb:modificationDate&gt;20131122130641&lt;/xb:modificationDate&gt;
+        &lt;xb:createdBy&gt;User, Admin&lt;/xb:createdBy&gt;
+        &lt;xb:modifiedBy&gt;User, Admin&lt;/xb:modifiedBy&gt;
+      &lt;/xb:owneredEntity&gt;
+      &lt;xb:type&gt;OTHER_ID_3&lt;/xb:type&gt;
+      &lt;xb:status&gt;Active&lt;/xb:status&gt;
+      &lt;xb:value&gt;00031070107375962884&lt;/xb:value&gt;
+    &lt;/xb:userIdentifier&gt;
+    &lt;xb:userIdentifier&gt;
+      &lt;xb:owneredEntity&gt;
+        &lt;xb:creationDate&gt;20131122168641&lt;/xb:creationDate&gt;
+        &lt;xb:modificationDate&gt;20131122130641&lt;/xb:modificationDate&gt;
+        &lt;xb:createdBy&gt;User, Admin&lt;/xb:createdBy&gt;
+        &lt;xb:modifiedBy&gt;User, Admin&lt;/xb:modifiedBy&gt;
+      &lt;/xb:owneredEntity&gt;
+      &lt;xb:type&gt;UNIV_ID&lt;/xb:type&gt;
+      &lt;xb:status&gt;Active&lt;/xb:status&gt;
+      &lt;xb:value&gt;200083480&lt;/xb:value&gt;
+    &lt;/xb:userIdentifier&gt;
+  &lt;/xb:userIdentifiers&gt;
+  &lt;xb:userAddressList&gt;
+    &lt;xb:userAddress preferred=&quot;true&quot;&gt;
+      &lt;xb:line1&gt;University of Salford&lt;/xb:line1&gt;
+      &lt;xb:line2&gt;The Crescent&lt;/xb:line2&gt;
+      &lt;xb:city&gt;Salford&lt;/xb:city&gt;
+      &lt;xb:postalCode&gt;M5 4WT&lt;/xb:postalCode&gt;
+      &lt;xb:types&gt;
+        &lt;xb:userAddressTypes&gt;school&lt;/xb:userAddressTypes&gt;
+      &lt;/xb:types&gt;
+    &lt;/xb:userAddress&gt;
+    &lt;xb:userEmail preferred=&quot;true&quot;&gt;
+      &lt;xb:email&gt;M.Chester@salford.ac.uk&lt;/xb:email&gt;
+      &lt;xb:types&gt;
+        &lt;xb:userEmailTypes&gt;personal&lt;/xb:userEmailTypes&gt;
+      &lt;/xb:types&gt;
+    &lt;/xb:userEmail&gt;
+  &lt;/xb:userAddressList&gt;
+  &lt;xb:userStatisticalCategoriesList&gt;
+    &lt;xb:userCategory&gt;
+      &lt;xb:statisticalCategory&gt;Information &amp;amp; Learning Services&lt;/xb:statisticalCategory&gt;
+      &lt;xb:owneredEntity&gt;
+        &lt;xb:creationDate&gt;20131122130641&lt;/xb:creationDate&gt;
+        &lt;xb:modificationDate&gt;20131122130641&lt;/xb:modificationDate&gt;
+        &lt;xb:createdBy&gt;User, Admin&lt;/xb:createdBy&gt;
+        &lt;xb:modifiedBy&gt;User, Admin&lt;/xb:modifiedBy&gt;
+      &lt;/xb:owneredEntity&gt;
+      &lt;xb:note&gt;-&lt;/xb:note&gt;
+    &lt;/xb:userCategory&gt;
+  &lt;/xb:userStatisticalCategoriesList&gt;
+&lt;/xb:userRecord&gt;</pre>
+</div></div><h1 id="ALMA-DailyBulkUpdate">Daily Bulk Update</h1><p>In addition to the (Type-127) transaction processor within Accman, a command-line tool exists called AlmaImportFromJanus.exe. It executes exactly the same code as the Type-127 transaction, so the resulting XML sent to ALMA is the same, but without the need to create a transaction to kick the process off. This allows us to do the following:</p><ol><li><p>Update ALMA with the latest values from Accman and Janus for a single user (ABC123 in the example below)</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">C:\AlmaImportFromJanus\AlmaImportFromJanus.exe ABC123</pre>
+</div></div></li><li><p>Update ALMA with the latest values from Accman and Janus for <em>all </em>users. Note, this takes several hours to update all users that it finds because it has to call the ALMA web service once per user.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">C:\AlmaImportFromJanus\AlmaImportFromJanus.exe</pre>
+</div></div></li></ol><p>This bypasses the need to create any transactions in the Accman database. Its useful for the following reasons:</p><ol><li>If we want to quickly refresh an individual's ALMA details because they have somehow become corrupted.</li><li>The library have requested an update to all users, which they sometimes do - e.g. the 'purge date' is changed for all users several times per year (see 
+<span class="jira-issue resolved" data-jira-key="ALMA-19" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ALMA-19?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10318&amp;avatarType=issuetype"/>ALMA-19</a>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Resolved</span>
+                </span>
+)</li></ol><p>Recently, as a result of 
+<span class="jira-issue resolved" data-jira-key="AC-86" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/AC-86?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/images/icons/issuetypes/health.png"/>AC-86</a>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+, this tool has become a permanent part of Accman rather than just a utility. It is run on a daily basis as a windows scheduled task with the following details</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Runs on Server</th><td class="confluenceTd">uos-p-acbe-01.mgt.isdads.salford.ac.uk</td><td class="confluenceTd"> </td></tr><tr><th class="confluenceTh">Executable</th><td class="confluenceTd">C:\AlmaImportFromJanus\<span>AlmaImportFromJanus.exe</span></td><td class="confluenceTd">This is what does all the work, but it is not called directly by the scheduled task (see below)</td></tr><tr><th class="confluenceTh">Scheduled Task Name</th><td class="confluenceTd">AlmaImportFromJanus</td><td class="confluenceTd">This executes a batch file <em>bulkupdate.bat</em> which exists just so that we can tweak any command line arguments in an easy way</td></tr><tr><th colspan="1" class="confluenceTh">Schedule</th><td colspan="1" class="confluenceTd">Daily at 7pm</td><td colspan="1" class="confluenceTd"> </td></tr><tr><th class="confluenceTh">Log Files</th><td class="confluenceTd"><span>C:\AlmaImportFromJanus\Logs</span></td><td class="confluenceTd">Configured in AlmaImportFromJanus.exe.config</td></tr></tbody></table></div><p> </p><p> </p><p> </p><p> </p><p class="MsoNormal" style="margin-top: 7.5pt;text-indent: 36.0pt;"><span style="font-size: 10.5pt;color: black;">Mail.Account.Person.BorrowerStatus = <s>'ELB'</s></span><span style="font-size: 10.5pt;color: blue;"> ‘ELPG’:</span><span style="font-size: 10.5pt;color: rgb(0,51,102);"> </span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;text-indent: 27.0pt;"><span style="font-size: 10.5pt;">Attendance is ‘F’ or ‘S’</span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;"><span style="font-size: 10.5pt;">                     If student level is PGR: <span style="color: rgb(0,112,192);">PGRFTNSEXT</span><span style="color: rgb(0,51,102);"> </span></span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;"><span style="font-size: 10.5pt;color: rgb(0,51,102);">                     </span><span style="font-size: 10.5pt;">If student level is PGT: <span style="color: rgb(0,112,192);">PGTFTNSEXT</span><span style="color: rgb(0,51,102);"> </span></span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;text-indent: 27.0pt;"><span style="font-size: 10.5pt;">Otherwise</span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;"><span style="font-size: 10.5pt;">                     If student level is PGR: <span style="color: rgb(0,112,192);">PGRPTNSEXT</span><span style="color: rgb(0,51,102);"> </span></span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;"><span style="font-size: 10.5pt;color: rgb(0,51,102);">                     </span><span style="font-size: 10.5pt;">If student level is PGT: <span style="color: rgb(0,112,192);">PGTPTNSEXT</span></span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;"><span style="font-size: 10.5pt;color: black;">Mail.Account.Person.BorrowerStatus != <s>'ELB'</s></span><span style="font-size: 10.5pt;color: blue;"> ‘ELPG:</span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;text-indent: 27.0pt;"><span style="font-size: 10.5pt;">Attendance is ‘F’ or ‘S’</span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;"><span style="font-size: 10.5pt;">                     If student level is PGR: <span style="color: rgb(0,112,192);">PGRFTNS<s>EXT</s></span><s><span style="color: rgb(0,51,102);"> </span></s></span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;"><span style="font-size: 10.5pt;color: rgb(0,51,102);">                     </span><span style="font-size: 10.5pt;">If student level is PGT: <span style="color: rgb(0,112,192);">PGTFTNS<s>EXT</s></span><span style="color: rgb(0,51,102);"> </span></span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;text-indent: 27.0pt;"><span style="font-size: 10.5pt;">Otherwise</span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;"><span style="font-size: 10.5pt;">                     If student level is PGR: <span style="color: rgb(0,112,192);">PGRPTNS<s>EXT</s></span><span style="color: rgb(0,51,102);"> </span></span></p><p class="MsoNormal" style="margin-top: 7.5pt;margin-right: 0.0cm;margin-left: 45.0pt;"><span style="font-size: 10.5pt;color: rgb(0,51,102);">                     </span><span style="font-size: 10.5pt;">If student level is PGT: <span style="color: rgb(0,112,192);">PGTPTNS<s>EXT</s></span><span style="color: rgb(0,51,102);"> </span></span></p>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-16384076"></a>
+                                    <font class="smallfont"><p><a class="confluence-userlink user-mention" data-username="uis934" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis934" data-linked-resource-id="828223" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (uis934)</a>, I think this is complete now</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis894 at Nov 25, 2013 11:07
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-16384695"></a>
+                                    <font class="smallfont"><p>There is currently a task in development to remove the 32 bit number from the interface. It's detailed in AC-98. If and when it goes live I will update this document to reflect the change.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis894 at Feb 05, 2014 09:00
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-16384505"></a>
+                                    <font class="smallfont"><p>I have found a list of user group codes at <a rel="nofollow">https://eu.alma.exlibrisgroup.com/infra/action/pageAction.do?xmlFileName=tables.codeTables.codeTablesEdit.xml&amp;pageViewMode=View&amp;operation=DIRECT_LINK_VIEW&amp;pageBean.orgUnitCode=1611&amp;pageBean.tableName=UserGroups&amp;pageBean.language=en&amp;pageBean.currentUrl=xmlFileName%3Dtables.codeTables.codeTablesEdit.xml%26pageViewMode%3DView%26operation%3DDIRECT_LINK_VIEW%26pageBean.orgUnitCode%3D{currentScope.institutionId}%26pageBean.tableName%3DUserGroups%26pageBean.language%3Den%26resetPaginationContext%3Dtrue%26showBackButton%3Dfalse&amp;pageBean.navigationBackUrl=..%2Faction%2Fhome.do&amp;resetPaginationContext=true&amp;showBackButton=false&amp;pageBean.securityHashToken=7756289039046378704</a> which will be helpful.</p><p> </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis876 at Feb 14, 2014 09:39
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23202826"></a>
+                                    <font class="smallfont"><p>Updated with new borrower codes and logic (FYI <a class="confluence-userlink user-mention" data-username="ujs104" href="https://confluence.salford.ac.uk:8444/confluence/display/~ujs104" data-linked-resource-id="1245186" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Karla Seward</a>)</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis894 at Nov 05, 2015 11:44
+                                    </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td  style="border-top: 1px dashed #666666">
+                                    <a name="comment-23856312"></a>
+                                    <font class="smallfont"><p>Hi <a class="confluence-userlink user-mention" data-username="uis934" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis934" data-linked-resource-id="828223" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Unknown User (uis934)</a>, <a class="confluence-userlink user-mention" data-username="ujs104" href="https://confluence.salford.ac.uk:8444/confluence/display/~ujs104" data-linked-resource-id="1245186" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Karla Seward</a>, I've updated the user group business logic to combine the latest in Sharepoint and the clarification Andy sent through last week to the nursing student section.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis894 at Jan 11, 2016 16:14
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Logging in Database using Nlog and Elmah</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Rewrite-Documentation-2013_16384056.html">Accman Rewrite Documentation 2013</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Logging_25628446.html">Logging</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Logging in Database using Nlog and Elmah
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (ujs077)</span>, last modified by <span class='editor'> Jon Besson</span> on May 12, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>As we know we have issue with our logging in AccMan.</p><p>There are few different issues with logging:</p><ul><li>Logging too much information</li><li>Logging at too many different places (ServiceLog, TransactionLog, Individual Log)</li><li>Logging file size goes beyond limit (sometime over 5GBs)</li></ul><p>Other team members have suggested different ways to improve this logging.</p><p>I was looking for solution which is easy to implement and can be use for different applications. I've come across this <a href="http://benfoster.io/blog/centralized-logging-and-diagnostics-with-elmah-and-nlog" class="external-link" rel="nofollow">page</a> which explains &quot;<strong>Centralized Logging and Diagnostics</strong>&quot;. Similar to what we have been looking for. Real benefit to use this approach will be log is easily accessible. It stores log in database which save disk space as well.</p><p><a href="http://benfoster.io/blog/centralized-logging-and-diagnostics-with-elmah-and-nlog" style="line-height: 1.42857;" class="external-link" rel="nofollow">http://benfoster.io/blog/centralized-logging-and-diagnostics-with-elmah-and-nlog</a></p><p>Basically you can use <strong>ELMAH</strong> and <strong>NLog</strong> to log both unhanded and useful debug information.</p><p><strong>There are many pros using this approach</strong></p><ul><li>Logging is centralised</li><li>Incredibly easy to setup</li><li>There is even API you can use for logging from non-web applications</li><li>Logging in Database will saves lots of disk space compare to file</li><li>Elmah capture any unhanded exception<br/><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image confluence-external-resource" alt="Elmah Error Log" src="http://storage.onfabrik.com/6724b018c1dfea1e/logging-elmah-viewer.PNG" data-image-src="http://storage.onfabrik.com/6724b018c1dfea1e/logging-elmah-viewer.PNG"></span></li><li>NLog is compatible with Common Logging which we have used in many places. This means we can use Nlog without changing any code.</li><li>Nlog also allows to store logs in both File and Database using different targets<br/><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" src="attachments/26869862/26869874.png" data-image-src="attachments/26869862/26869874.png" data-unresolved-comment-count="0" data-linked-resource-id="26869874" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2016-5-12 12:37:26.png" data-base-url="https://confluence.salford.ac.uk:8444/confluence" data-linked-resource-content-type="image/png" data-linked-resource-container-id="26869862" data-linked-resource-container-version="8"></span></li><li>NLog doesn't require a specific table schema, you have complete control over the SQL that is used to write log entries.</li><li>ELMAH can sends email</li><li>You can use ELMAHR = Elmah _ SignalR which provides real time monitoring<br/><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image confluence-external-resource" alt="ElmahR Dashboard" src="http://storage.onfabrik.com/6724b018c1dfea1e/logging-elmahr.PNG" data-image-src="http://storage.onfabrik.com/6724b018c1dfea1e/logging-elmahr.PNG"></span></li><li>Real time diagnostics</li></ul><p> </p><p><strong>Cons</strong></p><ul><li>Have to change code where common logging is not implemented</li><li>Needs proper database normalisation and indexing to improve database performance.</li><li>May have to write our own centralise viewing to get proper information</li><li>Need new domain (<a href="https://log.salford.ac.uk)" class="external-link" rel="nofollow">https://log.salford.ac.uk)</a> for viewing</li><li>A performance issue while reporting because data grows quickly with logging (feedback from <a class="confluence-userlink user-mention" data-username="ujs040" href="https://confluence.salford.ac.uk:8444/confluence/display/~ujs040" data-linked-resource-id="832605" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Muhammad Javed</a>)</li><li>May need a service request to access data</li></ul><p> </p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/26869862/26869874.png">image2016-5-12 12:37:26.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

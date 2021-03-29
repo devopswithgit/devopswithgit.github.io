@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Bringing student from Banner to Accman for testing</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Testing_23200775.html">Testing</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Bringing student from Banner to Accman for testing
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Mo Mumtaz</span>, last modified on Nov 11, 2019
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>Pre-requisites;</p><ul style="list-style-type: square;"><li>Having a student in a suitable state in banner.</li><li>The student having been assigned to a suitable available account in Syraccs (Student that has a SYRACCS_ACCMAN_STATUS as New - ‘N’ or Returning - ‘R’ and SYRACCS_SIS_STATUS as Assigned - ‘A’)</li></ul><p>Databases and servers;</p><ul style="list-style-type: square;"><li>Accman DB: Mail on UOS-T-RHEL-03</li><li>Banner DB: UBANO1</li><li>Accman test server: UOS-T-ACBE-01</li></ul><p>Once a suitable student has been found in the Banner DB this can then be assigned to its account that is prepared and waiting in the Accman account table. If you search this account in Accman <strong>‘Select * from mail.account where username = ‘[<em>syraccs_usename</em>]’;’</strong> the <strong>personID</strong> should be not assigned - ‘-1’ and <strong>state</strong> should be printed in syraccs - ‘printed’.</p><p>Note: Currently this transaction is carried out on the server ‘UOS-T-ACBE-01’ as all banner related transactions are still hosted on the older server. However once work to decommission this server is completed this transaction will also be carried out on the new server ‘UOS-T-ACBE-02’.</p><p><br/></p><ul style="list-style-type: square;"><li>On the server create a folder in the C:\ drive where you can deploy your latest test build of Accman back end library. This should be named something suitable referring to the build i.e. 'AccmanBackEndLibrary_OAI-90'. Deploy the build to this folder.</li><li>Similiarly access 'C:\Single-ConsoleSchedulerService' and create a folder for the current build i.e. 'Current_OAI-90'. Deploy the latest test build of the .net code library - console scheduler service to this folder.</li><li>In the directory 'C:\Single-ConsoleSchedulerService\Current_OAI-90' open the file 'ConsoleSchedulerService.exe.config' (in Notepad++) Check that the connection strings for databases are pointing to the Test databases as listed above. Configure the app setting for 'ServiceProcess.DllFileFolder' to have value 'C:\AccmanBackEndLibrary_OAI-90\'</li><li>In the directory 'C:\Single-ConsoleSchedulerService\Current_OAI-90\QuartzConfig'  create a sub folder where you can keep a backup copy of all the quartz config files. Keep only the file 'quartz_jobs.test.main.xml' in the main directory and open the file (in Notepad++). This lists all the jobs scheduled to run when you run the console scheuler with the instance main. We only need to run transaction 47 - <strong>ASSIGN_ACCOUNT_TO_STUDENT </strong>and transaction 43 - <strong>REGISTER_ACCOUNT_TO_PERSON</strong> to get the student into Accman.</li><li>Their are two ways of controlling which transactions are run when the service is running. Either the cron trigger for transactions that don't need to run can be commented out. The console service will read these transactions but never run them as they don't have a trigger. The safer way to do this is by deleting transactions that dont need to run from the quartz config altogether (these can be copied back in from the backp we created earlier if we need to run other transactions).</li><li><strong>NOTE: </strong>Their is a parameter taken in transaction 47 that can give control to allow migration of only one student at a time. The parameter key <strong>TestPidms </strong>can be passed the value of the account you are migrating. This will only transer that one account. If their is no parameter passed then Accman will migrate all elegible accounts to its DB.</li><li>You should also set the cron trigger to run only once in the next few mins so that the transaction is attempted once and is not repeatedly run. (Cron-trigger translater can be found on google to help write time such as this ' 0 30 14 10 * ? *' which will trigger only once on the tenth of the month at 14.30)</li><li>Finally, we are ready to run the console scheduler. This can be done in CMD where you can see transactions taking place and a certain amount of logging. Open a new cmd window and navigate to <strong>C:\Single-ConsoleSchedulerService\Current_OAI-90&gt;ConsoleSchedulerService.exe -instance main. </strong>You will see the service starting up and it will give a list of transactions that it has read. Should only be 47 and 43 if all others were deleted.</li><li>Once the time has been reached that you set in the cron trigger you will see that the transaction is being executed and the student is being assigned in Accman. After transaction 43 is also completed you can end the service running with Ctrl + C.</li><li>You can now query the Accman person and account tables and the student shoud have a account state of Valid as apposed to printed from earlier and the person table should have a person_state of expected.</li></ul><p><br/></p><p>At this stage the student account would normally be awaiting for the student to complete Online registration before the person state would change to present, AD account and O365 licences would be provisioned.</p>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

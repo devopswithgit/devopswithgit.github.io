@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Perl Script Business Logic</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RFC-and-Project-Work_16384025.html">RFC and Project Work</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Email-for-Life_16384064.html">Email for Life</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Perl Script Business Logic
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Aug 23, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="PerlScriptBusinessLogic-/*&lt;![CDATA[*/div.rbtoc1617011811245{padding:0px;}div.rbtoc1617011811245ul{list-style:disc;margin-left:0px;}div.rbtoc1617011811245li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#PerlScriptBusinessLogic-Introduction#PerlScriptBusinessLo"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1617011811245 {padding: 0px;}
+div.rbtoc1617011811245 ul {list-style: disc;margin-left: 0px;}
+div.rbtoc1617011811245 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1617011811245'>
+<ul class='toc-indentation'>
+<li><a href='#PerlScriptBusinessLogic-'></a></li>
+<li><a href='#PerlScriptBusinessLogic-Introduction'>Introduction</a></li>
+<li><a href='#PerlScriptBusinessLogic-DeterminingifaStudentisanAlumnus'>Determining if a Student is an Alumnus</a>
+<ul class='toc-indentation'>
+<li><a href='#PerlScriptBusinessLogic-banner4import'>banner4import</a></li>
+<li><a href='#PerlScriptBusinessLogic-banner4person'>banner4person</a>
+<ul class='toc-indentation'>
+<li><a href='#PerlScriptBusinessLogic-DeterminingaPerson&#39;snewState'>Determining a Person&#39;s new State</a></li>
+<li><a href='#PerlScriptBusinessLogic-ExampleOutput'>Example Output</a></li>
+</ul>
+</li>
+<li><a href='#PerlScriptBusinessLogic-studentautostate'>studentautostate</a>
+<ul class='toc-indentation'>
+<li><a href='#PerlScriptBusinessLogic-enable()function'>enable() function</a></li>
+<li><a href='#PerlScriptBusinessLogic-disable()function'>disable() function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></h1><h1 id="PerlScriptBusinessLogic-Introduction">Introduction</h1><p>The business logic for email for life is complex and mostly takes place within the Perl Scripts. This is an attempt to clarify it a little bit.</p><p>During a Banner Import (which is a scheduled task initiated by the script banner_import.bat) we read various fields from the Banner database. </p><p>The banner_import script is broken down into several steps, each of which is executed by a different Perl script. The steps are as follows:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Step Name</th><th class="confluenceTh">Script</th><th class="confluenceTh">Notes</th></tr><tr><td class="confluenceTd">banner4import</td><td class="confluenceTd">c:\accman\scripts\scheduled\SISimport\banner4import.pl</td><td class="confluenceTd">Import student data from Banner into AccMan banner_import table</td></tr><tr><td class="confluenceTd">banner4prog</td><td class="confluenceTd">c:\accman\scripts\scheduled\SISimport\banner4prog.pl</td><td class="confluenceTd">Import program data from Banner into AccMan prog table</td></tr><tr><td class="confluenceTd">noshow</td><td class="confluenceTd">c:\accman\scripts\scheduled\SISimport\noshow.pl</td><td class="confluenceTd">Check for no-shows of 'expected' students</td></tr><tr><td class="confluenceTd">banner4person</td><td class="confluenceTd">c:\accman\scripts\scheduled\SISimport\banner4person.pl</td><td class="confluenceTd">Import from banner_import into person table</td></tr><tr><td class="confluenceTd">assign</td><td class="confluenceTd">c:\accman\scripts\scheduled\SISimport\assign.pl</td><td class="confluenceTd">Import from banner into banner_syraccs table and assign any allocated accounts to the correct student</td></tr><tr><td class="confluenceTd">studentautostate</td><td class="confluenceTd">c:\accman\scripts\scheduled\SISimport\studentautostate.pl</td><td class="confluenceTd">Enable accounts that have been disabled previously that are now active and disable ones where student has now left or is absent</td></tr></tbody></table></div><p>There are more steps after this, but they are all to do with Talis, and we are not concerned with that at this point.</p><p> </p><h1 id="PerlScriptBusinessLogic-DeterminingifaStudentisanAlumnus">Determining if a Student is an Alumnus</h1><h2 id="PerlScriptBusinessLogic-banner4import">banner4import</h2><p>We originally thought that if a student had a value set in their SKBHINS_ENDDATE flag, they were an alumnus. This is not the case.</p><p>The query used to retrieve data from Banner is shown below (click to expand). Note the two columns being retrieved called <span><span style="color: rgb(0,128,0);"><em>SHRDGMR_DEGS_CODE</em></span> and <span style="color: rgb(0,128,0);"><em>SHRDGMR_GRAD_DATE</em></span>. These are the values held in BANNER that we need to check to determine if a student is an alumnus (SKBHINS_ENDDATE is not the column to check).</span></p><p><span>This query is executed by the <em>banner4import</em> step.</span></p><div class="code panel pdl" style="border-width: 1px;">
+ <div class="codeHeader panelHeader pdl hide-border-bottom" style="border-bottom-width: 1px;">
+  <b class="code-title">Horrible Query to get Student Information from Banner</b>
+  <span class="collapse-source expand-control" style="display:none;"><span class="expand-control-icon icon">&nbsp;</span><span class="expand-control-text">Expand source</span></span>
+  <span class="collapse-spinner-wrapper"></span>
+ </div>
+ <div class="codeContent panelContent pdl hide-toolbar"> 
+  <pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence; collapse: true" data-theme="Confluence">SELECT DISTINCT SPRIDEN_PIDM,SPRIDEN_ID,
+SPRIDEN_LAST_NAME,
+SPRIDEN_FIRST_NAME,
+SPRIDEN_MI,
+SPBPERS_BIRTH_DATE,
+SPBPERS_SEX,
+SPBPERS_NAME_PREFIX,
+SGBSTDN_TERM_CODE_EFF,
+SGBSTDN_STST_CODE,
+SGBSTDN_LEVL_CODE,
+SGBSTDN_STYP_CODE,
+SGBSTDN_DEGC_CODE_1,
+SGBSTDN_MAJR_CODE_1,
+SGBSTDN_BLCK_CODE,
+SGBSTDN_DEPT_CODE,
+SGBSTDN_PROGRAM_1,
+SFBETRM_AR_IND,
+SFBETRM_ADD_DATE,
+SFBETRM_ESTS_CODE,
+SKBHINS_ENDDATE,
+SHRDGMR_DEGS_CODE,
+SHRDGMR_GRAD_DATE
+FROM
+spriden JOIN spbpers
+ON spriden_pidm = spbpers_pidm
+JOIN sgbstdn
+ON spriden_pidm = sgbstdn_pidm
+JOIN sfbetrm
+ON spriden_pidm = sfbetrm_pidm
+LEFT JOIN v_sal_shrdgmr_max_seq_no 
+ON spriden_pidm = shrdgmr_pidm
+LEFT JOIN
+(SELECT ins1.skbhins_pidm, stdn1.sgbstdn_term_code_admit,
+MAX(ins1.skbhins_enddate) AS skbhins_enddate
+FROM skbhins ins1, sgbstdn stdn1
+WHERE NOT EXISTS (SELECT 1
+FROM skbhins ins2
+WHERE ins2.skbhins_pidm = ins1.skbhins_pidm
+AND ins2.skbhins_enddate IS NULL
+AND ins2.skbhins_term_code = ins1.skbhins_term_code
+AND ins1.skbhins_active_ind = 'Y'
+AND ins2.skbhins_active_ind = 'Y')
+AND ins1.skbhins_term_code = stdn1.sgbstdn_term_code_admit
+AND ins1.SKBHINS_PIDM = stdn1.sgbstdn_pidm
+GROUP BY ins1.skbhins_pidm, sgbstdn_term_code_admit
+UNION
+SELECT ins1.skbhins_pidm, stdn1.sgbstdn_term_code_admit,
+NULL AS skbhins_enddate
+FROM skbhins ins1, sgbstdn stdn1
+WHERE EXISTS (SELECT 1
+FROM skbhins ins2
+WHERE ins2.skbhins_pidm = ins1.skbhins_pidm
+AND ins2.skbhins_enddate IS NULL
+AND ins2.SKBHINS_TERM_CODE = ins1.SKBHINS_TERM_CODE
+AND ins1.skbhins_active_ind = 'Y'
+AND ins2.skbhins_active_ind = 'Y')
+AND ins1.skbhins_term_code = stdn1.sgbstdn_term_code_admit
+AND ins1.skbhins_pidm = stdn1.sgbstdn_pidm) ains
+ON spriden_pidm = skbhins_pidm AND ains.sgbstdn_term_code_admit = sgbstdn.sgbstdn_term_code_admit
+WHERE
+sgbstdn_term_code_eff = sfbetrm_term_code
+AND spriden_change_ind IS NULL
+AND SUBSTR(sfbetrm_term_code,1,4) =
+(SELECT
+MAX(SUBSTR(sfbetrm_term_code,1,4))
+FROM
+spriden spri2, sfbetrm
+WHERE
+spri2.spriden_pidm = spriden.spriden_pidm
+AND sfbetrm_ests_code != 'EL'
+AND sfbetrm_term_code BETWEEN 201100 AND 201299
+AND spri2.spriden_pidm = sfbetrm_pidm)
+ORDER BY spriden_id;</pre> 
+ </div>
+</div><p>Yes, it's horrible... but at the end of this step, all of the values retrieved from Banner have been inserted into the banner_import table in the Accman database.</p><p>Skipping over the <em>banner4prog</em> and <em>noshow</em> steps (because they aren't very interesting from an Email4Life point of view), we get to banner4person.</p><h2 id="PerlScriptBusinessLogic-banner4person">banner4person</h2><p>This reads the information from the banner_import table and checks to see if a student's details have changed. Since the entire job runs on a regular basis (at least daily) there is a constant stream of changes, for example a student might inform helpdesk that their last name has changed, or they may leave the university etc etc. In our case, we're interested in students who have graduated and then left.  </p><p>This script reads the values saved in the banner_import table, and calls some methods in studentPerson.pl which work out if any details have changed for each student.</p><div class="confluence-information-macro confluence-information-macro-information"><p class="title">Hint</p><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span><div class="confluence-information-macro-body">We're interested in this because we need to work out if any students have graduated, and can therefore be considered alumni.</div></div><p>The interesting method is <span style="color: rgb(0,0,128);"><em>studentPerson.pl.updateStudentPerson()</em></span>, which banner4person.pl calls, passing in many of the person's details.</p><p>This is the code fragment that determines if the student is an alumnus</p><p> </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Function updateStudentPerson, deciding if a student is an alumnus</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: perl; gutter: false; theme: Confluence" data-theme="Confluence"># If $SHRDGMR_DEGS_CODE is &#39;AW&#39; and $SHRDGMR_GRAD_DATE is populated then the student is an alumnus, so set person.is_alumnus = 1
+my $is_alumnus = 0;
+
+print &quot;Deciding if student is an Alumnus based on Degree Status code: $SHRDGMR_DEGS_CODE, and Graduation Date: $SHRDGMR_GRAD_DATE\n&quot;;
+if (&#39;AW&#39; eq $SHRDGMR_DEGS_CODE &amp;&amp; $SHRDGMR_GRAD_DATE) {
+    print &quot;Student $SPRIDEN_ID is an alumnus.\n&quot;;
+    $is_alumnus = 1;
+}
+else {
+    print &quot;studentPerson.pl - student $SPRIDEN_ID is not an alumnus.\n&quot;;
+    $is_alumnus = 0;
+}</pre>
+</div></div><p>As it says in the comments, if the column SHRDGMR_DEGS_CODE is set to 'AW' (degree has been awarded) and there is a value in SHRDGMR_GRAD_DATE (their graduation date has been filled in) then they are an alumnus. </p><p>When this condition is true, the is_alumnus column in the student's <em>person</em> record is set from 0, to 1.</p><h3 id="PerlScriptBusinessLogic-DeterminingaPerson&#39;snewState">Determining a Person's new State</h3><p>Working out the the new value to store in the person table's person_state column is also of vital importance, since it's used later on. Unfortunately, this is one of the hardest bits of logic to understand in the whole process. </p><p>It's done in the banner4person.pl's parseRegistration function. Reproduced in all it's glory below (click to expand, it's too ugly to be on full show.</p><p> </p><div class="code panel pdl" style="border-width: 1px;">
+ <div class="codeHeader panelHeader pdl hide-border-bottom" style="border-bottom-width: 1px;">
+  <b class="code-title">parseRegistration function</b>
+  <span class="collapse-source expand-control" style="display:none;"><span class="expand-control-icon icon">&nbsp;</span><span class="expand-control-text">Expand source</span></span>
+  <span class="collapse-spinner-wrapper"></span>
+ </div>
+ <div class="codeContent panelContent pdl hide-toolbar"> 
+  <pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: perl; gutter: false; theme: Confluence; collapse: true" data-theme="Confluence">sub parseRegistration {
+  my ($pidm, $acad_sess, $program, $SFBETRM_AR_IND, $SFBETRM_ADD_DATE, $SFBETRM_ESTS_CODE, $SKBHINS_ENDDATE, $rejref) = @_;
+  # Given the input above, returns the list below. Note $rejref is a hash ref and would be called as \%reject.
+  my ($person_state, $stu_ests, $reg_status, $start_date, $end_date);
+
+  # get and check the reg_status
+  $reg_status = $SFBETRM_AR_IND;
+  $rejref -&gt; {'SFBETRM_AR_IND'} = $SFBETRM_AR_IND unless $reg_status =~ m/^[YCN]$/;
+
+  # get enrollment status and calculate person_state
+  $stu_ests = $SFBETRM_ESTS_CODE;
+  my $newpstate = $pstate {$SFBETRM_ESTS_CODE};
+  if (defined $newpstate) {
+    $person_state = $newpstate;
+  } else {
+    $rejref -&gt; {'SFBETRM_ESTS_CODE'} = $SFBETRM_ESTS_CODE;
+    $person_state = 'absent';
+  }
+  # hack to allow Riga, Toulon and Crete MBA/MSc/PGDip students access (all other RX courses are FD at present)
+  if ($person_state eq 'absent' and $stu_ests eq 'RX' and $program =~ m/^M|^PD/) {
+    $person_state = 'present';
+  }
+
+  my $today = datenow ();
+
+  # get start_date
+  $start_date = $SFBETRM_ADD_DATE;
+  if (defined $start_date and $start_date ne '0000-00-00') {
+    $start_date =~ s/ .*//;
+  } else {
+    $start_date = $today;
+    $rejref -&gt; {'SFBETRM_ADD_DATE'} = $SFBETRM_ADD_DATE;
+  }
+
+  # If there is a leaving date for the student and program, and it's in the correct academic session, the student has left
+  # NB the leaving date for the correct program is guaranteed from the import selection
+  # if the student is actually flagged as left, we don't need to check that the leaving date is in this session
+  print "Calculating if the student has left\n";
+  if (defined $SKBHINS_ENDDATE) {
+
+    # the only way a graduate is detected is by the leaving date: their ESTS code remains RE (or equiv)
+    # treat rollover date as 1 Aug; allow for students registered in other months by extending period to end of following acad session;
+    # if they subsequently come back they'll get a new later term record
+    # allow rolled over WN students to have a leaving date in the previous session (some may not actually have a leaving date)
+    my ($earliest, $start, $end, $rollover, $left_date);
+    $rollover = '-08-01';
+    $earliest = $acad_sess - 5 . $rollover;
+    $start = $acad_sess - ($stu_ests =~ m/WN/ ? 2 : 1) . $rollover; 
+    $end = $acad_sess + 1 . $rollover;
+    print "End date ($end) is acad_sess ($acad_sess) + 1 . rollover ($rollover)\n";
+    $end = $today if $end gt $today;
+    print "End is now $end\n";
+    $left_date = $SKBHINS_ENDDATE;
+    $left_date =~ s/ .*//;
+    if ($left_date lt $earliest or $left_date gt $end) {
+      print "Left date ($left_date) is NOT between EarliestDate ($earliest) and EndDate ($end), so not checking any further (student has not left yet)\n";
+      $rejref -&gt; {'SKBHINS_ENDDATE'} = $SKBHINS_ENDDATE;
+    } else {
+      print "Left date ($left_date) is between EarliestDate ($earliest) and EndDate ($end), so it is possible the student has left\n";
+      my ($grad_start, $grad_end);
+      foreach my $date (@graduationDate) {
+      $grad_end = $date;
+      last if $today le $grad_end;
+      $grad_start = $grad_end;
+    }
+
+    print "Person state is $person_state and ESTS code is $stu_ests\n";
+    if (($person_state eq 'present' or $stu_ests =~ m/IG|RW|TG/) and $left_date gt $grad_start and $left_date le $grad_end) {
+      print "Student is graduating because person is currently 'present' and ESTS code is $stu_ests, and left date ($left_date) is between GraduationStartDate ($grad_start) and GraduationEndDate ($grad_end)\n";
+      $end_date = $left_date;
+      $person_state = 'graduating';
+    } elsif ($left_date ge $start and $left_date le $end) {
+      print "Student has left because left date ($left_date) is between StartDate ($start) and EndEate ($end)\n";
+      $end_date = $left_date;
+      $person_state = 'left';
+    }
+  }
+}
+else {
+  print "SKBHINS_ENDDATE ($SKBHINS_ENDDATE) is not set so not calculating if student has left\n";
+}
+return ($person_state, $stu_ests, $reg_status, $start_date, $end_date);
+}</pre> 
+ </div>
+</div><p> </p><p>It also makes reference to a list of graduation dates higher up in the script</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Graduation Dates</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: perl; gutter: false; theme: Confluence" data-theme="Confluence">my @graduationDate = (&#39;2009-07-17&#39;, &#39;2010-07-16&#39;, &#39;2011-07-15&#39;, &#39;2012-07-04&#39;, &#39;2013-07-19&#39;, &#39;2020-12-31&#39;);</pre>
+</div></div><p>How it seems to work is like this (this could well be inaccurate, it's hard to say...)</p><ol><li>A student has a <span style="color: rgb(255,0,0);">$left_date</span>, populated in Banner's SKBHINS_ENDDATE field. This is one of the fields that we copy to the banner_import table. </li><li>We have an <span style="color: rgb(255,0,0);">$end</span> date (for the course) that is calculated as follows<br/><ol><li>Get the academic session from our database (e.g. 2012) and then add 1 to it (giving e.g. 2013)</li><li>Append the rollover date to it (e.g. 1st August every year) giving 2013-08-01.</li><li>If today's date is before the date obtained in b) use today's date instead. Otherwise stick with the generated value e.g. 2013-08-01.</li></ol></li><li>We have a <span style="color: rgb(255,0,0);">$start</span> date, which is the start of their course and is calculated as the<em> academic session - 1 or 2 years</em> (depending on the ESTS code) beginning on the rollover date of that year e.g. 2009-08-01.</li><li>Calculate an <span style="color: rgb(255,0,0);">$earliest</span> date, which is the (academic session - 5 years) plus the rollover date e.g. 2007-08-01.</li><li>If the <span style="color: rgb(255,0,0);">$left_date</span> is not between<span style="color: rgb(255,0,0);"> $earliest</span> and <span style="color: rgb(255,0,0);">$end</span>, don't do anything</li><li>If the <span style="color: rgb(255,0,0);">$left_date</span> <em>is</em> between the above dates e.g. they left between 2007-08-01 and 2012-07-06<strong><span style="color: rgb(255,0,0);">*</span></strong>, then we need to work out if they are <em>graduating</em>, or <em>left</em>. <span style="color: rgb(255,0,0);"><strong>*</strong></span>Note, the date 2012-07-06 is 'today's' date from step 2c in this example.</li><li>Calculate the graduation start and end dates (<span style="color: rgb(255,0,0);">$grad_start</span> and <span style="color: rgb(255,0,0);">$grad_end</span>). There will be many graduation ceremonies for a given academic session, and they all fall within this period.<br/><ol><li><span style="color: rgb(255,0,0);">$grad_end</span> is the first date in the list (shown in the <em>Graduation Dates</em> code block above) that falls <em>after</em> today's date (i.e. 2013-07-19).</li><li><span style="color: rgb(255,0,0);">$grad_start</span> is the date that appears in the list immediately before the date chosen for $grad_end (i.e. 2012-07-04)</li></ol></li><li>The student is considered to be graduating if their left date is between (not inclusive) <span style="color: rgb(255,0,0);">$grad_start</span> and <span style="color: rgb(255,0,0);">$grad_end</span>. This means that they have finished their course, but they have not left yet because they are waiting to attend their ceremony.</li><li>When 8) is true, <strong>and</strong> their current person_state is <em>present</em> (or their ESTS code in Banner is IG, RW or TG, then their person_state is changed to <em>graduating. </em></li><li>If 9) is not true (which could happen if say, their person_state is <em>graduating</em> instead of <em>present</em>), <strong>but</strong> their <span style="color: rgb(255,0,0);">$left_date</span> is between <span style="color: rgb(255,0,0);">$start</span> and <span style="color: rgb(255,0,0);">$end</span>, then they must have graduated by now, so their person_state is changed to <em>left</em>. </li></ol><p>If this logic is run more than once (which it will) against a given student at the right time of year, step 9 will execute and change their status to <em>graduating</em>. Then on the second run, step 10 will be executed instead and change the person to <em>left</em>.</p><p> </p><h3 id="PerlScriptBusinessLogic-ExampleOutput">Example Output</h3><p>The change from student to alumnus is recorded along with any other changes. You can see the entire output from the script for three students in the box below. The first and third students have not had any change to their alumnus status, however the second student has been awarded, and has therefore been marked as an alumnus!</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Logging output</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">Processing a student (count=1)
+----------------------------------------
+Use of uninitialized value $SHRDGMR_GRAD_DATE in concatenation (.) or string at c:\accman\scripts\scheduled\SISimport\banner4person.pl line 97.
+Calling updateStudentDetails() with [SO, ]
+Calculating if the student has left
+End date (2013-08-01) is acad_sess (2012) + 1 . rollover (-08-01)
+End is now 2012-07-06
+Left date (2012-03-07) is between EarliestDate (2007-08-01) and EndDate (2012-07-06), so it is possible the student has left
+Person state is left and ESTS code is RR
+Student has left because left date (2012-03-07) is between StartDate (2011-08-01) and EndEate (2012-07-06)
+Calling updateStudentPerson()
+Processing student [34431, @00032941, 00032941, Richard Alexander, Dawson, left]
+Use of uninitialized value $SHRDGMR_GRAD_DATE in concatenation (.) or string at ../lib/studentPerson.pl line 429.
+Deciding if student is an Alumnus based on Degree Status code: SO, and Graduation Date:
+studentPerson.pl - student @00032941 is not an alumnus.
+Student record found, checking if we should update it
+Probably not updating this record
+We are updating the record
+Logging changes
+
+
+Processing a student (count=2)
+----------------------------------------
+Calling updateStudentDetails() with [AW, 2012-07-30]
+Calculating if the student has left
+End date (2013-08-01) is acad_sess (2012) + 1 . rollover (-08-01)
+End is now 2012-07-06
+Left date (2012-07-05) is between EarliestDate (2007-08-01) and EndDate (2012-07-06), so it is possible the student has left
+Person state is present and ESTS code is RE
+Student has left because left date (2012-07-05) is between StartDate (2011-08-01) and EndEate (2012-07-06)
+Calling updateStudentPerson()
+Processing student [74567, @00234784, 00234784, Venkat Swamy, Mannam, left]
+Deciding if student is an Alumnus based on Degree Status code: AW, and Graduation Date: 2012-07-30
+Student @00234784 is an alumnus.
+Student record found, checking if we should update it
+Probably not updating this record
+We are updating the record
+Logging changes
+Updating now...
+Generating a type 97 transaction
+Generated a transaction with trId 2063463
+Generating a type 121 transaction
+Generated a transaction with trId 2063464
+
+
+Processing a student (count=3)
+----------------------------------------
+Use of uninitialized value $SHRDGMR_GRAD_DATE in concatenation (.) or string at c:\accman\scripts\scheduled\SISimport\banner4person.pl line 97.
+Calling updateStudentDetails() with [SO, ]
+Calculating if the student has left
+Use of uninitialized value $SKBHINS_ENDDATE in concatenation (.) or string at ../lib/studentPerson.pl line 365.
+SKBHINS_ENDDATE () is not set so not calculating if student has left
+Calling updateStudentPerson()
+Processing student [343526, @00310895, 00310895, Maria Jose, San Jose Gomez, present]
+Use of uninitialized value $SHRDGMR_GRAD_DATE in concatenation (.) or string at ../lib/studentPerson.pl line 429.
+Deciding if student is an Alumnus based on Degree Status code: SO, and Graduation Date:
+studentPerson.pl - student @00310895 is not an alumnus.
+Student record found, checking if we should update it
+Probably not updating this record
+We are updating the record
+Logging changes
+Updating now...
+3 records processed</pre>
+</div></div><h2 id="PerlScriptBusinessLogic-studentautostate">studentautostate</h2><p>Skipping over the <em>assign</em> step, we get to studentautostate. This script basically just works out whether to enable or disable student accounts. It uses some appaling logic to determine, among other things, what state the person record is in. Possible states include <em>present, graduating or left</em> (although there are others too).</p><p>While a student is studying, their status is set to <em>present</em>.</p><p>Then, when they have finished their course, but have not yet received their degree because they are waiting to attend their graduation ceremony, their status is set to <em>graduating</em>.</p><p>Then, when they have got their certificate and are heading to the job centre (or more likely down the pub celebrating), their status will be set to <em>left</em>.</p><p>It has two major methods/functions called enable() and disable(). </p><h3 id="PerlScriptBusinessLogic-enable()function">enable() function</h3><p>There are two possible explanations for enabling an account: </p><ol><li>Student had previously been away from study (getting married etc) and has since returned </li><li>Student is graduating i.e. they've come back to uni to attend their ceremony</li></ol><p>The query executed is:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Query to retrieve accounts that should be enabled</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">select 
+  a.accID, 
+  a.username, 
+  p.person_state, 
+  p.personID 
+from 
+  account a, 
+  person p, 
+  department_status ds, 
+  dept_person_account d 
+where 
+  p.personID = a.personID 
+  and p.person_state in (&#39;present&#39;, &#39;graduating&#39;) 
+  and p.source_code = &#39;S&#39; 
+  and p.acad_sess &gt;= $session 
+  and (
+    (p.person_status_code in (&#39;N&#39;, &#39;U&#39;) and a.status_code &lt; &#39;P&#39;) 
+    or (p.person_status_code = &#39;P&#39; and a.status_code in (&#39;P&#39;, &#39;Q&#39;))
+  ) 
+  and a.state in (&#39;disabled&#39;, &#39;deletable&#39;) 
+  and a.accountType = &#39;personal&#39; 
+  and a.department_status_code = ds.department_status_code 
+  and p.dept_code = d.person_dept_code and ds.dept_code = d.account_dept_code 
+  and a.disabledReason in (&#39;$leftReason&#39;, &#39;$absentReason&#39;, &#39;$extendReason&#39;, &#39;Student has probably left&#39;);</pre>
+</div></div><h3 id="PerlScriptBusinessLogic-disable()function">disable() function</h3><p>A student's account will be disabled if they are absent, or have left the university. The query executed is</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Query to determine which accounts to disable</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">select 
+  a.accID, 
+  a.username, 
+  p.person_state, 
+  p.stu_ests, 
+  p.is_alumnus 
+from 
+  account a, 
+  person p, 
+  department_status ds 
+where 
+  p.personID = a.personID 
+  and p.person_state in (&#39;absent&#39;, &#39;left&#39;) 
+  and p.source_code = &#39;S&#39; 
+  and p.acad_sess &gt;= $session 
+  and a.state = &#39;valid&#39; 
+  and a.accountType = &#39;personal&#39; 
+  and a.department_status_code = ds.department_status_code;</pre>
+</div></div><p>From an Email4Life point of view, the reason we are interested in students getting enabled or disabled is this:</p><p>When a student leaves, we do not disable their email account (which is held in Live@Edu), but we do want to hide their address from the Live@Edu address list. This means they can still send/receive emails with their Salford email address (forever) but the address list will only contain accounts for students who are currently studying. Otherwise the address list will become huge.</p><p>When enabling an account, we always want to make sure the student's email appears in the address list. However when disabling an account, the decision about hiding their address from the list depends on <em>why</em> their account was disabled. If they were kicked off their course for some reason, we don't want them to keep their email account. But if they have graduated and are therefore an alumnus, we do want them to keep their email account (but we also want to hide their address from the address list).</p><p>In the disable function, therefore, we have this bit of logic</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Fragment from the disable() function</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: perl; gutter: false; theme: Confluence" data-theme="Confluence">my $disable_edu_account;
+if ($is_alumnus == 1){
+    print &quot;studentautostate.pl - student is alumnus, so email account will not be disabled.\n&quot;;
+    $disable_edu_account = 0;
+}
+else {
+    print &quot;studentautostate.pl - student is not alumnus, so email account will be disabled.\n&quot;;
+    $disable_edu_account = 1;
+} 
+
+# disable the account
+$trID = disableAccount ($dbh, $accID, $disable_edu_account, $reason{$person_state}, $cure{$stu_ests});</pre>
+</div></div><p>The last line always happened (prior to Email4Life) but now we have a bit of logic to decide if their email account should be disabled as part of the process. We use the is_alumnus flag (calculated during the <em>banner4person </em>step) to decide this, and pass the decision to the <em>disableAccount</em> function via the variable <em>disable_edu_account</em>.</p><div class="confluence-information-macro confluence-information-macro-information"><p class="title">Handy hint</p><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span><div class="confluence-information-macro-body">The disableAccount() function is held in a different Perl script called disableAccount.pl</div></div><p>If the disable_edu_account is set to true, then nothing different happens (accounts have always previously been disabled). However if it is false, we want to:</p><ul><li>Preserve their email account</li><li>Hide their email address in the Live@Edu address list</li></ul><p>...And that's what this bit of code does</p><p> </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>disableAccount.pl's disableAccount function</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: perl; gutter: false; theme: Confluence" data-theme="Confluence">if ($disable_edu_account == 1)
+{
+    # disable the account in the usual way
+    ...
+    ...
+}
+else
+{
+    print &quot;disableAccount.pl - student is an alumnus, so email account has not been disabled.\n&quot;;
+    # disableAccount.pl - about to generate tx type 125 to hide email addr in Live@Edu list and Outlook; params &#39;identity&#39;
+    print &quot;disableAccount.pl - about to generate tx type 125 to hide email addr in LiveAtEdu list and Outlook.\n&quot;;
+
+    $edu_selparamh = $dbh -&gt; prepare (q{select concat(a.primary_mailname, &#39;@&#39;, ed.domainName) identity from account a, emailDomain ed where a.primary_domainID = ed.domainID and accID = ?}) or die $edu_selparamh -&gt; errstr;
+    $edu_selparamh -&gt; execute ($accID) or die $edu_selparamh -&gt; errstr;
+    my $edu_transactionParams = $edu_selparamh -&gt; fetchrow_hashref;
+    my $edu_trID = generateTransaction ($dbh, 125, $accID, %$edu_transactionParams);
+    print &quot;disableAccount.pl - edu_trID=$edu_trID\n&quot;;
+}</pre>
+</div></div><p>The interesting part about this is in the <em>else</em> clause where we <strong><em>don't</em></strong> create a type 62 transaction (which is what disables the Live@Edu account), but we <strong><em>do</em></strong> create a type 125 transaction, which hides their email address from the Live@Edu address list.</p><p>You can see the resulting output in the following bit of logging for a student who has been identified as an alumnus in the earlier steps.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: Confluence" data-theme="Confluence">studentautostate.pl - student is alumnus, so email account will not be disabled.
+disableAccount.pl - student is an alumnus, so email account has not been disabled.
+disableAccount.pl - about to generate tx type 125 to hide email addr in LiveAtEdu list and Outlook.
+Generating a type 125 transaction
+Generated a transaction with trId 2063473
+disableAccount.pl - edu_trID=2063473
+BWP360 disabled (transaction 0): Student has left</pre>
+</div></div>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-22675585"></a>
+                                    <font class="smallfont"><p>The logic defined here doesn't take account of extensions or returning students.</p><p>The data used to determine the Alumnus status is only transient from an Accman PoV. There is no auditing in person_change for example.</p><p>There is no frontend maintenance of the alumnus flag, i.e. turn off/on manually to override the system.</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis876 at May 29, 2015 11:37
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Duplicate Register Transactions and Incorrect Email</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Support-Notes_16384017.html">Support Notes</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Duplicate Register Transactions and Incorrect Email
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis894)</span>, last modified on Jan 08, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="DuplicateRegisterTransactionsandIncorrectEmail-Background">Background</h1><p>At times the Accman system will generate two type 43 transactions for the same account. This has the effect of using up all the possible emails for a first initial, last name combination.</p><p>Usually raised by the Accman daily checks. The script, <a href="http://dailychecks.pl" class="external-link" rel="nofollow">dailychecks.pl</a>, will show entries in the “Unexpected tasks currently CREATING” section:</p><div class="panel" style="border-width: 1px;"><div class="panelContent">
+<p>Unexpected tasks currently CREATING<br/>Note: tr types &gt;= 80 are currently excluded from this list<br/>trID date time accID state originator type-description<br/>5706828 2014-05-15 10:48:12 261719 creating AccManWeb1 43-Register account to p</p>
+</div></div><p>These transactions are processed fairly quickly so any from the day before is a concern.</p><h1 id="DuplicateRegisterTransactionsandIncorrectEmail-HowtoSolve">How to Solve</h1><p>Using the acid from the <a href="http://dailychecks.pl" class="external-link" rel="nofollow">dailychecks.pl</a> script get a list of transactions:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">SELECT tr.trID, tr.tr_when, tt.tr_description, tr.tr_type_id,tr.affectsID,tr.tr_state, tr.ExecuteAt FROM transactions tr LEFT JOIN trtypes tt on tt.tr_type_id = tr.tr_type_id where affectsID=261719 order by trid;</pre>
+</div></div><p>Typical output will look like:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence"># trID, tr_when, tr_description, tr_type_id, affectsID, tr_state, ExecuteAt
+&#39;5706824&#39;, &#39;2014-05-14 14:47:11&#39;, &#39;Register account to person&#39;, &#39;43&#39;, &#39;261719&#39;, &#39;processed&#39;, &#39;0001-01-01 00:00:00&#39;
+&#39;5706825&#39;, &#39;2014-05-14 14:47:03&#39;, &#39;X Set User Password [Novell - Obsolete]&#39;, &#39;81&#39;, &#39;261719&#39;, &#39;waiting&#39;, &#39;0001-01-01 00:00:00&#39;
+&#39;5706826&#39;, &#39;2014-05-14 14:47:04&#39;, &#39;Set User Active Directory Password&#39;, &#39;91&#39;, &#39;261719&#39;, &#39;processed&#39;, &#39;2014-05-14 13:52:45&#39;
+&#39;5706828&#39;, &#39;2014-05-14 14:47:04&#39;, &#39;Register account to person&#39;, &#39;43&#39;, &#39;261719&#39;, &#39;creating&#39;, &#39;0001-01-01 00:00:00&#39;
+&#39;5706829&#39;, &#39;2014-05-14 14:47:04&#39;, &#39;X Set User Password [Novell - Obsolete]&#39;, &#39;81&#39;, &#39;261719&#39;, &#39;waiting&#39;, &#39;0001-01-01 00:00:00&#39;
+&#39;5706830&#39;, &#39;2014-05-14 14:47:04&#39;, &#39;Set User Active Directory Password&#39;, &#39;91&#39;, &#39;261719&#39;, &#39;processed&#39;, &#39;2014-05-14 13:52:45&#39;
+&#39;5706832&#39;, &#39;2014-05-14 14:48:29&#39;, &#39;Generate PASSWORD.TXT file&#39;, &#39;39&#39;, &#39;261719&#39;, &#39;processed&#39;, NULL
+&#39;5706833&#39;, &#39;2014-05-14 14:47:11&#39;, &#39;Update Janus User Details&#39;, &#39;97&#39;, &#39;261719&#39;, &#39;processed&#39;, &#39;0001-01-01 00:00:00&#39;
+&#39;5706834&#39;, &#39;2014-05-14 14:47:11&#39;, &#39;Create New Active Directory User&#39;, &#39;93&#39;, &#39;261719&#39;, &#39;processed&#39;, &#39;0001-01-01 00:00:00&#39;
+&#39;5706835&#39;, &#39;2014-05-14 14:47:34&#39;, &#39;Create New Exchange Account&#39;, &#39;115&#39;, &#39;261719&#39;, &#39;processed&#39;, &#39;2014-05-14 15:27:30&#39;</pre>
+</div></div><p>Delete the transaction 43 with a tr_state of “creating” (or &quot;pending&quot;).</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">delete from transactions where trid=5706828;
+delete from transaction_params where trid=5706828;</pre>
+</div></div><p>Check in Outlook (or AD) for the email address used by Exchange/Gal.</p><p>Update the primary_mailname field in the account table to match:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">update account set primary_mailname=&quot;D.Hobbs-Wyatt36&quot; where accid=261719;</pre>
+</div></div><p>Next a number of  records in the idm.mail_address table need deleting so that only the used email address is left:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: sql; gutter: false; theme: Confluence" data-theme="Confluence">delete from idm.mail_address
+where address_type=&#39;P&#39;
+and username=&#39;aaa25044&#39;
+and mail_name&lt;&gt;&#39;D.Hobbs-Wyatt36&#39;;</pre>
+</div></div>
+                    </div>
+
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

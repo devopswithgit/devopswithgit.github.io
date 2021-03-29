@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman Refresh : Logging Specification</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman Refresh</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Refresh-Home_17170433.html">Accman Refresh Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="17170437.html">Accman Refresh: Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman Refresh : Logging Specification
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (ais008)</span>, last modified on Jul 04, 2014
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>In an ideal world, what's the perfect logging system?</p><ul><li>not the present system! </li><li>Try to replicate features of the unix syslog daemon?<ul><li>multiple levels of reporting - ERROR, WARNING, INFO, DEBUG</li><li>log errors on a remote server - i.e. processing occurs on the accman back-end but logs are written both locally on the accman back-end itself and on a central server where they can be read without having to log on to the accman back-end</li><li>using syslog conventions would allow teh use of standard tools to view and analze log files</li><li>ability to change the logging level 'live' without having to stop and restart any processes (and hence not requiring an RFC!)</li></ul></li><li>automatic log rotation and houskeeping</li><li>on accman back-end, write all log files to D: drive rather than a mixture of C: drive and D: drive as at present</li><li>for each transaction logged, show date/time and the username (or other object) that it relates to</li><li>show a clear return code at the end of the log file segment for a transaction</li><li>we currently have both individual per-transaction log files <em>and</em> 'cumulative' log files<ul><li>re-examine to achieve greater consistency</li></ul></li></ul><p> </p><p> </p>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-26869858"></a>
+                                    <font class="smallfont"><p>I have found following transactions which are taking maximum space:</p><div class="table-wrap"><table class="confluenceTable"><colgroup><col/> <col/> </colgroup><tbody><tr><td class="confluenceTd"><strong>Transaction</strong></td><td class="confluenceTd"><strong>Size (GB)</strong></td></tr><tr><td class="confluenceTd">ActiveDirectoryUnlockUser</td><td class="confluenceTd">1.13</td></tr><tr><td class="confluenceTd">AlmaImportFromJanus</td><td class="confluenceTd">1.9</td></tr><tr><td class="confluenceTd">CreateExchangeMailbox</td><td class="confluenceTd">1.51</td></tr><tr><td class="confluenceTd">HideInEmailAddressLists</td><td class="confluenceTd">1.09</td></tr><tr><td class="confluenceTd">LogFileCleanup</td><td class="confluenceTd">3.37</td></tr><tr><td class="confluenceTd">UnhideInEmailAddressLists</td><td class="confluenceTd">1.5</td></tr><tr><td class="confluenceTd">BannerForPerson</td><td class="confluenceTd">4.78</td></tr><tr><td class="confluenceTd">UpdateJanusUserDetailsNew</td><td class="confluenceTd">0.852</td></tr><tr><td class="confluenceTd">SchedulerService.log</td><td class="confluenceTd">5.5</td></tr></tbody></table></div></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ujs077 at May 12, 2016 10:59
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 11:13</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

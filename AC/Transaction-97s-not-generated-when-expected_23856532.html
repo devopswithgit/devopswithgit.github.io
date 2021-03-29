@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Transaction 97s not generated when expected</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Completed_19595586.html">Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Transaction 97s not generated when expected
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Martin Evans</span>, last modified by <span class='editor'> Unknown User (ujs079)</span> on Apr 08, 2016
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Transaction 97s not generated when expected</td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Bug</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">High</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis485" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis485" data-linked-resource-id="829846" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Martin Evans</a></td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd"><time datetime="2016-01-14" class="date-past">14 Jan 2016</time> </td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd"><a class="confluence-userlink user-mention" data-username="uis485" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis485" data-linked-resource-id="829846" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Martin Evans</a></td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-330" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-330?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-330</a>
+                            -
+            <span class="summary">Transaction 97s not generated when expected</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+</td></tr></tbody></table></div><p> </p><h2 id="Transaction97snotgeneratedwhenexpected-Details">Details</h2><ul><li>Example @00318273 - Went Expected and end date 24/06/2015 &gt; null on 13/11/2015 but no T97 generated. This means his card was never reactivated. A manual T97 had to be generated to remove and date from Janus and reactivate.</li><li>This isn't an isolated instance and many T97s aren't being generated for both starters and leavers and so some leavers have access to buildings they should no longer have therefore a security risk.</li></ul><p> </p><p>Additional column added to the Transaction table in the Accman database to trace transaction creation as part of 
+<span class="jira-issue resolved" data-jira-key="ARF-220" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/+ARF-220?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10303&amp;avatarType=issuetype"/>ARF-220</a>
+                            -
+            <span class="summary">Fix Duplicate Transaction 43</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+. See <a href="Fix-Duplicate-Transaction-43_19596002.html">Fix Duplicate Transaction 43</a> for more details.</p></div>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/23856532/25626460.sql">t97_banner4import_test.sql</a> (application/x-upload-data)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/23856532/25626464.xlsx">Card Issues Jan 16.xlsx</a> (application/vnd.openxmlformats-officedocument.spreadsheetml.sheet)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-25626452"></a>
+                                    <font class="smallfont"><p>In reviewing the transaction history in Accman FE it looks like person change details were added on the 13/11/2015, however no T97 was generated</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th colspan="1" class="confluenceTh">Date</th><th class="confluenceTh"><span>Field Name</span></th><th class="confluenceTh"><span>Old Value</span></th><th class="confluenceTh"> <span>New Value</span></th></tr><tr><td colspan="1" class="confluenceTd">13/11/2015</td><td class="confluenceTd">acad_sess</td><td class="confluenceTd">2015</td><td class="confluenceTd">2016</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">end_date</td><td class="confluenceTd">24/06/2015 00:00:00</td><td class="confluenceTd">NULL</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">leaver_flag</td><td class="confluenceTd">Y</td><td class="confluenceTd">N</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">person_state</td><td class="confluenceTd">U</td><td class="confluenceTd">P</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">person_status_code</td><td class="confluenceTd">left</td><td class="confluenceTd">expected</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">program</td><td class="confluenceTd">S/PSC/F</td><td class="confluenceTd">MSR/BC1/F</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">qual_aim_code</td><td class="confluenceTd">21</td><td class="confluenceTd">2</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">reg_status</td><td class="confluenceTd">Y</td><td class="confluenceTd">N</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">sos_code</td><td class="confluenceTd">F151</td><td class="confluenceTd">C790</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">start_date</td><td class="confluenceTd">14/03/2014 00:00:00</td><td class="confluenceTd">16/11/2015 00:00:00</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">stu_block</td><td class="confluenceTd">S/PSC/F3</td><td class="confluenceTd">NULL</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">stu_degc</td><td class="confluenceTd">BSC</td><td class="confluenceTd">MSR</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">stu_ests</td><td class="confluenceTd">RE</td><td class="confluenceTd">EL</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">stu_levl</td><td class="confluenceTd">UG</td><td class="confluenceTd">PG</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">stu_styp</td><td class="confluenceTd">F</td><td class="confluenceTd">N</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">yr_course</td><td class="confluenceTd">3</td><td class="confluenceTd">0</td></tr><tr><td colspan="1" class="confluenceTd"> </td><td class="confluenceTd">yr_student</td><td class="confluenceTd">2</td><td class="confluenceTd">1</td></tr></tbody></table></div><p> </p><p>I was not able to any find logs for 13/011/2015. So I replicated the BannerForImport (in the <strong>mailtest</strong> Accman database) for the sample user provided, in Debug mode. The following changes where made and T97 was generated successfully.</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th colspan="1" class="confluenceTh">Change ID</th><th colspan="1" class="confluenceTh">Import ID</th><th colspan="1" class="confluenceTh">Person ID</th><th colspan="1" class="confluenceTh">Field Name</th><th colspan="1" class="confluenceTh">Old Field Value</th><th colspan="1" class="confluenceTh">New Field Value</th></tr><tr><td class="confluenceTd">18729621</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">acad_sess</td><td class="confluenceTd">2015</td><td class="confluenceTd">2016</td></tr><tr><td class="confluenceTd">18729631</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">end_date</td><td class="confluenceTd">24/06/2015 00:00:00</td><td class="confluenceTd">NULL</td></tr><tr><td class="confluenceTd">18729632</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">mobile_number</td><td class="confluenceTd"> </td><td class="confluenceTd">07460701011</td></tr><tr><td class="confluenceTd">18729624</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">person_state</td><td class="confluenceTd">U</td><td class="confluenceTd">P</td></tr><tr><td class="confluenceTd">18729619</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">person_status_code</td><td class="confluenceTd">graduating</td><td class="confluenceTd">present</td></tr><tr><td class="confluenceTd">18729625</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">program</td><td class="confluenceTd">S/PSC/F</td><td class="confluenceTd">MSR/BC1/F</td></tr><tr><td class="confluenceTd">18729620</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">qual_aim_code</td><td class="confluenceTd">21</td><td class="confluenceTd">2</td></tr><tr><td class="confluenceTd">18729618</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">sos_code</td><td class="confluenceTd">F151</td><td class="confluenceTd">C790</td></tr><tr><td class="confluenceTd">18729630</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">start_date</td><td class="confluenceTd">14/03/2014 00:00:00</td><td class="confluenceTd">16/11/2015 00:00:00</td></tr><tr><td class="confluenceTd">18729629</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">stu_block</td><td class="confluenceTd">S/PSC/F3</td><td class="confluenceTd">MSR/BC1/F1</td></tr><tr><td class="confluenceTd">18729628</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">stu_degc</td><td class="confluenceTd">BSC</td><td class="confluenceTd">MSR</td></tr><tr><td class="confluenceTd">18729626</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">stu_levl</td><td class="confluenceTd">UG</td><td class="confluenceTd">PG</td></tr><tr><td class="confluenceTd">18729627</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">stu_styp</td><td class="confluenceTd">F</td><td class="confluenceTd">N</td></tr><tr><td class="confluenceTd">18729622</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">yr_course</td><td class="confluenceTd">3</td><td class="confluenceTd">1</td></tr><tr><td class="confluenceTd">18729623</td><td class="confluenceTd">25946</td><td class="confluenceTd">180058</td><td class="confluenceTd">yr_student</td><td class="confluenceTd">2</td><td class="confluenceTd">1</td></tr></tbody></table></div><p><strong style="color: rgb(0,0,0);line-height: 1.42857;">T97 Details:</strong></p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th colspan="1" class="confluenceTh">TrID</th><th colspan="1" class="confluenceTh">Affects ID</th><th colspan="1" class="confluenceTh">Params</th><th colspan="1" class="confluenceTh">Value</th></tr><tr><td class="confluenceTd">9986340</td><td colspan="1" class="confluenceTd">180058</td><td class="confluenceTd">ROLLNUMBER</td><td class="confluenceTd">318273</td></tr><tr><td class="confluenceTd">9986340</td><td colspan="1" class="confluenceTd">180058</td><td class="confluenceTd">SOURCE</td><td class="confluenceTd">BANNER_FOR_PERSON</td></tr></tbody></table></div><h4 id="Transaction97snotgeneratedwhenexpected-ScripttoaddBannerImportrecord:">Script to add BannerImport record:</h4><p><a href="attachments/23856532/25626460.sql" data-linked-resource-id="25626460" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="t97_banner4import_test.sql" data-linked-resource-content-type="application/x-upload-data" data-linked-resource-container-id="23856532" data-linked-resource-container-version="4">t97_banner4import_test.sql</a></p><h4 id="Transaction97snotgeneratedwhenexpected-CardIssuesSpreadsheetfrom,">Card Issues Spreadsheet from <a class="confluence-userlink user-mention" data-username="uis485" href="https://confluence.salford.ac.uk:8444/confluence/display/~uis485" data-linked-resource-id="829846" data-linked-resource-version="1" data-linked-resource-type="userinfo" data-base-url="https://confluence.salford.ac.uk:8444/confluence">Martin Evans</a>, <time datetime="2016-01-16" class="date-past">16 Jan 2016</time> </h4><p><a href="attachments/23856532/25626464.xlsx" data-linked-resource-id="25626464" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Card Issues Jan 16.xlsx" data-nice-type="Excel Spreadsheet" data-linked-resource-content-type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" data-linked-resource-container-id="23856532" data-linked-resource-container-version="4">Card Issues Jan 16.xlsx</a></p><p> </p><p>I am unable to replicate the defect.</p><p> </p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by ujs079 at Mar 11, 2016 11:46
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

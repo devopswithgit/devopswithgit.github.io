@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : Difference in Column Widths between AccMan and Banner causing BannerForImport Problems</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="AccMan-Issues_19104073.html">AccMan Issues</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Completed_19595586.html">Completed</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : Difference in Column Widths between AccMan and Banner causing BannerForImport Problems
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Julia Kelbrick</span>, last modified by <span class='editor'> Jon Besson</span> on Dec 04, 2015
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class='plugin-tabmeta-details'><div class="table-wrap"><table class="confluenceTable"><tbody><tr><th class="confluenceTh">Summary</th><td class="confluenceTd">Difference in Column Widths between AccMan and Banner creating BannerForImport Problems<br/> </td></tr><tr><th class="confluenceTh">Issue Type</th><td class="confluenceTd">Bug</td></tr><tr><th class="confluenceTh">Priority</th><td class="confluenceTd">Medium</td></tr><tr><th class="confluenceTh">Raised By</th><td class="confluenceTd">@Julia</td></tr><tr><th class="confluenceTh">Date Raised</th><td class="confluenceTd">11/11/2015</td></tr><tr><th class="confluenceTh">Source</th><td class="confluenceTd">@PaulDaniels</td></tr><tr><th class="confluenceTh">JIRA Issue(s)</th><td class="confluenceTd">
+<span class="jira-issue resolved" data-jira-key="ARF-295" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-295?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/secure/viewavatar?size=xsmall&amp;avatarId=10300&amp;avatarType=issuetype"/>ARF-295</a>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Resolved</span>
+                </span>
+</td></tr></tbody></table></div><p> </p><h2 id="DifferenceinColumnWidthsbetweenAccManandBannercausingBannerForImportProblems-Details">Details</h2><p>There are differences in column widths between AccMan and Banner that result in the data being truncated in the AccMan Person table following the BannerForImport process.  Consequently, when BannerForImport is run on future occassions it is unable to match the two values as equal and attempts to update AccMan each time and in addition creates a corresponding type 97 transaction (UPDATE_JANUS_USER_DETAILS).</p><p>To resolve this, the code in the &quot;StudentActions&quot; class which determines if the Banner and AccMan values are different should be changed to do the comparison based on the AccMan column width.</p><p> </p><p>Examples of the differences in column widths are:</p><div class="table-wrap"><table class="confluenceTable"><tbody><tr><td class="highlight-grey confluenceTd" colspan="2" data-highlight-colour="grey"><p align="center"><strong>Banner</strong></p></td><td class="highlight-grey confluenceTd" colspan="2" data-highlight-colour="grey"><p align="center"><strong>AccMan</strong></p></td></tr><tr><td class="highlight-blue confluenceTd" data-highlight-colour="blue"><p align="center"><strong>Column Name</strong></p></td><td class="highlight-blue confluenceTd" data-highlight-colour="blue"><p align="center"><strong>Column Data Type</strong></p></td><td class="highlight-blue confluenceTd" data-highlight-colour="blue"><p align="center"><strong>Column Name</strong></p></td><td class="highlight-blue confluenceTd" data-highlight-colour="blue"><p align="center"><strong>Column Data Type</strong></p></td></tr><tr><td class="confluenceTd"><p>SPRIDEN_LAST_NAME</p></td><td class="confluenceTd"><p>varchar(60)</p></td><td class="confluenceTd"><p>person.realname</p></td><td class="confluenceTd"><p>varchar(40)</p></td></tr><tr><td class="confluenceTd"><p>SPRIDEN_FIRST_NAME</p></td><td class="confluenceTd"><p>varchar(80)</p></td><td rowspan="2" class="confluenceTd"><p>person.forenames</p></td><td rowspan="2" class="confluenceTd"><p>varchar(80)</p></td></tr><tr><td class="confluenceTd"><p>SPRIDEN_MI</p></td><td class="confluenceTd"><p>varchar(80)</p></td></tr><tr><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>preferredName  </p></td><td class="confluenceTd"><p>varchar(40)</p></td></tr><tr><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>initials</p></td><td class="confluenceTd"><p>varchar(5)</p></td></tr></tbody></table></div><p> </p><p> </p><p> </p><p> </p></div>
+                    </div>
+
+                    
+                                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="comments" class="pageSectionTitle">Comments:</h2>
+                        </div>
+
+                        <table border="0" width="100%">
+                                                        <tr>
+                                <td >
+                                    <a name="comment-29066253"></a>
+                                    <font class="smallfont"><p>This affects the BannerForAddress table too. I've just come across the problem myself and mentioned it in 
+<span class="jira-issue resolved" data-jira-key="ARF-365" >
+                    <a href="https://jira.salford.ac.uk:8443/jira/browse/ARF-365?src=confmacro" class="jira-issue-key"><img class="icon"
+                                                                                      src="https://jira.salford.ac.uk:8443/jira/images/icons/issuetypes/health.png"/>ARF-365</a>
+                            -
+            <span class="summary">Update ALMA if Banner Address Details Change</span>
+                                                <span class="aui-lozenge aui-lozenge-subtle             aui-lozenge-success
+     jira-macro-single-issue-export-pdf">Closed</span>
+                </span>
+</p></font>
+                                    <div align="left" class="smallfont" style="color: #666666; width: 98%; margin-bottom: 10px;">
+                                        <img src="images/icons/contenttypes/comment_16.png" height="16" width="16" border="0" align="absmiddle"/>
+                                        Posted by uis894 at Jun 16, 2016 15:08
+                                    </div>
+                                </td>
+                            </tr>
+                                                    </table>
+                    </div>
+                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:55</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

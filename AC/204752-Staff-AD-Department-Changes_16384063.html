@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accman : 204752 Staff AD Department Changes</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">Accman</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Accman-Home_16384043.html">Accman Home</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RFC-and-Project-Work_16384025.html">RFC and Project Work</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            Accman : 204752 Staff AD Department Changes
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (uis881)</span>, last modified by <span class='editor'> Unknown User (uis894)</span> on Sep 04, 2012
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>Staff changes on the SAP system to not propagate departmental changes to the AD system.</p><p>This fix is required to address this issue.</p><p>This fix requires minor changes to sap_import.pl:</p><p>sub updateStaff {</p><p>...</p><p>my $badpernr = 0;<br/> $reject = 0;</p><p><strong>my $dept_change = 0;</strong></p><p>then change:</p><p><strong>logchange ('dept_code') if $db_dept_code ne $dept_code;</strong></p><p>to:</p><p><strong>if ($db_dept_code ne $dept_code)</strong><br/><strong> {</strong><br/><strong> logchange ('dept_code');</strong><br/><strong> $dept_change = 1;</strong><br/><strong> }</strong></p><p>and finally add:</p><p><strong>if ($dept_change)</strong><br/><strong> {</strong><br/><strong> return 0 unless $childTrID = generateTransaction ($dbh, 121, $db_personID, %transactionParams);</strong><br/><strong> }</strong></p><p>What these changes do is create a flag that gets set if the department code changes, and then creates a type 121 transaction (which updates the AD department field) if that flag is set.</p><h2 id="id-204752StaffADDepartmentChanges-Testing">Testing</h2><p>To test, change the department code in the sap_import table, run the sap_import.pl script, and see if a type 121 transaction is generated.  The type 121 transaction is already live and working, so no testing of this element is required.</p><h2 id="id-204752StaffADDepartmentChanges-Rollback">Rollback</h2><p>To rollback, simply run the previous version of the sap_import.pl script instead of the newly modified version.</p><h1 id="id-204752StaffADDepartmentChanges-SourceCode">Source Code</h1><p>This isn't on a branch at the moment but the file affected is attached (note this is from the test server so the config will be different in production)</p><p><a href="attachments/16384063/16581332.pl" data-linked-resource-id="16581332" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="sap_import.pl" data-linked-resource-content-type="application/octet-stream" data-linked-resource-container-id="16384063" data-linked-resource-container-version="2">sap_import.pl</a></p>
+                    </div>
+
+                                        <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16384063/16581332.pl">sap_import.pl</a> (application/octet-stream)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on Mar 29, 2021 10:56</p>
+                    <div id="footer-logo"><a href="http://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>
